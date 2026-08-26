@@ -443,9 +443,10 @@ async function() {
     "none";
 
 
+    /* HORA DE CHEGADA AUTOMÁTICA */
+
     horaChegada.value =
     horaAtual();
-
 
   } catch (erro) {
 
@@ -465,7 +466,7 @@ async function() {
 });
 
 
-/* CALCULAR KM */
+/* CALCULAR KM E HORA DE CHEGADA */
 
 kmChegada.addEventListener(
 "input",
@@ -482,6 +483,13 @@ function() {
 
     kmPercorrido.textContent =
     chegada - saida;
+
+    if (horaChegada.value === "") {
+
+      horaChegada.value =
+      horaAtual();
+
+    }
 
   } else {
 
@@ -510,6 +518,8 @@ async function() {
 
   }
 
+
+  /* GARANTE A HORA DE CHEGADA */
 
   if (horaChegada.value === "") {
 
