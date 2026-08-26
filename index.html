@@ -131,6 +131,10 @@ button:disabled {
       <label>Placa</label>
       <input id="placa" type="text" maxlength="7" required>
 
+      <!-- NOVO CAMPO -->
+      <label>Destino</label>
+      <input id="destino" type="text" placeholder="Digite o destino" required>
+
       <label>KM de Saída</label>
       <input id="kmSaida" type="number" min="0" required>
 
@@ -211,6 +215,9 @@ formulario.addEventListener("submit", async function(event) {
 
     placa: document.getElementById("placa").value.trim(),
 
+    // NOVO CAMPO
+    destino: document.getElementById("destino").value.trim(),
+
     kmSaida: kmSaida.value,
 
     kmChegada: kmChegada.value
@@ -240,7 +247,7 @@ formulario.addEventListener("submit", async function(event) {
     });
 
     resultado.textContent =
-      "Movimentação enviada com sucesso!";
+      "Movimentação registrada com sucesso!";
 
     resultado.className = "sucesso";
 
