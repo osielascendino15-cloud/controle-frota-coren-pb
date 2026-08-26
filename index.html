@@ -143,8 +143,8 @@ button:disabled {
       <label>Motorista</label>
       <input id="motorista" type="text" required>
 
-      <label>E-mail</label>
-      <input id="email" type="email" required>
+      <label>Hora de Saída</label>
+      <input id="horaSaida" type="time" required>
 
       <label>Veículo</label>
       <input id="veiculo" type="text" required>
@@ -177,6 +177,12 @@ button:disabled {
           id="kmChegada"
           type="number"
           min="0">
+
+        <label>Hora de Chegada</label>
+
+        <input
+          id="horaChegada"
+          type="time">
 
         <div class="km">
           KM PERCORRIDO:
@@ -212,8 +218,8 @@ document.getElementById("formulario");
 const motorista =
 document.getElementById("motorista");
 
-const email =
-document.getElementById("email");
+const horaSaida =
+document.getElementById("horaSaida");
 
 const veiculo =
 document.getElementById("veiculo");
@@ -226,6 +232,9 @@ document.getElementById("destino");
 
 const kmSaida =
 document.getElementById("kmSaida");
+
+const horaChegada =
+document.getElementById("horaChegada");
 
 const kmChegada =
 document.getElementById("kmChegada");
@@ -249,9 +258,83 @@ const status =
 document.getElementById("status");
 
 
+/* HORA ATUAL */
+
+function horaAtual() {
+
+  const agora = new Date();
+
+  const horas =
+    String(agora.getHours()).padStart(2, "0");
+
+  const minutos =
+    String(agora.getMinutes()).padStart(2, "0");
+
+  return horas + ":" + minutos;
+
+}
+
+
+/* AO ABRIR O APLICATIVO */
+
+window.addEventListener("load", function() {
+
+  const viagem =
+    localStorage.getItem("viagemAberta");
+
+  if (viagem) {
+
+    const dados =
+    JSON.parse(viagem);
+
+    motorista.value =
+    dados.motorista;
+
+    horaSaida.value =
+    dados.horaSaida;
+
+    veiculo.value =
+    dados.veiculo;
+
+    placa.value =
+    dados.placa;
+
+    destino.value =
+    dados.destino;
+
+    kmSaida.value =
+    dados.kmSaida;
+
+    motorista.disabled = true;
+    horaSaida.disabled = true;
+    veiculo.disabled = true;
+    placa.disabled = true;
+    destino.disabled = true;
+    kmSaida.disabled = true;
+
+    botaoSaida.style.display =
+    "none";
+
+    areaChegada.style.display =
+    "block";
+
+    status.textContent =
+    "🚗 VIAGEM EM ANDAMENTO — informe o KM e a hora de chegada.";
+
+  } else {
+
+    horaSaida.value =
+    horaAtual();
+
+  }
+
+});
+
+
 function mostrarMensagem(texto, tipo) {
 
   mensagem.textContent = texto;
+
   mensagem.className = tipo;
 
 }
@@ -286,25 +369,33 @@ async function() {
   if (!formulario.checkValidity()) {
 
     formulario.reportValidity();
+
     return;
 
   }
+
 
   const dados = {
 
     acao: "saida",
 
-    motorista: motorista.value.trim(),
+    motorista:
+    motorista.value.trim(),
 
-    email: email.value.trim(),
+    horaSaida:
+    horaSaida.value,
 
-    veiculo: veiculo.value.trim(),
+    veiculo:
+    veiculo.value.trim(),
 
-    placa: placa.value.trim(),
+    placa:
+    placa.value.trim().toUpperCase(),
 
-    destino: destino.value.trim(),
+    destino:
+    destino.value.trim(),
 
-    kmSaida: kmSaida.value
+    kmSaida:
+    kmSaida.value
 
   };
 
@@ -319,10 +410,6 @@ async function() {
 
     await enviarDados(dados);
 
-    /*
-      Guardamos os dados da viagem
-      no celular.
-    */
 
     localStorage.setItem(
       "viagemAberta",
@@ -337,7 +424,7 @@ async function() {
 
 
     status.textContent =
-    "🚗 VIAGEM EM ANDAMENTO — informe o KM de chegada.";
+    "🚗 VIAGEM EM ANDAMENTO — informe o KM e a hora de chegada.";
 
 
     areaChegada.style.display =
@@ -345,7 +432,7 @@ async function() {
 
 
     motorista.disabled = true;
-    email.disabled = true;
+    horaSaida.disabled = true;
     veiculo.disabled = true;
     placa.disabled = true;
     destino.disabled = true;
@@ -356,6 +443,10 @@ async function() {
     "none";
 
 
+    horaChegada.value =
+    horaAtual();
+
+
   } catch (erro) {
 
     mostrarMensagem(
@@ -363,7 +454,8 @@ async function() {
       "erro"
     );
 
-    botaoSaida.disabled = false;
+    botaoSaida.disabled =
+    false;
 
     botaoSaida.textContent =
     "🟢 SALVAR KM DE SAÍDA";
@@ -419,6 +511,14 @@ async function() {
   }
 
 
+  if (horaChegada.value === "") {
+
+    horaChegada.value =
+    horaAtual();
+
+  }
+
+
   const saida =
   Number(kmSaida.value);
 
@@ -456,32 +556,39 @@ async function() {
   }
 
 
-  /*
-    Procura a última viagem
-    desse motorista/veículo
-    que ainda está sem chegada.
-  */
-
   const dados = {
 
     acao: "chegada",
 
-    motorista: viagem.motorista,
+    motorista:
+    viagem.motorista,
 
-    email: viagem.email,
+    horaSaida:
+    viagem.horaSaida,
 
-    veiculo: viagem.veiculo,
+    veiculo:
+    viagem.veiculo,
 
-    placa: viagem.placa,
+    placa:
+    viagem.placa,
 
-    kmSaida: viagem.kmSaida,
+    destino:
+    viagem.destino,
 
-    kmChegada: kmChegada.value
+    kmSaida:
+    viagem.kmSaida,
+
+    kmChegada:
+    kmChegada.value,
+
+    horaChegada:
+    horaChegada.value
 
   };
 
 
-  botaoChegada.disabled = true;
+  botaoChegada.disabled =
+  true;
 
   botaoChegada.textContent =
   "ENCERRANDO...";
@@ -510,6 +617,10 @@ async function() {
     formulario.reset();
 
 
+    horaSaida.value =
+    horaAtual();
+
+
     areaChegada.style.display =
     "none";
 
@@ -517,21 +628,30 @@ async function() {
     botaoSaida.style.display =
     "block";
 
-
     botaoSaida.disabled =
     false;
-
 
     botaoSaida.textContent =
     "🟢 SALVAR KM DE SAÍDA";
 
 
-    motorista.disabled = false;
-    email.disabled = false;
-    veiculo.disabled = false;
-    placa.disabled = false;
-    destino.disabled = false;
-    kmSaida.disabled = false;
+    motorista.disabled =
+    false;
+
+    horaSaida.disabled =
+    false;
+
+    veiculo.disabled =
+    false;
+
+    placa.disabled =
+    false;
+
+    destino.disabled =
+    false;
+
+    kmSaida.disabled =
+    false;
 
 
     kmPercorrido.textContent =
@@ -549,68 +669,8 @@ async function() {
     botaoChegada.disabled =
     false;
 
-
     botaoChegada.textContent =
     "🔴 ENCERRAR VIAGEM";
-
-  }
-
-});
-
-
-/* RECUPERAR VIAGEM */
-
-window.addEventListener(
-"load",
-function() {
-
-  const viagem =
-  localStorage.getItem("viagemAberta");
-
-
-  if (viagem) {
-
-    const dados =
-    JSON.parse(viagem);
-
-
-    motorista.value =
-    dados.motorista;
-
-    email.value =
-    dados.email;
-
-    veiculo.value =
-    dados.veiculo;
-
-    placa.value =
-    dados.placa;
-
-    destino.value =
-    dados.destino;
-
-    kmSaida.value =
-    dados.kmSaida;
-
-
-    motorista.disabled = true;
-    email.disabled = true;
-    veiculo.disabled = true;
-    placa.disabled = true;
-    destino.disabled = true;
-    kmSaida.disabled = true;
-
-
-    botaoSaida.style.display =
-    "none";
-
-
-    areaChegada.style.display =
-    "block";
-
-
-    status.textContent =
-    "🚗 VIAGEM EM ANDAMENTO — informe o KM de chegada.";
 
   }
 
