@@ -353,145 +353,126 @@ body:JSON.stringify(dados)
 
 /* PREPARAR ASSINATURA */
 
-function prepararCanvas(){
+/* ASSINATURA PELO DEDO */
 
-const escala =
-window.devicePixelRatio || 1;
+function prepararCanvas() {
 
-const largura =
-canvas.clientWidth;
+  const largura = canvas.clientWidth;
+  const altura = canvas.clientHeight;
+  const escala = window.devicePixelRatio || 1;
 
-const altura =
-canvas.clientHeight;
+  canvas.width = largura * escala;
+  canvas.height = altura * escala;
 
-canvas.width =
-largura * escala;
+  ctx.setTransform(escala, 0, 0, escala, 0, 0);
 
-canvas.height =
-altura * escala;
+  ctx.lineWidth = 3;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+}
 
-ctx.setTransform(
-escala,
-0,
-0,
-escala,
-0,
-0
-);
 
-ctx.lineWidth = 3;
+function pegarPosicao(evento) {
 
-ctx.lineCap = "round";
+  const retangulo =
+    canvas.getBoundingClientRect();
 
-ctx.lineJoin = "round";
+  const toque =
+    evento.touches[0];
+
+  return {
+    x: toque.clientX - retangulo.left,
+    y: toque.clientY - retangulo.top
+  };
 
 }
 
 
-/* POSIÇÃO DO DEDO */
-
-function obterPosicao(evento){
-
-const retangulo =
-canvas.getBoundingClientRect();
-
-return {
-
-x:
-evento.clientX -
-retangulo.left,
-
-y:
-evento.clientY -
-retangulo.top
-
-};
-
-}
-
-
-/* COMEÇAR ASSINATURA */
+/* COMEÇAR A ASSINAR */
 
 canvas.addEventListener(
-"pointerdown",
-function(evento){
+  "touchstart",
+  function(evento) {
 
-evento.preventDefault();
+    evento.preventDefault();
 
-desenhando = true;
+    desenhando = true;
+    assinaturaTemConteudo = true;
 
-assinaturaTemConteudo = true;
+    const posicao =
+      pegarPosicao(evento);
 
-canvas.setPointerCapture(
-evento.pointerId
-);
+    ctx.beginPath();
 
-const posicao =
-obterPosicao(evento);
+    ctx.moveTo(
+      posicao.x,
+      posicao.y
+    );
 
-ctx.beginPath();
-
-ctx.moveTo(
-posicao.x,
-posicao.y
-);
-
-},
-{passive:false}
+  },
+  { passive: false }
 );
 
 
-/* DESENHAR COM O DEDO */
+/* CONTINUAR A ASSINATURA */
 
 canvas.addEventListener(
-"pointermove",
-function(evento){
+  "touchmove",
+  function(evento) {
 
-if(!desenhando){
-return;
-}
+    evento.preventDefault();
 
-evento.preventDefault();
+    if (!desenhando) {
+      return;
+    }
 
-const posicao =
-obterPosicao(evento);
+    const posicao =
+      pegarPosicao(evento);
 
-ctx.lineTo(
-posicao.x,
-posicao.y
+    ctx.lineTo(
+      posicao.x,
+      posicao.y
+    );
+
+    ctx.stroke();
+
+  },
+  { passive: false }
 );
 
-ctx.stroke();
 
-},
-{passive:false}
-);
-
-
-/* TERMINAR ASSINATURA */
+/* TERMINAR */
 
 canvas.addEventListener(
-"pointerup",
-function(evento){
+  "touchend",
+  function(evento) {
 
-evento.preventDefault();
+    evento.preventDefault();
 
-desenhando = false;
+    desenhando = false;
 
-},
-{passive:false}
+  },
+  { passive: false }
 );
 
 
-canvas.addEventListener(
-"pointercancel",
-function(){
+/* LIMPAR */
 
-desenhando = false;
+botaoLimpar.addEventListener(
+  "click",
+  function() {
 
-}
+    ctx.clearRect(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+    assinaturaTemConteudo = false;
+
+  }
 );
-
 
 /* LIMPAR */
 
