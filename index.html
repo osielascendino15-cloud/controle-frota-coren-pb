@@ -1,31 +1,836 @@
-kmChegada.addEventListener(
-  "input",
-  function() {
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    const saida =
-      Number(kmSaida.value);
+<title>Controle de Frota COREN-PB</title>
 
-    const chegada =
-      Number(kmChegada.value);
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f2f4f7;
+  margin: 0;
+  padding: 0;
+}
 
-    if (chegada >= saida) {
+.container {
+  max-width: 500px;
+  margin: auto;
+  padding: 20px;
+}
 
-      kmPercorrido.textContent =
-        chegada - saida;
+.header {
+  background: #07579c;
+  color: white;
+  text-align: center;
+  padding: 25px 15px;
+  border-radius: 0 0 18px 18px;
+}
 
-      /* HORA AUTOMÁTICA */
+.header h1 {
+  margin: 0;
+  font-size: 24px;
+}
 
-      if (kmChegada.value !== "") {
-        horaChegada.value = horaAtual();
-      }
+.header p {
+  margin: 8px 0 0;
+}
 
-    } else {
+.card {
+  background: white;
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 3px 10px rgba(0,0,0,.12);
+}
 
-      kmPercorrido.textContent = "0";
+label {
+  display: block;
+  font-weight: bold;
+  margin-top: 15px;
+  margin-bottom: 6px;
+}
 
-      horaChegada.value = "";
+input {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
 
-    }
+button {
+  width: 100%;
+  margin-top: 20px;
+  padding: 16px;
+  border: 0;
+  border-radius: 8px;
+  color: white;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+}
 
-  }
+.btn-saida {
+  background: #198754;
+}
+
+.btn-chegada {
+  background: #dc3545;
+}
+
+.btn-limpar {
+  background: #6c757d;
+  margin-top: 10px;
+  font-size: 15px;
+  padding: 12px;
+}
+
+button:disabled {
+  background: #999;
+}
+
+#mensagem {
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  display: none;
+}
+
+.sucesso {
+  display: block !important;
+  background: #d4edda;
+  color: #155724;
+}
+
+.erro {
+  display: block !important;
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.km {
+  margin-top: 15px;
+  padding: 12px;
+  background: #eef5fb;
+  text-align: center;
+  border-radius: 8px;
+  font-weight: bold;
+  color: #07579c;
+}
+
+#areaChegada {
+  display: none;
+}
+
+.status {
+  margin-top: 15px;
+  padding: 12px;
+  background: #fff3cd;
+  color: #856404;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.assinatura-titulo {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+#canvasAssinatura {
+  width: 100%;
+  height: 180px;
+  border: 2px solid #07579c;
+  border-radius: 8px;
+  background: white;
+  display: block;
+  box-sizing: border-box;
+  touch-action: none;
+}
+
+.aviso-assinatura {
+  text-align: center;
+  font-size: 13px;
+  color: #666;
+  margin-top: 6px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+<h1>🚗 CONTROLE DE FROTA</h1>
+<p>COREN-PB</p>
+</div>
+
+<div class="card">
+
+<form id="formulario">
+
+<label>Motorista</label>
+<input id="motorista" type="text" required>
+
+<label>Hora de Saída</label>
+<input id="horaSaida" type="time" required>
+
+<label>Veículo</label>
+<input id="veiculo" type="text" required>
+
+<label>Placa</label>
+<input id="placa" type="text" maxlength="7" required>
+
+<label>Destino</label>
+<input id="destino" type="text" required>
+
+<label>KM de Saída</label>
+<input id="kmSaida" type="number" min="0" required>
+
+<button id="botaoSaida" class="btn-saida" type="button">
+🟢 SALVAR KM DE SAÍDA
+</button>
+
+<div id="status" class="status">
+Nenhuma viagem em andamento.
+</div>
+
+<div id="areaChegada">
+
+<label>KM de Chegada</label>
+<input id="kmChegada" type="number" min="0">
+
+<label>Hora de Chegada</label>
+<input id="horaChegada" type="time" readonly>
+
+<div class="km">
+KM PERCORRIDO:
+<span id="kmPercorrido">0</span> KM
+</div>
+
+<div class="assinatura-titulo">
+✍️ Assinatura do Motorista
+</div>
+
+<canvas id="canvasAssinatura"></canvas>
+
+<div class="aviso-assinatura">
+Assine dentro do quadro usando o dedo.
+</div>
+
+<button id="botaoLimpar" class="btn-limpar" type="button">
+🗑️ LIMPAR ASSINATURA
+</button>
+
+<button id="botaoChegada" class="btn-chegada" type="button">
+🔴 ENCERRAR VIAGEM
+</button>
+
+</div>
+
+<div id="mensagem"></div>
+
+</form>
+
+</div>
+</div>
+
+<script>
+
+const URL_APPS_SCRIPT =
+"https://script.google.com/macros/s/AKfycbxPQx0vFT0XZbU4nUDO0NCqF2uxfpGOlhna6N9fAKE9h5mx2rVgZ3rdFFxPvclIIh4M/exec";
+
+
+const formulario = document.getElementById("formulario");
+const motorista = document.getElementById("motorista");
+const horaSaida = document.getElementById("horaSaida");
+const veiculo = document.getElementById("veiculo");
+const placa = document.getElementById("placa");
+const destino = document.getElementById("destino");
+const kmSaida = document.getElementById("kmSaida");
+const kmChegada = document.getElementById("kmChegada");
+const horaChegada = document.getElementById("horaChegada");
+const botaoSaida = document.getElementById("botaoSaida");
+const botaoChegada = document.getElementById("botaoChegada");
+const botaoLimpar = document.getElementById("botaoLimpar");
+const areaChegada = document.getElementById("areaChegada");
+const kmPercorrido = document.getElementById("kmPercorrido");
+const mensagem = document.getElementById("mensagem");
+const status = document.getElementById("status");
+
+const canvas = document.getElementById("canvasAssinatura");
+const ctx = canvas.getContext("2d");
+
+let assinaturaTemConteudo = false;
+let desenhando = false;
+
+
+/* HORA ATUAL */
+
+function horaAtual() {
+
+const agora = new Date();
+
+const horas =
+String(agora.getHours()).padStart(2,"0");
+
+const minutos =
+String(agora.getMinutes()).padStart(2,"0");
+
+return horas + ":" + minutos;
+
+}
+
+
+/* MENSAGEM */
+
+function mostrarMensagem(texto,tipo) {
+
+mensagem.textContent = texto;
+mensagem.className = tipo;
+
+}
+
+
+/* ENVIO PARA APPS SCRIPT */
+
+function enviarDados(dados) {
+
+return fetch(
+URL_APPS_SCRIPT,
+{
+method:"POST",
+mode:"no-cors",
+headers:{
+"Content-Type":"text/plain;charset=utf-8"
+},
+body:JSON.stringify(dados)
+}
 );
+
+}
+
+
+/* ASSINATURA */
+
+function prepararCanvas() {
+
+const proporcao =
+window.devicePixelRatio || 1;
+
+const largura =
+canvas.clientWidth;
+
+const altura =
+canvas.clientHeight;
+
+canvas.width =
+largura * proporcao;
+
+canvas.height =
+altura * proporcao;
+
+ctx.scale(proporcao,proporcao);
+
+ctx.lineWidth = 2;
+ctx.lineCap = "round";
+ctx.lineJoin = "round";
+
+}
+
+
+function posicao(evento) {
+
+const retangulo =
+canvas.getBoundingClientRect();
+
+return {
+x:evento.clientX-retangulo.left,
+y:evento.clientY-retangulo.top
+};
+
+}
+
+
+canvas.addEventListener(
+"pointerdown",
+function(evento) {
+
+desenhando = true;
+assinaturaTemConteudo = true;
+
+canvas.setPointerCapture(
+evento.pointerId
+);
+
+const p = posicao(evento);
+
+ctx.beginPath();
+
+ctx.moveTo(
+p.x,
+p.y
+);
+
+}
+);
+
+
+canvas.addEventListener(
+"pointermove",
+function(evento) {
+
+if(!desenhando) return;
+
+const p = posicao(evento);
+
+ctx.lineTo(
+p.x,
+p.y
+);
+
+ctx.stroke();
+
+}
+);
+
+
+canvas.addEventListener(
+"pointerup",
+function() {
+
+desenhando = false;
+
+}
+);
+
+
+canvas.addEventListener(
+"pointercancel",
+function() {
+
+desenhando = false;
+
+}
+);
+
+
+/* LIMPAR ASSINATURA */
+
+botaoLimpar.addEventListener(
+"click",
+function() {
+
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+assinaturaTemConteudo = false;
+
+}
+);
+
+
+/* INICIAR */
+
+window.addEventListener(
+"load",
+function() {
+
+prepararCanvas();
+
+const viagem =
+localStorage.getItem("viagemAberta");
+
+if(viagem) {
+
+const dados =
+JSON.parse(viagem);
+
+motorista.value =
+dados.motorista;
+
+horaSaida.value =
+dados.horaSaida;
+
+veiculo.value =
+dados.veiculo;
+
+placa.value =
+dados.placa;
+
+destino.value =
+dados.destino;
+
+kmSaida.value =
+dados.kmSaida;
+
+motorista.disabled = true;
+horaSaida.disabled = true;
+veiculo.disabled = true;
+placa.disabled = true;
+destino.disabled = true;
+kmSaida.disabled = true;
+
+botaoSaida.style.display = "none";
+
+areaChegada.style.display = "block";
+
+status.textContent =
+"🚗 VIAGEM EM ANDAMENTO — informe o KM de chegada.";
+
+}
+else {
+
+horaSaida.value =
+horaAtual();
+
+}
+
+}
+);
+
+
+/* SALVAR SAÍDA */
+
+botaoSaida.addEventListener(
+"click",
+async function() {
+
+if(!formulario.checkValidity()) {
+
+formulario.reportValidity();
+
+return;
+
+}
+
+const dados = {
+
+acao:"saida",
+
+motorista:
+motorista.value.trim(),
+
+horaSaida:
+horaSaida.value,
+
+veiculo:
+veiculo.value.trim(),
+
+placa:
+placa.value.trim().toUpperCase(),
+
+destino:
+destino.value.trim(),
+
+kmSaida:
+kmSaida.value
+
+};
+
+botaoSaida.disabled = true;
+
+botaoSaida.textContent =
+"SALVANDO...";
+
+try {
+
+await enviarDados(dados);
+
+localStorage.setItem(
+"viagemAberta",
+JSON.stringify(dados)
+);
+
+mostrarMensagem(
+"KM de saída salvo com sucesso!",
+"sucesso"
+);
+
+status.textContent =
+"🚗 VIAGEM EM ANDAMENTO — informe o KM de chegada.";
+
+areaChegada.style.display =
+"block";
+
+motorista.disabled = true;
+horaSaida.disabled = true;
+veiculo.disabled = true;
+placa.disabled = true;
+destino.disabled = true;
+kmSaida.disabled = true;
+
+botaoSaida.style.display =
+"none";
+
+}
+catch(erro) {
+
+mostrarMensagem(
+"Erro ao salvar o KM de saída.",
+"erro"
+);
+
+botaoSaida.disabled = false;
+
+botaoSaida.textContent =
+"🟢 SALVAR KM DE SAÍDA";
+
+}
+
+}
+);
+
+
+/* KM DE CHEGADA */
+
+kmChegada.addEventListener(
+"input",
+function() {
+
+const saida =
+Number(kmSaida.value);
+
+const chegada =
+Number(kmChegada.value);
+
+if(
+kmChegada.value !== "" &&
+chegada >= saida
+) {
+
+kmPercorrido.textContent =
+chegada - saida;
+
+horaChegada.value =
+horaAtual();
+
+}
+else {
+
+kmPercorrido.textContent =
+"0";
+
+horaChegada.value =
+"";
+
+}
+
+}
+);
+
+
+/* ENCERRAR VIAGEM */
+
+botaoChegada.addEventListener(
+"click",
+async function() {
+
+if(kmChegada.value === "") {
+
+mostrarMensagem(
+"Informe o KM de chegada.",
+"erro"
+);
+
+return;
+
+}
+
+const saida =
+Number(kmSaida.value);
+
+const chegada =
+Number(kmChegada.value);
+
+if(chegada < saida) {
+
+mostrarMensagem(
+"O KM de chegada não pode ser menor que o KM de saída.",
+"erro"
+);
+
+return;
+
+}
+
+if(!assinaturaTemConteudo) {
+
+mostrarMensagem(
+"Faça a assinatura do motorista antes de encerrar a viagem.",
+"erro"
+);
+
+return;
+
+}
+
+
+/* CAPTURA A HORA FINAL */
+
+const horaFinal =
+horaAtual();
+
+horaChegada.value =
+horaFinal;
+
+
+const viagem =
+JSON.parse(
+localStorage.getItem("viagemAberta")
+);
+
+if(!viagem) {
+
+mostrarMensagem(
+"Viagem não encontrada.",
+"erro"
+);
+
+return;
+
+}
+
+
+const assinatura =
+canvas.toDataURL("image/png");
+
+
+const dados = {
+
+acao:"chegada",
+
+motorista:
+viagem.motorista,
+
+horaSaida:
+viagem.horaSaida,
+
+veiculo:
+viagem.veiculo,
+
+placa:
+viagem.placa,
+
+destino:
+viagem.destino,
+
+kmSaida:
+viagem.kmSaida,
+
+kmChegada:
+kmChegada.value,
+
+horaChegada:
+horaFinal,
+
+assinatura:
+assinatura
+
+};
+
+
+botaoChegada.disabled =
+true;
+
+botaoLimpar.disabled =
+true;
+
+botaoChegada.textContent =
+"ENCERRANDO...";
+
+
+try {
+
+await enviarDados(dados);
+
+localStorage.removeItem(
+"viagemAberta"
+);
+
+mostrarMensagem(
+"Viagem encerrada com sucesso!",
+"sucesso"
+);
+
+status.textContent =
+"Nenhuma viagem em andamento.";
+
+formulario.reset();
+
+horaSaida.value =
+horaAtual();
+
+horaChegada.value =
+"";
+
+areaChegada.style.display =
+"none";
+
+botaoSaida.style.display =
+"block";
+
+botaoSaida.disabled =
+false;
+
+botaoSaida.textContent =
+"🟢 SALVAR KM DE SAÍDA";
+
+motorista.disabled = false;
+horaSaida.disabled = false;
+veiculo.disabled = false;
+placa.disabled = false;
+destino.disabled = false;
+kmSaida.disabled = false;
+
+botaoLimpar.disabled = false;
+
+kmPercorrido.textContent =
+"0";
+
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+assinaturaTemConteudo =
+false;
+
+}
+catch(erro) {
+
+mostrarMensagem(
+"Não foi possível encerrar a viagem.",
+"erro"
+);
+
+botaoChegada.disabled =
+false;
+
+botaoLimpar.disabled =
+false;
+
+botaoChegada.textContent =
+"🔴 ENCERRAR VIAGEM";
+
+}
+
+}
+);
+
+</script>
+
+</body>
+</html>
