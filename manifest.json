@@ -1,0 +1,10 @@
+{
+  "name": "Controle de Frota COREN-PB",
+  "short_name": "Frota COREN-PB",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#075985",
+  "orientation": "portrait"
+}
+
