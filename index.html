@@ -1,406 +1,268 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Controle de Frota COREN-PB</title>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#075985">
+
 <style>
-
 body {
-    font-family: Arial;
-    background: #f2f2f2;
-    margin: 0;
-}
-
-header {
-    background: #075985;
-    color: white;
-    text-align: center;
-    padding: 20px;
+  font-family: Arial, sans-serif;
+  background: #f2f4f7;
+  margin: 0;
+  padding: 0;
 }
 
 .container {
-    padding: 15px;
-    max-width: 600px;
-    margin: auto;
+  max-width: 500px;
+  margin: auto;
+  padding: 20px;
 }
 
-.caixa {
-    background: white;
-    padding: 20px;
-    margin-bottom: 15px;
-    border-radius: 10px;
+.header {
+  background: #07579c;
+  color: white;
+  text-align: center;
+  padding: 25px 15px;
+  border-radius: 0 0 18px 18px;
 }
 
-h2 {
-    color: #075985;
+.header h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.card {
+  background: white;
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 3px 10px rgba(0,0,0,.12);
 }
 
 label {
-    display: block;
-    margin-top: 10px;
-    font-weight: bold;
+  display: block;
+  font-weight: bold;
+  margin-top: 15px;
+  margin-bottom: 6px;
 }
 
 input {
-    width: 100%;
-    padding: 12px;
-    margin-top: 5px;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 16px;
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
 }
 
 button {
-    width: 100%;
-    padding: 15px;
-    margin-top: 15px;
-    border: none;
-    border-radius: 7px;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
+  width: 100%;
+  margin-top: 25px;
+  padding: 16px;
+  border: 0;
+  border-radius: 8px;
+  background: #07579c;
+  color: white;
+  font-size: 17px;
+  font-weight: bold;
 }
 
-.saida {
-    background: green;
+button:disabled {
+  background: #999;
 }
 
-.chegada {
-    background: red;
+#resultado {
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  display: none;
 }
 
-.registro {
-    background: #f5f5f5;
-    padding: 12px;
-    margin-top: 10px;
-    border-radius: 6px;
+.sucesso {
+  display: block !important;
+  background: #d4edda;
+  color: #155724;
 }
 
+.erro {
+  display: block !important;
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.km {
+  margin-top: 15px;
+  padding: 12px;
+  background: #eef5fb;
+  text-align: center;
+  border-radius: 8px;
+  font-weight: bold;
+  color: #07579c;
+}
 </style>
-
 </head>
 
 <body>
 
-<header>
-
-<h1>🚗 CONTROLE DE FROTA</h1>
-
-<p>COREN-PB</p>
-
-</header>
-
 <div class="container">
 
-<div class="caixa">
+  <div class="header">
+    <h1>🚗 CONTROLE DE FROTA</h1>
+    <p>COREN-PB</p>
+  </div>
 
-<h2>Motorista e veículo</h2>
+  <div class="card">
 
-<label>Nome do motorista</label>
+    <form id="formulario">
 
-<input
-id="motorista"
-type="text"
-placeholder="Digite seu nome">
+      <label>Motorista</label>
+      <input id="motorista" type="text" required>
 
-<label>E-mail</label>
+      <label>E-mail</label>
+      <input id="email" type="email" required>
 
-<input
-id="email"
-type="email"
-placeholder="Digite seu Gmail">
+      <label>Veículo</label>
+      <input id="veiculo" type="text" required>
 
-<label>Veículo</label>
+      <label>Placa</label>
+      <input id="placa" type="text" maxlength="7" required>
 
-<input
-id="veiculo"
-type="text"
-placeholder="Ex.: Fiat Cronos">
+      <label>KM de Saída</label>
+      <input id="kmSaida" type="number" min="0" required>
 
-<label>Placa</label>
+      <label>KM de Chegada</label>
+      <input id="kmChegada" type="number" min="0" required>
 
-<input
-id="placa"
-type="text"
-placeholder="Ex.: ABC1D23">
+      <div class="km">
+        KM PERCORRIDO: <span id="kmPercorrido">0</span> KM
+      </div>
 
-</div>
+      <button id="botao" type="submit">
+        REGISTRAR MOVIMENTAÇÃO
+      </button>
 
+      <div id="resultado"></div>
 
-<div class="caixa">
+    </form>
 
-<h2>🟢 Saída</h2>
-
-<label>KM de saída</label>
-
-<input
-id="kmSaida"
-type="number"
-placeholder="Digite o KM">
-
-<button
-class="saida"
-onclick="registrarSaida()">
-
-REGISTRAR SAÍDA
-
-</button>
+  </div>
 
 </div>
-
-
-<div class="caixa">
-
-<h2>🔴 Chegada</h2>
-
-<label>KM de chegada</label>
-
-<input
-id="kmChegada"
-type="number"
-placeholder="Digite o KM">
-
-<button
-class="chegada"
-onclick="registrarChegada()">
-
-REGISTRAR CHEGADA
-
-</button>
-
-</div>
-
-
-<div class="caixa">
-
-<h2>📋 Histórico</h2>
-
-<div id="historico">
-
-Nenhuma viagem registrada.
-
-</div>
-
-</div>
-
-</div>
-
 
 <script>
 
-let viagem = null;
+const URL_APPS_SCRIPT =
+"https://script.google.com/macros/s/AKfycbxPQx0vFT0XZbU4nUDO0NCqF2uxfpGOlhna6N9fAKE9h5mx2rVgZ3rdFFxPvclIIh4M/exec";
 
-let historico =
-JSON.parse(
-localStorage.getItem("frota")
-) || [];
+const formulario = document.getElementById("formulario");
+const kmSaida = document.getElementById("kmSaida");
+const kmChegada = document.getElementById("kmChegada");
+const kmPercorrido = document.getElementById("kmPercorrido");
+const resultado = document.getElementById("resultado");
+const botao = document.getElementById("botao");
 
+function calcularKM() {
 
-function registrarSaida() {
+  const saida = Number(kmSaida.value);
+  const chegada = Number(kmChegada.value);
 
-let motorista =
-document.getElementById("motorista").value;
-
-let email =
-document.getElementById("email").value;
-
-let veiculo =
-document.getElementById("veiculo").value;
-
-let placa =
-document.getElementById("placa").value;
-
-let km =
-document.getElementById("kmSaida").value;
-
-
-if (
-!motorista ||
-!email ||
-!veiculo ||
-!placa ||
-!km
-) {
-
-alert(
-"Preencha todos os campos."
-);
-
-return;
-
+  if (chegada >= saida) {
+    kmPercorrido.textContent = chegada - saida;
+  } else {
+    kmPercorrido.textContent = "0";
+  }
 }
 
+kmSaida.addEventListener("input", calcularKM);
+kmChegada.addEventListener("input", calcularKM);
 
-viagem = {
+document.getElementById("placa").addEventListener("input", function() {
+  this.value = this.value.toUpperCase();
+});
 
-motorista: motorista,
+formulario.addEventListener("submit", async function(event) {
 
-email: email,
+  event.preventDefault();
 
-veiculo: veiculo,
+  const saida = Number(kmSaida.value);
+  const chegada = Number(kmChegada.value);
 
-placa: placa,
+  if (chegada < saida) {
 
-kmSaida: km,
+    resultado.textContent =
+      "O KM de chegada não pode ser menor que o KM de saída.";
 
-horaSaida:
-new Date().toLocaleString("pt-BR")
+    resultado.className = "erro";
 
-};
+    return;
+  }
 
+  const dados = {
 
-alert(
-"Saída registrada com sucesso!"
-);
+    motorista: document.getElementById("motorista").value.trim(),
 
-}
+    email: document.getElementById("email").value.trim(),
 
+    veiculo: document.getElementById("veiculo").value.trim(),
 
-function registrarChegada() {
+    placa: document.getElementById("placa").value.trim(),
 
-if (!viagem) {
+    kmSaida: kmSaida.value,
 
-alert(
-"Primeiro registre a saída."
-);
+    kmChegada: kmChegada.value
 
-return;
+  };
 
-}
+  botao.disabled = true;
+  botao.textContent = "SALVANDO...";
 
+  resultado.className = "";
+  resultado.style.display = "none";
 
-let kmChegada =
-document.getElementById("kmChegada").value;
+  try {
 
+    await fetch(URL_APPS_SCRIPT, {
 
-if (!kmChegada) {
+      method: "POST",
 
-alert(
-"Digite o KM de chegada."
-);
+      mode: "no-cors",
 
-return;
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
 
-}
+      body: JSON.stringify(dados)
 
+    });
 
-let kmPercorrido =
-Number(kmChegada) -
-Number(viagem.kmSaida);
+    resultado.textContent =
+      "Movimentação enviada com sucesso!";
 
+    resultado.className = "sucesso";
 
-viagem.kmChegada =
-kmChegada;
+    formulario.reset();
 
-viagem.kmPercorrido =
-kmPercorrido;
+    kmPercorrido.textContent = "0";
 
-viagem.horaChegada =
-new Date().toLocaleString("pt-BR");
+  } catch (erro) {
 
+    resultado.textContent =
+      "Não foi possível enviar o registro.";
 
-historico.push(viagem);
+    resultado.className = "erro";
 
+  }
 
-localStorage.setItem(
-"frota",
-JSON.stringify(historico)
-);
-
-
-viagem = null;
-
-
-alert(
-"Chegada registrada com sucesso!"
-);
-
-
-mostrarHistorico();
-
-}
-
-
-function mostrarHistorico() {
-
-let area =
-document.getElementById("historico");
-
-area.innerHTML = "";
-
-
-if (historico.length === 0) {
-
-area.innerHTML =
-"Nenhuma viagem registrada.";
-
-return;
-
-}
-
-
-historico
-.slice()
-.reverse()
-.forEach(function(item) {
-
-area.innerHTML += `
-
-<div class="registro">
-
-<b>Motorista:</b>
-${item.motorista}<br>
-
-<b>Veículo:</b>
-${item.veiculo}<br>
-
-<b>Placa:</b>
-${item.placa}<br>
-
-<b>Saída:</b>
-${item.kmSaida} KM<br>
-
-<b>Chegada:</b>
-${item.kmChegada} KM<br>
-
-<b>KM percorrido:</b>
-${item.kmPercorrido} KM<br>
-
-<b>Data/hora saída:</b>
-${item.horaSaida}<br>
-
-<b>Data/hora chegada:</b>
-${item.horaChegada}
-
-</div>
-
-`;
+  botao.disabled = false;
+  botao.textContent = "REGISTRAR MOVIMENTAÇÃO";
 
 });
 
-}
-
-
-mostrarHistorico();
-
 </script>
-<script>
-if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("sw.js");
-}
-</script>
+
 </body>
-
 </html>
-
-
-
