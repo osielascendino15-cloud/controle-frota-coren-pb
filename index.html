@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Controle de Frota COREN-PB</title>
 
 <style>
+
 body {
   font-family: Arial, sans-serif;
   background: #f2f4f7;
@@ -31,6 +36,10 @@ body {
 .header h1 {
   margin: 0;
   font-size: 24px;
+}
+
+.header p {
+  margin-bottom: 0;
 }
 
 .card {
@@ -66,6 +75,7 @@ button {
   color: white;
   font-size: 17px;
   font-weight: bold;
+  cursor: pointer;
 }
 
 .btn-saida {
@@ -76,8 +86,16 @@ button {
   background: #dc3545;
 }
 
+.btn-limpar {
+  background: #6c757d;
+  margin-top: 10px;
+  padding: 12px;
+  font-size: 15px;
+}
+
 button:disabled {
   background: #999;
+  cursor: not-allowed;
 }
 
 #mensagem {
@@ -124,7 +142,34 @@ button:disabled {
   text-align: center;
   font-weight: bold;
 }
+
+/* ÁREA DE ASSINATURA */
+
+.assinatura-titulo {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+#canvasAssinatura {
+  width: 100%;
+  height: 180px;
+  border: 2px solid #07579c;
+  border-radius: 8px;
+  background: white;
+  touch-action: none;
+  display: block;
+  box-sizing: border-box;
+}
+
+.aviso-assinatura {
+  font-size: 13px;
+  color: #666;
+  margin-top: 6px;
+  text-align: center;
+}
+
 </style>
+
 </head>
 
 <body>
@@ -132,44 +177,110 @@ button:disabled {
 <div class="container">
 
   <div class="header">
+
     <h1>🚗 CONTROLE DE FROTA</h1>
+
     <p>COREN-PB</p>
+
   </div>
+
 
   <div class="card">
 
     <form id="formulario">
 
+
+      <!-- MOTORISTA -->
+
       <label>Motorista</label>
-      <input id="motorista" type="text" required>
+
+      <input
+        id="motorista"
+        type="text"
+        required>
+
+
+      <!-- HORA DE SAÍDA -->
 
       <label>Hora de Saída</label>
-      <input id="horaSaida" type="time" required>
+
+      <input
+        id="horaSaida"
+        type="time"
+        required>
+
+
+      <!-- VEÍCULO -->
 
       <label>Veículo</label>
-      <input id="veiculo" type="text" required>
+
+      <input
+        id="veiculo"
+        type="text"
+        required>
+
+
+      <!-- PLACA -->
 
       <label>Placa</label>
-      <input id="placa" type="text" maxlength="7" required>
+
+      <input
+        id="placa"
+        type="text"
+        maxlength="7"
+        required>
+
+
+      <!-- DESTINO -->
 
       <label>Destino</label>
-      <input id="destino" type="text" required>
+
+      <input
+        id="destino"
+        type="text"
+        required>
+
+
+      <!-- KM SAÍDA -->
 
       <label>KM de Saída</label>
-      <input id="kmSaida" type="number" min="0" required>
+
+      <input
+        id="kmSaida"
+        type="number"
+        min="0"
+        required>
+
+
+      <!-- BOTÃO SAÍDA -->
 
       <button
         id="botaoSaida"
         class="btn-saida"
         type="button">
+
         🟢 SALVAR KM DE SAÍDA
+
       </button>
 
-      <div id="status" class="status">
+
+      <!-- STATUS -->
+
+      <div
+        id="status"
+        class="status">
+
         Nenhuma viagem em andamento.
+
       </div>
 
+
+      <!-- ÁREA DE CHEGADA -->
+
       <div id="areaChegada">
+
+
+        <!-- KM CHEGADA -->
 
         <label>KM de Chegada</label>
 
@@ -178,27 +289,78 @@ button:disabled {
           type="number"
           min="0">
 
+
+        <!-- HORA CHEGADA -->
+
         <label>Hora de Chegada</label>
 
         <input
           id="horaChegada"
-          type="time">
+          type="time"
+          readonly>
+
+
+        <!-- KM PERCORRIDO -->
 
         <div class="km">
+
           KM PERCORRIDO:
-          <span id="kmPercorrido">0</span> KM
+
+          <span id="kmPercorrido">0</span>
+
+          KM
+
         </div>
+
+
+        <!-- ASSINATURA -->
+
+        <div class="assinatura-titulo">
+
+          ✍️ Assinatura do Motorista
+
+        </div>
+
+        <canvas
+          id="canvasAssinatura">
+        </canvas>
+
+        <div class="aviso-assinatura">
+
+          Assine dentro do quadro usando o dedo.
+
+        </div>
+
+
+        <!-- LIMPAR -->
+
+        <button
+          id="botaoLimpar"
+          class="btn-limpar"
+          type="button">
+
+          🗑️ LIMPAR ASSINATURA
+
+        </button>
+
+
+        <!-- ENCERRAR -->
 
         <button
           id="botaoChegada"
           class="btn-chegada"
           type="button">
+
           🔴 ENCERRAR VIAGEM
+
         </button>
+
 
       </div>
 
+
       <div id="mensagem"></div>
+
 
     </form>
 
@@ -206,11 +368,21 @@ button:disabled {
 
 </div>
 
+
 <script>
+
+
+/* =========================
+   URL DO APPS SCRIPT
+========================= */
 
 const URL_APPS_SCRIPT =
 "https://script.google.com/macros/s/AKfycbxPQx0vFT0XZbU4nUDO0NCqF2uxfpGOlhna6N9fAKE9h5mx2rVgZ3rdFFxPvclIIh4M/exec";
 
+
+/* =========================
+   ELEMENTOS
+========================= */
 
 const formulario =
 document.getElementById("formulario");
@@ -233,17 +405,20 @@ document.getElementById("destino");
 const kmSaida =
 document.getElementById("kmSaida");
 
-const horaChegada =
-document.getElementById("horaChegada");
-
 const kmChegada =
 document.getElementById("kmChegada");
+
+const horaChegada =
+document.getElementById("horaChegada");
 
 const botaoSaida =
 document.getElementById("botaoSaida");
 
 const botaoChegada =
 document.getElementById("botaoChegada");
+
+const botaoLimpar =
+document.getElementById("botaoLimpar");
 
 const areaChegada =
 document.getElementById("areaChegada");
@@ -257,8 +432,16 @@ document.getElementById("mensagem");
 const status =
 document.getElementById("status");
 
+const canvas =
+document.getElementById("canvasAssinatura");
 
-/* HORA ATUAL */
+const ctx =
+canvas.getContext("2d");
+
+
+/* =========================
+   HORA ATUAL
+========================= */
 
 function horaAtual() {
 
@@ -275,61 +458,9 @@ function horaAtual() {
 }
 
 
-/* AO ABRIR O APLICATIVO */
-
-window.addEventListener("load", function() {
-
-  const viagem =
-    localStorage.getItem("viagemAberta");
-
-  if (viagem) {
-
-    const dados =
-    JSON.parse(viagem);
-
-    motorista.value =
-    dados.motorista;
-
-    horaSaida.value =
-    dados.horaSaida;
-
-    veiculo.value =
-    dados.veiculo;
-
-    placa.value =
-    dados.placa;
-
-    destino.value =
-    dados.destino;
-
-    kmSaida.value =
-    dados.kmSaida;
-
-    motorista.disabled = true;
-    horaSaida.disabled = true;
-    veiculo.disabled = true;
-    placa.disabled = true;
-    destino.disabled = true;
-    kmSaida.disabled = true;
-
-    botaoSaida.style.display =
-    "none";
-
-    areaChegada.style.display =
-    "block";
-
-    status.textContent =
-    "🚗 VIAGEM EM ANDAMENTO — informe o KM e a hora de chegada.";
-
-  } else {
-
-    horaSaida.value =
-    horaAtual();
-
-  }
-
-});
-
+/* =========================
+   MENSAGEM
+========================= */
 
 function mostrarMensagem(texto, tipo) {
 
@@ -340,353 +471,675 @@ function mostrarMensagem(texto, tipo) {
 }
 
 
+/* =========================
+   ENVIO PARA APPS SCRIPT
+========================= */
+
 function enviarDados(dados) {
 
-  return fetch(URL_APPS_SCRIPT, {
+  return fetch(
+    URL_APPS_SCRIPT,
+    {
 
-    method: "POST",
+      method: "POST",
 
-    mode: "no-cors",
+      mode: "no-cors",
 
-    headers: {
-      "Content-Type":
-      "text/plain;charset=utf-8"
-    },
+      headers: {
+        "Content-Type":
+        "text/plain;charset=utf-8"
+      },
 
-    body: JSON.stringify(dados)
+      body: JSON.stringify(dados)
 
-  });
+    }
+  );
 
 }
 
 
-/* SALVAR SAÍDA */
+/* =========================
+   CONFIGURAR CANVAS
+========================= */
 
-botaoSaida.addEventListener(
-"click",
-async function() {
+function prepararCanvas() {
 
-  if (!formulario.checkValidity()) {
+  const largura =
+    canvas.clientWidth;
 
-    formulario.reportValidity();
+  const altura =
+    canvas.clientHeight;
 
-    return;
+  const proporcao =
+    window.devicePixelRatio || 1;
 
-  }
+  canvas.width =
+    largura * proporcao;
+
+  canvas.height =
+    altura * proporcao;
+
+  ctx.scale(
+    proporcao,
+    proporcao
+  );
+
+  ctx.lineWidth = 2;
+
+  ctx.lineCap = "round";
+
+  ctx.lineJoin = "round";
+
+}
 
 
-  const dados = {
+/* =========================
+   ASSINATURA
+========================= */
 
-    acao: "saida",
+let assinando = false;
 
-    motorista:
-    motorista.value.trim(),
+let assinaturaTemConteudo = false;
 
-    horaSaida:
-    horaSaida.value,
 
-    veiculo:
-    veiculo.value.trim(),
+function posicao(evento) {
 
-    placa:
-    placa.value.trim().toUpperCase(),
+  const retangulo =
+    canvas.getBoundingClientRect();
 
-    destino:
-    destino.value.trim(),
+  return {
 
-    kmSaida:
-    kmSaida.value
+    x:
+    evento.clientX -
+    retangulo.left,
+
+    y:
+    evento.clientY -
+    retangulo.top
 
   };
 
-
-  botaoSaida.disabled = true;
-
-  botaoSaida.textContent =
-  "SALVANDO...";
+}
 
 
-  try {
+canvas.addEventListener(
+  "pointerdown",
+  function(evento) {
 
-    await enviarDados(dados);
+    assinando = true;
 
+    assinaturaTemConteudo = true;
 
-    localStorage.setItem(
-      "viagemAberta",
-      JSON.stringify(dados)
+    canvas.setPointerCapture(
+      evento.pointerId
     );
 
+    const pos =
+      posicao(evento);
 
-    mostrarMensagem(
-      "KM de saída salvo com sucesso!",
-      "sucesso"
+    ctx.beginPath();
+
+    ctx.moveTo(
+      pos.x,
+      pos.y
     );
-
-
-    status.textContent =
-    "🚗 VIAGEM EM ANDAMENTO — informe o KM e a hora de chegada.";
-
-
-    areaChegada.style.display =
-    "block";
-
-
-    motorista.disabled = true;
-    horaSaida.disabled = true;
-    veiculo.disabled = true;
-    placa.disabled = true;
-    destino.disabled = true;
-    kmSaida.disabled = true;
-
-
-    botaoSaida.style.display =
-    "none";
-
-
-    /* HORA DE CHEGADA AUTOMÁTICA */
-
-    horaChegada.value =
-    horaAtual();
-
-  } catch (erro) {
-
-    mostrarMensagem(
-      "Erro ao salvar o KM de saída.",
-      "erro"
-    );
-
-    botaoSaida.disabled =
-    false;
-
-    botaoSaida.textContent =
-    "🟢 SALVAR KM DE SAÍDA";
 
   }
-
-});
-
-
-/* CALCULAR KM E HORA DE CHEGADA */
-
-kmChegada.addEventListener(
-"input",
-function() {
-
-  const saida =
-  Number(kmSaida.value);
-
-  const chegada =
-  Number(kmChegada.value);
+);
 
 
-  if (chegada >= saida) {
+canvas.addEventListener(
+  "pointermove",
+  function(evento) {
 
-    kmPercorrido.textContent =
-    chegada - saida;
+    if (!assinando) {
+      return;
+    }
 
-    if (horaChegada.value === "") {
+    const pos =
+      posicao(evento);
 
-      horaChegada.value =
-      horaAtual();
+    ctx.lineTo(
+      pos.x,
+      pos.y
+    );
+
+    ctx.stroke();
+
+  }
+);
+
+
+canvas.addEventListener(
+  "pointerup",
+  function() {
+
+    assinando = false;
+
+  }
+);
+
+
+canvas.addEventListener(
+  "pointercancel",
+  function() {
+
+    assinando = false;
+
+  }
+);
+
+
+/* =========================
+   LIMPAR ASSINATURA
+========================= */
+
+botaoLimpar.addEventListener(
+  "click",
+  function() {
+
+    ctx.clearRect(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+    assinaturaTemConteudo = false;
+
+  }
+);
+
+
+/* =========================
+   ABRIR APLICATIVO
+========================= */
+
+window.addEventListener(
+  "load",
+  function() {
+
+    prepararCanvas();
+
+    const viagem =
+      localStorage.getItem(
+        "viagemAberta"
+      );
+
+    if (viagem) {
+
+      const dados =
+        JSON.parse(viagem);
+
+      motorista.value =
+        dados.motorista;
+
+      horaSaida.value =
+        dados.horaSaida;
+
+      veiculo.value =
+        dados.veiculo;
+
+      placa.value =
+        dados.placa;
+
+      destino.value =
+        dados.destino;
+
+      kmSaida.value =
+        dados.kmSaida;
+
+      motorista.disabled = true;
+
+      horaSaida.disabled = true;
+
+      veiculo.disabled = true;
+
+      placa.disabled = true;
+
+      destino.disabled = true;
+
+      kmSaida.disabled = true;
+
+      botaoSaida.style.display =
+        "none";
+
+      areaChegada.style.display =
+        "block";
+
+      status.textContent =
+        "🚗 VIAGEM EM ANDAMENTO — informe o KM de chegada.";
+
+      horaChegada.value = "";
+
+    } else {
+
+      horaSaida.value =
+        horaAtual();
 
     }
 
-  } else {
-
-    kmPercorrido.textContent =
-    "0";
-
   }
-
-});
-
-
-/* ENCERRAR VIAGEM */
-
-botaoChegada.addEventListener(
-"click",
-async function() {
-
-  if (kmChegada.value === "") {
-
-    mostrarMensagem(
-      "Informe o KM de chegada.",
-      "erro"
-    );
-
-    return;
-
-  }
+);
 
 
-  /* GARANTE A HORA DE CHEGADA */
+/* =========================
+   SALVAR SAÍDA
+========================= */
 
-  if (horaChegada.value === "") {
+botaoSaida.addEventListener(
+  "click",
+  async function() {
 
-    horaChegada.value =
-    horaAtual();
+    if (
+      !formulario.checkValidity()
+    ) {
 
-  }
+      formulario.reportValidity();
 
+      return;
 
-  const saida =
-  Number(kmSaida.value);
-
-  const chegada =
-  Number(kmChegada.value);
-
-
-  if (chegada < saida) {
-
-    mostrarMensagem(
-      "O KM de chegada não pode ser menor que o KM de saída.",
-      "erro"
-    );
-
-    return;
-
-  }
+    }
 
 
-  const viagem =
-  JSON.parse(
-    localStorage.getItem("viagemAberta")
-  );
+    const dados = {
 
+      acao:
+        "saida",
 
-  if (!viagem) {
+      motorista:
+        motorista.value.trim(),
 
-    mostrarMensagem(
-      "Viagem não encontrada.",
-      "erro"
-    );
+      horaSaida:
+        horaSaida.value,
 
-    return;
+      veiculo:
+        veiculo.value.trim(),
 
-  }
+      placa:
+        placa.value
+        .trim()
+        .toUpperCase(),
 
+      destino:
+        destino.value.trim(),
 
-  const dados = {
+      kmSaida:
+        kmSaida.value
 
-    acao: "chegada",
+    };
 
-    motorista:
-    viagem.motorista,
-
-    horaSaida:
-    viagem.horaSaida,
-
-    veiculo:
-    viagem.veiculo,
-
-    placa:
-    viagem.placa,
-
-    destino:
-    viagem.destino,
-
-    kmSaida:
-    viagem.kmSaida,
-
-    kmChegada:
-    kmChegada.value,
-
-    horaChegada:
-    horaChegada.value
-
-  };
-
-
-  botaoChegada.disabled =
-  true;
-
-  botaoChegada.textContent =
-  "ENCERRANDO...";
-
-
-  try {
-
-    await enviarDados(dados);
-
-
-    localStorage.removeItem(
-      "viagemAberta"
-    );
-
-
-    mostrarMensagem(
-      "Viagem encerrada com sucesso!",
-      "sucesso"
-    );
-
-
-    status.textContent =
-    "Nenhuma viagem em andamento.";
-
-
-    formulario.reset();
-
-
-    horaSaida.value =
-    horaAtual();
-
-
-    areaChegada.style.display =
-    "none";
-
-
-    botaoSaida.style.display =
-    "block";
 
     botaoSaida.disabled =
-    false;
+      true;
 
     botaoSaida.textContent =
-    "🟢 SALVAR KM DE SAÍDA";
+      "SALVANDO...";
 
 
-    motorista.disabled =
-    false;
+    try {
 
-    horaSaida.disabled =
-    false;
-
-    veiculo.disabled =
-    false;
-
-    placa.disabled =
-    false;
-
-    destino.disabled =
-    false;
-
-    kmSaida.disabled =
-    false;
+      await enviarDados(
+        dados
+      );
 
 
-    kmPercorrido.textContent =
-    "0";
+      localStorage.setItem(
+        "viagemAberta",
+        JSON.stringify(dados)
+      );
 
 
-  } catch (erro) {
+      mostrarMensagem(
+        "KM de saída salvo com sucesso!",
+        "sucesso"
+      );
 
-    mostrarMensagem(
-      "Não foi possível encerrar a viagem.",
-      "erro"
-    );
+
+      status.textContent =
+        "🚗 VIAGEM EM ANDAMENTO — informe o KM de chegada.";
+
+
+      areaChegada.style.display =
+        "block";
+
+
+      motorista.disabled = true;
+
+      horaSaida.disabled = true;
+
+      veiculo.disabled = true;
+
+      placa.disabled = true;
+
+      destino.disabled = true;
+
+      kmSaida.disabled = true;
+
+
+      botaoSaida.style.display =
+        "none";
+
+
+      /* Hora de chegada fica vazia
+         até o encerramento */
+
+      horaChegada.value = "";
+
+
+      /* Limpar assinatura */
+
+      ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
+
+      assinaturaTemConteudo =
+        false;
+
+
+    } catch (erro) {
+
+      mostrarMensagem(
+        "Erro ao salvar o KM de saída.",
+        "erro"
+      );
+
+
+      botaoSaida.disabled =
+        false;
+
+      botaoSaida.textContent =
+        "🟢 SALVAR KM DE SAÍDA";
+
+    }
+
+  }
+);
+
+
+/* =========================
+   CALCULAR KM
+========================= */
+
+kmChegada.addEventListener(
+  "input",
+  function() {
+
+    const saida =
+      Number(kmSaida.value);
+
+    const chegada =
+      Number(kmChegada.value);
+
+
+    if (chegada >= saida) {
+
+      kmPercorrido.textContent =
+        chegada - saida;
+
+    } else {
+
+      kmPercorrido.textContent =
+        "0";
+
+    }
+
+  }
+);
+
+
+/* =========================
+   ENCERRAR VIAGEM
+========================= */
+
+botaoChegada.addEventListener(
+  "click",
+  async function() {
+
+
+    if (
+      kmChegada.value === ""
+    ) {
+
+      mostrarMensagem(
+        "Informe o KM de chegada.",
+        "erro"
+      );
+
+      return;
+
+    }
+
+
+    const saida =
+      Number(kmSaida.value);
+
+    const chegada =
+      Number(kmChegada.value);
+
+
+    if (chegada < saida) {
+
+      mostrarMensagem(
+        "O KM de chegada não pode ser menor que o KM de saída.",
+        "erro"
+      );
+
+      return;
+
+    }
+
+
+    /* HORA AUTOMÁTICA
+       NO MOMENTO DO ENCERRAMENTO */
+
+    horaChegada.value =
+      horaAtual();
+
+
+    /* VERIFICAR ASSINATURA */
+
+    if (!assinaturaTemConteudo) {
+
+      mostrarMensagem(
+        "Faça a assinatura do motorista antes de encerrar a viagem.",
+        "erro"
+      );
+
+      return;
+
+    }
+
+
+    const viagem =
+      JSON.parse(
+        localStorage.getItem(
+          "viagemAberta"
+        )
+      );
+
+
+    if (!viagem) {
+
+      mostrarMensagem(
+        "Viagem não encontrada.",
+        "erro"
+      );
+
+      return;
+
+    }
+
+
+    /* TRANSFORMAR ASSINATURA
+       EM IMAGEM */
+
+    const assinatura =
+      canvas.toDataURL(
+        "image/png"
+      );
+
+
+    const dados = {
+
+      acao:
+        "chegada",
+
+      motorista:
+        viagem.motorista,
+
+      horaSaida:
+        viagem.horaSaida,
+
+      veiculo:
+        viagem.veiculo,
+
+      placa:
+        viagem.placa,
+
+      destino:
+        viagem.destino,
+
+      kmSaida:
+        viagem.kmSaida,
+
+      kmChegada:
+        kmChegada.value,
+
+      horaChegada:
+        horaChegada.value,
+
+      assinatura:
+        assinatura
+
+    };
 
 
     botaoChegada.disabled =
-    false;
+      true;
+
+    botaoLimpar.disabled =
+      true;
 
     botaoChegada.textContent =
-    "🔴 ENCERRAR VIAGEM";
+      "ENCERRANDO...";
+
+
+    try {
+
+      await enviarDados(
+        dados
+      );
+
+
+      localStorage.removeItem(
+        "viagemAberta"
+      );
+
+
+      mostrarMensagem(
+        "Viagem encerrada com sucesso!",
+        "sucesso"
+      );
+
+
+      status.textContent =
+        "Nenhuma viagem em andamento.";
+
+
+      formulario.reset();
+
+
+      horaSaida.value =
+        horaAtual();
+
+
+      horaChegada.value =
+        "";
+
+
+      areaChegada.style.display =
+        "none";
+
+
+      botaoSaida.style.display =
+        "block";
+
+
+      botaoSaida.disabled =
+        false;
+
+
+      botaoSaida.textContent =
+        "🟢 SALVAR KM DE SAÍDA";
+
+
+      motorista.disabled =
+        false;
+
+      horaSaida.disabled =
+        false;
+
+      veiculo.disabled =
+        false;
+
+      placa.disabled =
+        false;
+
+      destino.disabled =
+        false;
+
+      kmSaida.disabled =
+        false;
+
+
+      botaoLimpar.disabled =
+        false;
+
+
+      kmPercorrido.textContent =
+        "0";
+
+
+      ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
+
+
+      assinaturaTemConteudo =
+        false;
+
+
+    } catch (erro) {
+
+      mostrarMensagem(
+        "Não foi possível encerrar a viagem.",
+        "erro"
+      );
+
+
+      botaoChegada.disabled =
+        false;
+
+      botaoLimpar.disabled =
+        false;
+
+      botaoChegada.textContent =
+        "🔴 ENCERRAR VIAGEM";
+
+    }
 
   }
-
-});
+);
 
 </script>
 
 </body>
+
 </html>
