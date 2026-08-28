@@ -169,6 +169,16 @@ required
 >
 
 
+<label>Data de Saída</label>
+
+<input
+id="dataSaida"
+type="text"
+readonly
+required
+>
+
+
 <label>Hora de Saída</label>
 
 <input
@@ -282,6 +292,15 @@ Nenhuma viagem em andamento.
 <div id="areaChegada">
 
 
+<label>Data de Chegada</label>
+
+<input
+id="dataChegada"
+type="text"
+readonly
+>
+
+
 <label>KM de Chegada</label>
 
 <input
@@ -358,6 +377,9 @@ document.getElementById("formulario");
 const motorista =
 document.getElementById("motorista");
 
+const dataSaida =
+document.getElementById("dataSaida");
+
 const horaSaida =
 document.getElementById("horaSaida");
 
@@ -372,6 +394,9 @@ document.getElementById("destino");
 
 const kmSaida =
 document.getElementById("kmSaida");
+
+const dataChegada =
+document.getElementById("dataChegada");
 
 const kmChegada =
 document.getElementById("kmChegada");
@@ -399,6 +424,32 @@ document.getElementById("mensagem");
 
 const status =
 document.getElementById("status");
+
+
+/* ================================
+   DATA ATUAL
+================================ */
+
+function dataAtual(){
+
+const agora =
+new Date();
+
+return String(
+agora.getDate()
+).padStart(2,"0")
++
+"/"
++
+String(
+agora.getMonth() + 1
+).padStart(2,"0")
++
+"/"
++
+agora.getFullYear();
+
+}
 
 
 /* ================================
@@ -534,6 +585,9 @@ viagem
 motorista.value =
 dados.motorista;
 
+dataSaida.value =
+dados.dataSaida || dataAtual();
+
 horaSaida.value =
 dados.horaSaida;
 
@@ -551,6 +605,9 @@ dados.kmSaida;
 
 
 motorista.disabled =
+true;
+
+dataSaida.disabled =
 true;
 
 horaSaida.disabled =
@@ -581,6 +638,9 @@ status.textContent =
 }
 
 else{
+
+dataSaida.value =
+dataAtual();
 
 horaSaida.value =
 horaAtual();
@@ -613,6 +673,9 @@ return;
 const dados = {
 
 acao:"saida",
+
+dataSaida:
+dataSaida.value,
 
 motorista:
 motorista.value.trim(),
@@ -666,6 +729,9 @@ mostrarMensagem(
 
 
 motorista.disabled =
+true;
+
+dataSaida.disabled =
 true;
 
 horaSaida.disabled =
@@ -745,7 +811,10 @@ kmPercorrido.textContent =
 chegada - saida;
 
 
-/* HORA AUTOMÁTICA */
+/* DATA E HORA AUTOMÁTICAS */
+
+dataChegada.value =
+dataAtual();
 
 horaChegada.value =
 horaAtual();
@@ -756,6 +825,9 @@ else{
 
 kmPercorrido.textContent =
 "0";
+
+dataChegada.value =
+"";
 
 horaChegada.value =
 "";
@@ -851,9 +923,15 @@ return;
 }
 
 
+const dataFinal =
+dataAtual();
+
 const horaFinal =
 horaAtual();
 
+
+dataChegada.value =
+dataFinal;
 
 horaChegada.value =
 horaFinal;
@@ -862,6 +940,12 @@ horaFinal;
 const dados = {
 
 acao:"chegada",
+
+dataSaida:
+viagem.dataSaida,
+
+dataChegada:
+dataFinal,
 
 motorista:
 viagem.motorista,
@@ -925,6 +1009,9 @@ status.textContent =
 formulario.reset();
 
 
+dataSaida.value =
+dataAtual();
+
 horaSaida.value =
 horaAtual();
 
@@ -945,6 +1032,9 @@ botaoSaida.textContent =
 
 
 motorista.disabled =
+false;
+
+dataSaida.disabled =
 false;
 
 horaSaida.disabled =
