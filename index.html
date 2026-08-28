@@ -53,13 +53,15 @@ margin-top:15px;
 margin-bottom:6px;
 }
 
-input{
+input,
+select{
 width:100%;
 padding:14px;
 border:1px solid #ccc;
 border-radius:8px;
 font-size:16px;
 box-sizing:border-box;
+background:white;
 }
 
 button{
@@ -154,6 +156,7 @@ font-weight:bold;
 
 
 <label>Motorista / Condutor</label>
+
 <input
 id="motorista"
 type="text"
@@ -173,12 +176,51 @@ required
 
 <label>Veículo</label>
 
-<input
+<select
 id="veiculo"
-type="text"
-placeholder="Veículo"
 required
 >
+
+<option value="">
+Selecione o veículo
+</option>
+
+<option
+value="Sandero"
+data-placa="OFC-4143"
+>
+Sandero - OFC-4143
+</option>
+
+<option
+value="Frontier"
+data-placa="PWC-1227"
+>
+Frontier - PWC-1227
+</option>
+
+<option
+value="Kicks"
+data-placa="SLC-8F20"
+>
+Kicks - SLC-8F20
+</option>
+
+<option
+value="Kicks"
+data-placa="SLC-8F50"
+>
+Kicks - SLC-8F50
+</option>
+
+<option
+value="Kicks"
+data-placa="SLC-8F40"
+>
+Kicks - SLC-8F40
+</option>
+
+</select>
 
 
 <label>Placa</label>
@@ -186,8 +228,9 @@ required
 <input
 id="placa"
 type="text"
-maxlength="7"
+maxlength="8"
 placeholder="Placa"
+readonly
 required
 >
 
@@ -352,6 +395,38 @@ document.getElementById("mensagem");
 
 const status =
 document.getElementById("status");
+
+
+/* PLACA AUTOMÁTICA */
+
+veiculo.addEventListener(
+"change",
+function(){
+
+const opcao =
+veiculo.options[
+veiculo.selectedIndex
+];
+
+const placaSelecionada =
+opcao.getAttribute(
+"data-placa"
+);
+
+if(placaSelecionada){
+
+placa.value =
+placaSelecionada;
+
+}else{
+
+placa.value =
+"";
+
+}
+
+}
+);
 
 
 /* HORA ATUAL */
@@ -521,7 +596,7 @@ horaSaida:
 horaSaida.value,
 
 veiculo:
-veiculo.value.trim(),
+veiculo.value,
 
 placa:
 placa.value
