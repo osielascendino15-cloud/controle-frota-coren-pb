@@ -64,6 +64,10 @@ box-sizing:border-box;
 background:white;
 }
 
+select{
+cursor:pointer;
+}
+
 button{
 width:100%;
 margin-top:20px;
@@ -200,21 +204,21 @@ Frontier - PWC-1227
 </option>
 
 <option
-value="Kicks"
+value="Kicks-SLC-8F20"
 data-placa="SLC-8F20"
 >
 Kicks - SLC-8F20
 </option>
 
 <option
-value="Kicks"
+value="Kicks-SLC-8F50"
 data-placa="SLC-8F50"
 >
 Kicks - SLC-8F50
 </option>
 
 <option
-value="Kicks"
+value="Kicks-SLC-8F40"
 data-placa="SLC-8F40"
 >
 Kicks - SLC-8F40
@@ -397,23 +401,28 @@ const status =
 document.getElementById("status");
 
 
-/* PLACA AUTOMÁTICA */
+/* ================================
+   PLACA AUTOMÁTICA
+================================ */
 
 veiculo.addEventListener(
 "change",
 function(){
 
-const opcao =
+const opcaoSelecionada =
 veiculo.options[
 veiculo.selectedIndex
 ];
 
 const placaSelecionada =
-opcao.getAttribute(
+opcaoSelecionada.getAttribute(
 "data-placa"
 );
 
-if(placaSelecionada){
+
+if(
+placaSelecionada
+){
 
 placa.value =
 placaSelecionada;
@@ -429,11 +438,14 @@ placa.value =
 );
 
 
-/* HORA ATUAL */
+/* ================================
+   HORA ATUAL
+================================ */
 
 function horaAtual(){
 
-const agora = new Date();
+const agora =
+new Date();
 
 return String(
 agora.getHours()
@@ -448,7 +460,9 @@ agora.getMinutes()
 }
 
 
-/* MENSAGEM */
+/* ================================
+   MENSAGEM
+================================ */
 
 function mostrarMensagem(
 texto,
@@ -464,7 +478,9 @@ tipo;
 }
 
 
-/* ENVIAR DADOS */
+/* ================================
+   ENVIAR DADOS
+================================ */
 
 function enviarDados(
 dados
@@ -491,7 +507,9 @@ JSON.stringify(dados)
 }
 
 
-/* INICIAR */
+/* ================================
+   INICIAR
+================================ */
 
 window.addEventListener(
 "load",
@@ -502,10 +520,15 @@ localStorage.getItem(
 "viagemAberta"
 );
 
-if(viagem){
+
+if(
+viagem
+){
 
 const dados =
-JSON.parse(viagem);
+JSON.parse(
+viagem
+);
 
 
 motorista.value =
@@ -568,7 +591,9 @@ horaAtual();
 );
 
 
-/* SALVAR SAÍDA */
+/* ================================
+   SALVAR SAÍDA
+================================ */
 
 botaoSaida.addEventListener(
 "click",
@@ -628,7 +653,9 @@ dados
 
 localStorage.setItem(
 "viagemAberta",
-JSON.stringify(dados)
+JSON.stringify(
+dados
+)
 );
 
 
@@ -669,7 +696,9 @@ status.textContent =
 
 }
 
-catch(erro){
+catch(
+erro
+){
 
 mostrarMensagem(
 "Erro ao salvar o KM de saída.",
@@ -688,17 +717,23 @@ botaoSaida.textContent =
 );
 
 
-/* KM DE CHEGADA */
+/* ================================
+   KM DE CHEGADA
+================================ */
 
 kmChegada.addEventListener(
 "input",
 function(){
 
 const saida =
-Number(kmSaida.value);
+Number(
+kmSaida.value
+);
 
 const chegada =
-Number(kmChegada.value);
+Number(
+kmChegada.value
+);
 
 
 if(
@@ -731,7 +766,9 @@ horaChegada.value =
 );
 
 
-/* ENCERRAR */
+/* ================================
+   ENCERRAR VIAGEM
+================================ */
 
 botaoChegada.addEventListener(
 "click",
@@ -768,10 +805,14 @@ return;
 
 
 const saida =
-Number(kmSaida.value);
+Number(
+kmSaida.value
+);
 
 const chegada =
-Number(kmChegada.value);
+Number(
+kmChegada.value
+);
 
 
 if(
@@ -796,7 +837,9 @@ localStorage.getItem(
 );
 
 
-if(!viagem){
+if(
+!viagem
+){
 
 mostrarMensagem(
 "Viagem não encontrada.",
@@ -925,7 +968,9 @@ kmPercorrido.textContent =
 
 }
 
-catch(erro){
+catch(
+erro
+){
 
 mostrarMensagem(
 "Não foi possível encerrar a viagem.",
