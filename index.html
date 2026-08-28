@@ -68,6 +68,10 @@ select{
 cursor:pointer;
 }
 
+input[readonly]{
+background:#f5f5f5;
+}
+
 button{
 width:100%;
 margin-top:20px;
@@ -140,24 +144,18 @@ font-weight:bold;
 </style>
 </head>
 
-
 <body>
 
 <div class="container">
 
 <div class="header">
-
 <h1>🚗 CONTROLE DE FROTA</h1>
-
 <p>COREN-PB</p>
-
 </div>
-
 
 <div class="card">
 
 <form id="formulario">
-
 
 <label>Motorista / Condutor</label>
 
@@ -168,16 +166,14 @@ placeholder="Nome do motorista"
 required
 >
 
-
 <label>Data de Saída</label>
 
 <input
 id="dataSaida"
-type="text"
+type="date"
 readonly
 required
 >
-
 
 <label>Hora de Saída</label>
 
@@ -187,55 +183,35 @@ type="time"
 required
 >
 
-
 <label>Veículo</label>
 
-<select
-id="veiculo"
-required
->
+<select id="veiculo" required>
 
 <option value="">
 Selecione o veículo
 </option>
 
-<option
-value="Sandero"
-data-placa="OFC-4143"
->
+<option value="Sandero" data-placa="OFC-4143">
 Sandero - OFC-4143
 </option>
 
-<option
-value="Frontier"
-data-placa="PWC-1227"
->
+<option value="Frontier" data-placa="PWC-1227">
 Frontier - PWC-1227
 </option>
 
-<option
-value="Kicks-SLC-8F20"
-data-placa="SLC-8F20"
->
+<option value="Kicks-SLC-8F20" data-placa="SLC-8F20">
 Kicks - SLC-8F20
 </option>
 
-<option
-value="Kicks-SLC-8F50"
-data-placa="SLC-8F50"
->
+<option value="Kicks-SLC-8F50" data-placa="SLC-8F50">
 Kicks - SLC-8F50
 </option>
 
-<option
-value="Kicks-SLC-8F40"
-data-placa="SLC-8F40"
->
+<option value="Kicks-SLC-8F40" data-placa="SLC-8F40">
 Kicks - SLC-8F40
 </option>
 
 </select>
-
 
 <label>Placa</label>
 
@@ -248,7 +224,6 @@ readonly
 required
 >
 
-
 <label>Destino</label>
 
 <input
@@ -257,7 +232,6 @@ type="text"
 placeholder="Destino"
 required
 >
-
 
 <label>KM de Saída</label>
 
@@ -269,7 +243,6 @@ placeholder="KM de saída"
 required
 >
 
-
 <button
 id="botaoSaida"
 class="btn-saida"
@@ -279,27 +252,19 @@ type="button">
 
 </button>
 
-
-<div
-id="status"
-class="status">
-
+<div id="status" class="status">
 Nenhuma viagem em andamento.
-
 </div>
 
-
 <div id="areaChegada">
-
 
 <label>Data de Chegada</label>
 
 <input
 id="dataChegada"
-type="text"
+type="date"
 readonly
 >
-
 
 <label>KM de Chegada</label>
 
@@ -310,7 +275,6 @@ min="0"
 placeholder="KM de chegada"
 >
 
-
 <label>Hora de Chegada</label>
 
 <input
@@ -318,7 +282,6 @@ id="horaChegada"
 type="time"
 readonly
 >
-
 
 <div class="km">
 
@@ -330,7 +293,6 @@ KM
 
 </div>
 
-
 <label>✍️ Assinatura do Motorista</label>
 
 <input
@@ -339,7 +301,6 @@ type="text"
 placeholder="Digite o nome completo do motorista"
 autocomplete="name"
 >
-
 
 <button
 id="botaoChegada"
@@ -350,12 +311,9 @@ type="button">
 
 </button>
 
-
 </div>
 
-
 <div id="mensagem"></div>
-
 
 </form>
 
@@ -363,13 +321,10 @@ type="button">
 
 </div>
 
-
 <script>
-
 
 const URL_APPS_SCRIPT =
 "https://script.google.com/macros/s/AKfycbxPQx0vFT0XZbU4nUDO0NCqF2uxfpGOlhna6N9fAKE9h5mx2rVgZ3rdFFxPvclIIh4M/exec";
-
 
 const formulario =
 document.getElementById("formulario");
@@ -426,54 +381,47 @@ const status =
 document.getElementById("status");
 
 
-/* ================================
-   DATA ATUAL
-================================ */
-
 function dataAtual(){
 
-const agora =
-new Date();
+const agora = new Date();
 
-return String(
-agora.getDate()
-).padStart(2,"0")
+return agora.getFullYear()
 +
-"/"
+"-"
 +
-String(
-agora.getMonth() + 1
-).padStart(2,"0")
+String(agora.getMonth()+1).padStart(2,"0")
 +
-"/"
+"-"
 +
-agora.getFullYear();
+String(agora.getDate()).padStart(2,"0");
 
 }
 
 
-/* ================================
-   PLACA AUTOMÁTICA
-================================ */
+function horaAtual(){
+
+const agora = new Date();
+
+return String(agora.getHours()).padStart(2,"0")
++
+":"
++
+String(agora.getMinutes()).padStart(2,"0");
+
+}
+
 
 veiculo.addEventListener(
 "change",
 function(){
 
 const opcaoSelecionada =
-veiculo.options[
-veiculo.selectedIndex
-];
+veiculo.options[veiculo.selectedIndex];
 
 const placaSelecionada =
-opcaoSelecionada.getAttribute(
-"data-placa"
-);
+opcaoSelecionada.getAttribute("data-placa");
 
-
-if(
-placaSelecionada
-){
+if(placaSelecionada){
 
 placa.value =
 placaSelecionada;
@@ -489,36 +437,7 @@ placa.value =
 );
 
 
-/* ================================
-   HORA ATUAL
-================================ */
-
-function horaAtual(){
-
-const agora =
-new Date();
-
-return String(
-agora.getHours()
-).padStart(2,"0")
-+
-":"
-+
-String(
-agora.getMinutes()
-).padStart(2,"0");
-
-}
-
-
-/* ================================
-   MENSAGEM
-================================ */
-
-function mostrarMensagem(
-texto,
-tipo
-){
+function mostrarMensagem(texto,tipo){
 
 mensagem.textContent =
 texto;
@@ -529,13 +448,7 @@ tipo;
 }
 
 
-/* ================================
-   ENVIAR DADOS
-================================ */
-
-function enviarDados(
-dados
-){
+function enviarDados(dados){
 
 return fetch(
 URL_APPS_SCRIPT,
@@ -545,42 +458,28 @@ method:"POST",
 mode:"no-cors",
 
 headers:{
-"Content-Type":
-"text/plain;charset=utf-8"
+"Content-Type":"text/plain;charset=utf-8"
 },
 
-body:
-JSON.stringify(dados)
+body:JSON.stringify(dados)
 
 }
 );
 
 }
 
-
-/* ================================
-   INICIAR
-================================ */
 
 window.addEventListener(
 "load",
 function(){
 
 const viagem =
-localStorage.getItem(
-"viagemAberta"
-);
+localStorage.getItem("viagemAberta");
 
-
-if(
-viagem
-){
+if(viagem){
 
 const dados =
-JSON.parse(
-viagem
-);
-
+JSON.parse(viagem);
 
 motorista.value =
 dados.motorista;
@@ -603,7 +502,6 @@ dados.destino;
 kmSaida.value =
 dados.kmSaida;
 
-
 motorista.disabled =
 true;
 
@@ -625,7 +523,6 @@ true;
 kmSaida.disabled =
 true;
 
-
 botaoSaida.style.display =
 "none";
 
@@ -635,9 +532,7 @@ areaChegada.style.display =
 status.textContent =
 "🚗 VIAGEM EM ANDAMENTO — informe o KM de chegada.";
 
-}
-
-else{
+}else{
 
 dataSaida.value =
 dataAtual();
@@ -651,17 +546,11 @@ horaAtual();
 );
 
 
-/* ================================
-   SALVAR SAÍDA
-================================ */
-
 botaoSaida.addEventListener(
 "click",
 async function(){
 
-if(
-!formulario.checkValidity()
-){
+if(!formulario.checkValidity()){
 
 formulario.reportValidity();
 
@@ -669,36 +558,25 @@ return;
 
 }
 
-
 const dados = {
 
 acao:"saida",
 
-dataSaida:
-dataSaida.value,
+dataSaida:dataSaida.value,
 
-motorista:
-motorista.value.trim(),
+motorista:motorista.value.trim(),
 
-horaSaida:
-horaSaida.value,
+horaSaida:horaSaida.value,
 
-veiculo:
-veiculo.value,
+veiculo:veiculo.value,
 
-placa:
-placa.value
-.trim()
-.toUpperCase(),
+placa:placa.value.trim().toUpperCase(),
 
-destino:
-destino.value.trim(),
+destino:destino.value.trim(),
 
-kmSaida:
-kmSaida.value
+kmSaida:kmSaida.value
 
 };
-
 
 botaoSaida.disabled =
 true;
@@ -706,27 +584,19 @@ true;
 botaoSaida.textContent =
 "SALVANDO...";
 
-
 try{
 
-await enviarDados(
-dados
-);
-
+await enviarDados(dados);
 
 localStorage.setItem(
 "viagemAberta",
-JSON.stringify(
-dados
-)
+JSON.stringify(dados)
 );
-
 
 mostrarMensagem(
 "KM de saída salvo com sucesso!",
 "sucesso"
 );
-
 
 motorista.disabled =
 true;
@@ -749,22 +619,16 @@ true;
 kmSaida.disabled =
 true;
 
-
 botaoSaida.style.display =
 "none";
 
 areaChegada.style.display =
 "block";
 
-
 status.textContent =
 "🚗 VIAGEM EM ANDAMENTO — informe o KM de chegada.";
 
-}
-
-catch(
-erro
-){
+}catch(erro){
 
 mostrarMensagem(
 "Erro ao salvar o KM de saída.",
@@ -783,24 +647,15 @@ botaoSaida.textContent =
 );
 
 
-/* ================================
-   KM DE CHEGADA
-================================ */
-
 kmChegada.addEventListener(
 "input",
 function(){
 
 const saida =
-Number(
-kmSaida.value
-);
+Number(kmSaida.value);
 
 const chegada =
-Number(
-kmChegada.value
-);
-
+Number(kmChegada.value);
 
 if(
 kmChegada.value !== "" &&
@@ -810,18 +665,13 @@ chegada >= saida
 kmPercorrido.textContent =
 chegada - saida;
 
-
-/* DATA E HORA AUTOMÁTICAS */
-
 dataChegada.value =
 dataAtual();
 
 horaChegada.value =
 horaAtual();
 
-}
-
-else{
+}else{
 
 kmPercorrido.textContent =
 "0";
@@ -838,17 +688,11 @@ horaChegada.value =
 );
 
 
-/* ================================
-   ENCERRAR VIAGEM
-================================ */
-
 botaoChegada.addEventListener(
 "click",
 async function(){
 
-if(
-kmChegada.value === ""
-){
+if(kmChegada.value === ""){
 
 mostrarMensagem(
 "Informe o KM de chegada.",
@@ -859,10 +703,7 @@ return;
 
 }
 
-
-if(
-assinatura.value.trim() === ""
-){
+if(assinatura.value.trim() === ""){
 
 mostrarMensagem(
 "Digite o nome do motorista no campo Assinatura.",
@@ -875,21 +716,13 @@ return;
 
 }
 
-
 const saida =
-Number(
-kmSaida.value
-);
+Number(kmSaida.value);
 
 const chegada =
-Number(
-kmChegada.value
-);
+Number(kmChegada.value);
 
-
-if(
-chegada < saida
-){
+if(chegada < saida){
 
 mostrarMensagem(
 "O KM de chegada não pode ser menor que o KM de saída.",
@@ -900,18 +733,12 @@ return;
 
 }
 
-
 const viagem =
 JSON.parse(
-localStorage.getItem(
-"viagemAberta"
-)
+localStorage.getItem("viagemAberta")
 );
 
-
-if(
-!viagem
-){
+if(!viagem){
 
 mostrarMensagem(
 "Viagem não encontrada.",
@@ -922,13 +749,11 @@ return;
 
 }
 
-
 const dataFinal =
 dataAtual();
 
 const horaFinal =
 horaAtual();
-
 
 dataChegada.value =
 dataFinal;
@@ -936,46 +761,33 @@ dataFinal;
 horaChegada.value =
 horaFinal;
 
-
 const dados = {
 
 acao:"chegada",
 
-dataSaida:
-viagem.dataSaida,
+dataSaida:viagem.dataSaida,
 
-dataChegada:
-dataFinal,
+motorista:viagem.motorista,
 
-motorista:
-viagem.motorista,
+horaSaida:viagem.horaSaida,
 
-horaSaida:
-viagem.horaSaida,
+veiculo:viagem.veiculo,
 
-veiculo:
-viagem.veiculo,
+placa:viagem.placa,
 
-placa:
-viagem.placa,
+destino:viagem.destino,
 
-destino:
-viagem.destino,
+kmSaida:viagem.kmSaida,
 
-kmSaida:
-viagem.kmSaida,
+dataChegada:dataFinal,
 
-kmChegada:
-kmChegada.value,
+kmChegada:kmChegada.value,
 
-horaChegada:
-horaFinal,
+horaChegada:horaFinal,
 
-assinatura:
-assinatura.value.trim()
+assinatura:assinatura.value.trim()
 
 };
-
 
 botaoChegada.disabled =
 true;
@@ -983,31 +795,23 @@ true;
 botaoChegada.textContent =
 "ENCERRANDO...";
 
-
 try{
 
-await enviarDados(
-dados
-);
-
+await enviarDados(dados);
 
 localStorage.removeItem(
 "viagemAberta"
 );
-
 
 mostrarMensagem(
 "Viagem encerrada com sucesso!",
 "sucesso"
 );
 
-
 status.textContent =
 "Nenhuma viagem em andamento.";
 
-
 formulario.reset();
-
 
 dataSaida.value =
 dataAtual();
@@ -1015,21 +819,17 @@ dataAtual();
 horaSaida.value =
 horaAtual();
 
-
 areaChegada.style.display =
 "none";
 
-
 botaoSaida.style.display =
 "block";
-
 
 botaoSaida.disabled =
 false;
 
 botaoSaida.textContent =
 "🟢 SALVAR KM DE SAÍDA";
-
 
 motorista.disabled =
 false;
@@ -1052,21 +852,15 @@ false;
 kmSaida.disabled =
 false;
 
-
 kmPercorrido.textContent =
 "0";
 
-}
-
-catch(
-erro
-){
+}catch(erro){
 
 mostrarMensagem(
 "Não foi possível encerrar a viagem.",
 "erro"
 );
-
 
 botaoChegada.disabled =
 false;
@@ -1078,7 +872,6 @@ botaoChegada.textContent =
 
 }
 );
-
 
 </script>
 
