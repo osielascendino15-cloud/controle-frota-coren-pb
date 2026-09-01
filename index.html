@@ -131,6 +131,10 @@ color:#07579c;
 display:none;
 }
 
+#campoLocalChegada{
+display:none;
+}
+
 .status{
 margin-top:15px;
 padding:12px;
@@ -283,6 +287,8 @@ type="time"
 readonly
 >
 
+<div id="campoLocalChegada">
+
 <label>Local de Chegada</label>
 
 <input
@@ -291,6 +297,8 @@ type="text"
 value="João Pessoa - PB"
 readonly
 >
+
+</div>
 
 <div class="km">
 
@@ -370,6 +378,9 @@ document.getElementById("horaChegada");
 
 const localChegada =
 document.getElementById("localChegada");
+
+const campoLocalChegada =
+document.getElementById("campoLocalChegada");
 
 const assinatura =
 document.getElementById("assinatura");
@@ -478,7 +489,6 @@ body:JSON.stringify(dados)
 }
 );
 
-
 }
 
 
@@ -541,6 +551,9 @@ botaoSaida.style.display =
 
 areaChegada.style.display =
 "block";
+
+campoLocalChegada.style.display =
+"none";
 
 status.textContent =
 "🚗 VIAGEM EM ANDAMENTO — informe o KM de chegada.";
@@ -638,6 +651,9 @@ botaoSaida.style.display =
 areaChegada.style.display =
 "block";
 
+campoLocalChegada.style.display =
+"none";
+
 status.textContent =
 "🚗 VIAGEM EM ANDAMENTO — informe o KM de chegada.";
 
@@ -670,6 +686,7 @@ Number(kmSaida.value);
 const chegada =
 Number(kmChegada.value);
 
+
 if(
 kmChegada.value !== "" &&
 chegada >= saida
@@ -677,12 +694,6 @@ chegada >= saida
 
 kmPercorrido.textContent =
 chegada - saida;
-
-/*
-Preenchimento automático:
-data, hora e local de chegada
-no momento em que a KM é informada.
-*/
 
 dataChegada.value =
 dataAtual();
@@ -692,6 +703,15 @@ horaAtual();
 
 localChegada.value =
 "João Pessoa - PB";
+
+/*
+Mostra o Local de Chegada
+somente depois que a KM
+for preenchida corretamente.
+*/
+
+campoLocalChegada.style.display =
+"block";
 
 }else{
 
@@ -703,6 +723,14 @@ dataChegada.value =
 
 horaChegada.value =
 "";
+
+/*
+Esconde novamente o Local de Chegada
+se a KM for apagada ou inválida.
+*/
+
+campoLocalChegada.style.display =
+"none";
 
 localChegada.value =
 "João Pessoa - PB";
@@ -741,11 +769,13 @@ return;
 
 }
 
+
 const saida =
 Number(kmSaida.value);
 
 const chegada =
 Number(kmChegada.value);
+
 
 if(chegada < saida){
 
@@ -758,10 +788,12 @@ return;
 
 }
 
+
 const viagem =
 JSON.parse(
 localStorage.getItem("viagemAberta")
 );
+
 
 if(!viagem){
 
@@ -774,11 +806,13 @@ return;
 
 }
 
+
 const dataFinal =
 dataAtual();
 
 const horaFinal =
 horaAtual();
+
 
 dataChegada.value =
 dataFinal;
@@ -788,6 +822,7 @@ horaFinal;
 
 localChegada.value =
 "João Pessoa - PB";
+
 
 const dados = {
 
@@ -819,11 +854,13 @@ assinatura:assinatura.value.trim()
 
 };
 
+
 botaoChegada.disabled =
 true;
 
 botaoChegada.textContent =
 "ENCERRANDO...";
+
 
 try{
 
@@ -850,6 +887,9 @@ horaSaida.value =
 horaAtual();
 
 areaChegada.style.display =
+"none";
+
+campoLocalChegada.style.display =
 "none";
 
 botaoSaida.style.display =
@@ -885,13 +925,9 @@ false;
 kmPercorrido.textContent =
 "0";
 
-/*
-Garante que o próximo encerramento
-também comece com o local correto.
-*/
-
 localChegada.value =
 "João Pessoa - PB";
+
 
 }catch(erro){
 
