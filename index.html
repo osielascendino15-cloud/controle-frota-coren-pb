@@ -283,6 +283,15 @@ type="time"
 readonly
 >
 
+<label>Local de Chegada</label>
+
+<input
+id="localChegada"
+type="text"
+value="João Pessoa - PB"
+readonly
+>
+
 <div class="km">
 
 KM PERCORRIDO:
@@ -358,6 +367,9 @@ document.getElementById("kmChegada");
 
 const horaChegada =
 document.getElementById("horaChegada");
+
+const localChegada =
+document.getElementById("localChegada");
 
 const assinatura =
 document.getElementById("assinatura");
@@ -465,6 +477,7 @@ body:JSON.stringify(dados)
 
 }
 );
+
 
 }
 
@@ -665,11 +678,20 @@ chegada >= saida
 kmPercorrido.textContent =
 chegada - saida;
 
+/*
+Preenchimento automático:
+data, hora e local de chegada
+no momento em que a KM é informada.
+*/
+
 dataChegada.value =
 dataAtual();
 
 horaChegada.value =
 horaAtual();
+
+localChegada.value =
+"João Pessoa - PB";
 
 }else{
 
@@ -681,6 +703,9 @@ dataChegada.value =
 
 horaChegada.value =
 "";
+
+localChegada.value =
+"João Pessoa - PB";
 
 }
 
@@ -761,6 +786,9 @@ dataFinal;
 horaChegada.value =
 horaFinal;
 
+localChegada.value =
+"João Pessoa - PB";
+
 const dados = {
 
 acao:"chegada",
@@ -784,6 +812,8 @@ dataChegada:dataFinal,
 kmChegada:kmChegada.value,
 
 horaChegada:horaFinal,
+
+localChegada:"João Pessoa - PB",
 
 assinatura:assinatura.value.trim()
 
@@ -854,6 +884,14 @@ false;
 
 kmPercorrido.textContent =
 "0";
+
+/*
+Garante que o próximo encerramento
+também comece com o local correto.
+*/
+
+localChegada.value =
+"João Pessoa - PB";
 
 }catch(erro){
 
