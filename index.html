@@ -294,7 +294,7 @@ readonly
 <input
 id="localChegada"
 type="text"
-value="João Pessoa - PB"
+value="João Pessoa - PB, Sede do COREN"
 readonly
 >
 
@@ -342,6 +342,7 @@ type="button">
 
 const URL_APPS_SCRIPT =
 "https://script.google.com/macros/s/AKfycbxPQx0vFT0XZbU4nUDO0NCqF2uxfpGOlhna6N9fAKE9h5mx2rVgZ3rdFFxPvclIIh4M/exec";
+
 
 const formulario =
 document.getElementById("formulario");
@@ -584,6 +585,7 @@ return;
 
 }
 
+
 const dados = {
 
 acao:"saida",
@@ -604,25 +606,30 @@ kmSaida:kmSaida.value
 
 };
 
+
 botaoSaida.disabled =
 true;
 
 botaoSaida.textContent =
 "SALVANDO...";
 
+
 try{
 
 await enviarDados(dados);
+
 
 localStorage.setItem(
 "viagemAberta",
 JSON.stringify(dados)
 );
 
+
 mostrarMensagem(
 "KM de saída salvo com sucesso!",
 "sucesso"
 );
+
 
 motorista.disabled =
 true;
@@ -645,6 +652,7 @@ true;
 kmSaida.disabled =
 true;
 
+
 botaoSaida.style.display =
 "none";
 
@@ -654,8 +662,10 @@ areaChegada.style.display =
 campoLocalChegada.style.display =
 "none";
 
+
 status.textContent =
 "🚗 VIAGEM EM ANDAMENTO — informe o KM de chegada.";
+
 
 }catch(erro){
 
@@ -695,24 +705,22 @@ chegada >= saida
 kmPercorrido.textContent =
 chegada - saida;
 
+
 dataChegada.value =
 dataAtual();
+
 
 horaChegada.value =
 horaAtual();
 
+
 localChegada.value =
-localChegada:"João Pessoa - PB, Sede do COREN",
+"João Pessoa - PB, Sede do COREN";
 
-
-/*
-Mostra o Local de Chegada
-somente depois que a KM
-for preenchida corretamente.
-*/
 
 campoLocalChegada.style.display =
 "block";
+
 
 }else{
 
@@ -725,16 +733,13 @@ dataChegada.value =
 horaChegada.value =
 "";
 
-/*
-Esconde novamente o Local de Chegada
-se a KM for apagada ou inválida.
-*/
 
 campoLocalChegada.style.display =
 "none";
 
+
 localChegada.value =
-"João Pessoa - PB";
+"João Pessoa - PB, Sede do COREN";
 
 }
 
@@ -756,6 +761,7 @@ mostrarMensagem(
 return;
 
 }
+
 
 if(assinatura.value.trim() === ""){
 
@@ -821,8 +827,9 @@ dataFinal;
 horaChegada.value =
 horaFinal;
 
+
 localChegada.value =
-"João Pessoa - PB";
+"João Pessoa - PB, Sede do COREN";
 
 
 const dados = {
@@ -849,7 +856,7 @@ kmChegada:kmChegada.value,
 
 horaChegada:horaFinal,
 
-localChegada:"João Pessoa - PB",
+localChegada:"João Pessoa - PB, Sede do COREN",
 
 assinatura:assinatura.value.trim()
 
@@ -867,19 +874,24 @@ try{
 
 await enviarDados(dados);
 
+
 localStorage.removeItem(
 "viagemAberta"
 );
+
 
 mostrarMensagem(
 "Viagem encerrada com sucesso!",
 "sucesso"
 );
 
+
 status.textContent =
 "Nenhuma viagem em andamento.";
 
+
 formulario.reset();
+
 
 dataSaida.value =
 dataAtual();
@@ -887,11 +899,13 @@ dataAtual();
 horaSaida.value =
 horaAtual();
 
+
 areaChegada.style.display =
 "none";
 
 campoLocalChegada.style.display =
 "none";
+
 
 botaoSaida.style.display =
 "block";
@@ -901,6 +915,7 @@ false;
 
 botaoSaida.textContent =
 "🟢 SALVAR KM DE SAÍDA";
+
 
 motorista.disabled =
 false;
@@ -923,11 +938,13 @@ false;
 kmSaida.disabled =
 false;
 
+
 kmPercorrido.textContent =
 "0";
 
+
 localChegada.value =
-"João Pessoa - PB";
+"João Pessoa - PB, Sede do COREN";
 
 
 }catch(erro){
@@ -936,6 +953,7 @@ mostrarMensagem(
 "Não foi possível encerrar a viagem.",
 "erro"
 );
+
 
 botaoChegada.disabled =
 false;
