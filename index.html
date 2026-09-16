@@ -5,10 +5,7 @@
 
 <meta charset="UTF-8">
 
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0"
->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Controle de Frota COREN-PB</title>
 
@@ -57,6 +54,7 @@ label {
 }
 
 input,
+select,
 textarea {
   width: 100%;
   padding: 12px;
@@ -66,7 +64,8 @@ textarea {
   background: white;
 }
 
-input:disabled {
+input:disabled,
+select:disabled {
   background: #eeeeee;
   color: #555;
 }
@@ -151,10 +150,6 @@ button:disabled {
   margin-top: 5px;
 }
 
-.oculto {
-  display: none;
-}
-
 .info {
   margin-top: 10px;
   padding: 10px;
@@ -164,12 +159,17 @@ button:disabled {
   color: #555;
 }
 
+.oculto {
+  display: none;
+}
+
 </style>
 
 </head>
 
 
 <body>
+
 
 <div class="container">
 
@@ -192,7 +192,7 @@ NENHUMA VIAGEM EM ANDAMENTO
 
 
 <!-- =================================================
-SAÍDA
+REGISTRO DE SAÍDA
 ================================================= -->
 
 <div id="areaSaida">
@@ -209,6 +209,7 @@ Motorista / Condutor
 <input
   id="motorista"
   type="text"
+  placeholder="Digite o nome do motorista"
 >
 
 
@@ -236,10 +237,51 @@ Hora de Saída
 Veículo
 </label>
 
-<input
+<select
   id="veiculo"
-  type="text"
+  onchange="selecionarVeiculo()"
 >
+
+<option value="">
+Selecione o veículo
+</option>
+
+<option
+  value="SANDERO"
+  data-placa="OFC-4143"
+>
+SANDERO
+</option>
+
+<option
+  value="NISSAN FRONTIER"
+  data-placa="PWC-1227"
+>
+NISSAN FRONTIER
+</option>
+
+<option
+  value="NISSAN KICKS"
+  data-placa="SLC-8F20"
+>
+NISSAN KICKS — SLC-8F20
+</option>
+
+<option
+  value="NISSAN KICKS"
+  data-placa="SLC-8F40"
+>
+NISSAN KICKS — SLC-8F40
+</option>
+
+<option
+  value="NISSAN KICKS"
+  data-placa="SLC-8F50"
+>
+NISSAN KICKS — SLC-8F50
+</option>
+
+</select>
 
 
 <label>
@@ -249,6 +291,8 @@ Placa
 <input
   id="placa"
   type="text"
+  readonly
+  placeholder="A placa aparecerá automaticamente"
 >
 
 
@@ -259,6 +303,7 @@ Destino
 <input
   id="destino"
   type="text"
+  placeholder="Informe o destino"
 >
 
 
@@ -300,7 +345,7 @@ REGISTRAR SAÍDA
 
 
 <!-- =================================================
-CHEGADA
+REGISTRO DE CHEGADA
 ================================================= -->
 
 <div id="areaChegada">
@@ -311,8 +356,7 @@ Registro de Chegada
 
 
 <div class="info">
-Os dados do motorista, veículo e placa são preenchidos
-automaticamente a partir da saída.
+Motorista, veículo e placa são preenchidos automaticamente pela viagem em andamento.
 </div>
 
 
@@ -435,6 +479,7 @@ REGISTRAR CHEGADA
 >
 </div>
 
+
 </div>
 
 
@@ -466,19 +511,14 @@ DATA ATUAL
 
 function dataAtual() {
 
-  const agora =
-    new Date();
+  const agora = new Date();
 
   return (
     agora.getFullYear() +
     "-" +
-    String(
-      agora.getMonth() + 1
-    ).padStart(2,"0") +
+    String(agora.getMonth() + 1).padStart(2,"0") +
     "-" +
-    String(
-      agora.getDate()
-    ).padStart(2,"0")
+    String(agora.getDate()).padStart(2,"0")
   );
 
 }
@@ -490,17 +530,12 @@ HORA ATUAL
 
 function horaAtual() {
 
-  const agora =
-    new Date();
+  const agora = new Date();
 
   return (
-    String(
-      agora.getHours()
-    ).padStart(2,"0") +
+    String(agora.getHours()).padStart(2,"0") +
     ":" +
-    String(
-      agora.getMinutes()
-    ).padStart(2,"0")
+    String(agora.getMinutes()).padStart(2,"0")
   );
 
 }
@@ -599,6 +634,38 @@ function formatarKm(valor) {
 
 
 /* =====================================================
+ESCOLHER VEÍCULO
+===================================================== */
+
+function selecionarVeiculo() {
+
+  const select =
+    document.getElementById(
+      "veiculo"
+    );
+
+
+  const opcao =
+    select.options[
+      select.selectedIndex
+    ];
+
+
+  const placa =
+    opcao.getAttribute(
+      "data-placa"
+    ) || "";
+
+
+  document.getElementById(
+    "placa"
+  ).value =
+    placa;
+
+}
+
+
+/* =====================================================
 SALVAR VIAGEM
 ===================================================== */
 
@@ -651,7 +718,7 @@ function lerViagem() {
 
 
 /* =====================================================
-ENCERRAR VIAGEM
+LIMPAR VIAGEM
 ===================================================== */
 
 function encerrarViagem() {
@@ -660,7 +727,47 @@ function encerrarViagem() {
     CHAVE_VIAGEM
   );
 
-  limparCamposChegada();
+
+  document.getElementById(
+    "motorista"
+  ).value = "";
+
+
+  document.getElementById(
+    "veiculo"
+  ).value = "";
+
+
+  document.getElementById(
+    "placa"
+  ).value = "";
+
+
+  document.getElementById(
+    "destino"
+  ).value = "";
+
+
+  document.getElementById(
+    "kmSaida"
+  ).value = "";
+
+
+  document.getElementById(
+    "kmChegada"
+  ).value = "";
+
+
+  document.getElementById(
+    "kmPercorrido"
+  ).textContent =
+    "0";
+
+
+  document.getElementById(
+    "assinatura"
+  ).value = "";
+
 
   atualizarTela();
 
@@ -668,19 +775,12 @@ function encerrarViagem() {
 
 
 /* =====================================================
-PREENCHER CHEGADA AUTOMATICAMENTE
+PREENCHER CHEGADA
 ===================================================== */
 
 function preencherChegada(
   viagem
 ) {
-
-  if (!viagem) {
-
-    return;
-
-  }
-
 
   document.getElementById(
     "motoristaChegada"
@@ -785,7 +885,7 @@ function atualizarTela() {
 
 
 /* =====================================================
-ENVIAR DADOS
+ENVIAR PARA GOOGLE APPS SCRIPT
 ===================================================== */
 
 async function enviarDados(
@@ -897,7 +997,7 @@ async function registrarSaida() {
   const veiculo =
     document.getElementById(
       "veiculo"
-    ).value.trim();
+    ).value;
 
 
   const placa =
@@ -922,18 +1022,50 @@ async function registrarSaida() {
     );
 
 
-  if (
-    !motorista ||
-    !dataSaida ||
-    !horaSaida ||
-    !veiculo ||
-    !placa ||
-    !destino
-  ) {
+  if (!motorista) {
 
     mostrarResultado(
       "saida",
-      "Preencha todos os campos da saída.",
+      "Digite o nome do motorista.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  if (!veiculo) {
+
+    mostrarResultado(
+      "saida",
+      "Escolha o veículo.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  if (!placa) {
+
+    mostrarResultado(
+      "saida",
+      "A placa não foi preenchida.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  if (!destino) {
+
+    mostrarResultado(
+      "saida",
+      "Informe o destino.",
       true
     );
 
@@ -1004,20 +1136,11 @@ async function registrarSaida() {
 
   try {
 
-    /*
-    Envia para a planilha.
-    */
-
     const resultado =
       await enviarDados(
         dados
       );
 
-
-    /*
-    Só cria a viagem aberta
-    depois que a planilha confirmou.
-    */
 
     if (
       resultado.sucesso === true
@@ -1071,7 +1194,7 @@ async function registrarSaida() {
 
 
 /* =====================================================
-CALCULAR KM PERCORRIDO
+CALCULAR KM
 ===================================================== */
 
 function calcularKmPercorrido() {
@@ -1122,15 +1245,11 @@ function calcularKmPercorrido() {
   }
 
 
-  const percorrido =
-    kmChegada - kmSaida;
-
-
   document.getElementById(
     "kmPercorrido"
   ).textContent =
     formatarKm(
-      percorrido
+      kmChegada - kmSaida
     );
 
 }
@@ -1294,14 +1413,6 @@ async function registrarChegada() {
       resultado.sucesso === true
     ) {
 
-      /*
-      ------------------------------------------
-      A PLANILHA CONFIRMOU.
-
-      Agora encerramos a viagem.
-      ------------------------------------------
-      */
-
       encerrarViagem();
 
 
@@ -1316,10 +1427,6 @@ async function registrarChegada() {
   }
 
   catch (erro) {
-
-    /*
-    A viagem NÃO é apagada se houver erro.
-    */
 
     mostrarResultado(
       "chegada",
@@ -1340,62 +1447,6 @@ async function registrarChegada() {
       "REGISTRAR CHEGADA";
 
   }
-
-}
-
-
-/* =====================================================
-LIMPAR CHEGADA
-===================================================== */
-
-function limparCamposChegada() {
-
-  document.getElementById(
-    "motoristaChegada"
-  ).value =
-    "";
-
-
-  document.getElementById(
-    "veiculoChegada"
-  ).value =
-    "";
-
-
-  document.getElementById(
-    "placaChegada"
-  ).value =
-    "";
-
-
-  document.getElementById(
-    "kmChegada"
-  ).value =
-    "";
-
-
-  document.getElementById(
-    "kmPercorrido"
-  ).textContent =
-    "0";
-
-
-  document.getElementById(
-    "assinatura"
-  ).value =
-    "";
-
-
-  document.getElementById(
-    "dataChegada"
-  ).value =
-    dataAtual();
-
-
-  document.getElementById(
-    "horaChegada"
-  ).value =
-    horaAtual();
 
 }
 
