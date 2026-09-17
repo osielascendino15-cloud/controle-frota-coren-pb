@@ -1,261 +1,357 @@
-<!DOCTYPE html> <html lang="pt-BR"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Controle de Frota COREN-PB</title> <style> * { box-sizing: border-box; }
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Controle de Frota COREN-PB</title>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
 body {
-margin: 0;
-padding: 20px;
-font-family: Arial, sans-serif;
-background: #f2f4f7;
-color: #222;
+  margin: 0;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background: #f2f4f7;
+  color: #222;
 }
 
 .container {
-max-width: 700px;
-margin: auto;
-background: white;
-padding: 25px;
-border-radius: 12px;
-box-shadow: 0 2px 10px rgba(0,0,0,.10);
+  max-width: 700px;
+  margin: auto;
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.10);
 }
 
 h1 {
-margin-top: 0;
-text-align: center;
-color: #075e2f;
-font-size: 25px;
+  text-align: center;
+  color: #075e2f;
 }
 
 h2 {
-color: #075e2f;
-border-bottom: 2px solid #075e2f;
-padding-bottom: 8px;
-margin-top: 30px;
+  color: #075e2f;
+  border-bottom: 2px solid #075e2f;
+  padding-bottom: 8px;
+  margin-top: 30px;
 }
 
 label {
-display: block;
-margin-top: 15px;
-margin-bottom: 5px;
-font-weight: bold;
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  font-weight: bold;
 }
 
 input,
 select,
 textarea {
-width: 100%;
-padding: 12px;
-font-size: 16px;
-border: 1px solid #bbb;
-border-radius: 7px;
-background: white;
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #bbb;
+  border-radius: 7px;
+  background: white;
 }
 
 input[readonly] {
-background: #eeeeee;
-}
-
-textarea {
-resize: vertical;
+  background: #eeeeee;
 }
 
 button {
-width: 100%;
-margin-top: 20px;
-padding: 14px;
-border: none;
-border-radius: 8px;
-font-size: 17px;
-font-weight: bold;
-cursor: pointer;
+  width: 100%;
+  margin-top: 20px;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 button:disabled {
-background: #999;
-cursor: wait;
+  background: #999;
 }
 
 .btn-saida {
-background: #075e2f;
-color: white;
+  background: #075e2f;
+  color: white;
 }
 
 .btn-chegada {
-background: #145da0;
-color: white;
+  background: #145da0;
+  color: white;
 }
 
 .status {
-margin-bottom: 20px;
-padding: 15px;
-border-radius: 8px;
-text-align: center;
-font-weight: bold;
-background: #eeeeee;
-color: #555;
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  background: #eee;
 }
 
 .status.aberta {
-background: #dff5e5;
-color: #075e2f;
-border: 2px solid #075e2f;
+  background: #dff5e5;
+  color: #075e2f;
+  border: 2px solid #075e2f;
 }
 
 .resultado {
-margin-top: 15px;
-padding: 12px;
-border-radius: 7px;
-background: #eef5ef;
-color: #075e2f;
-font-weight: bold;
-text-align: center;
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 7px;
+  background: #eef5ef;
+  color: #075e2f;
+  font-weight: bold;
+  text-align: center;
 }
 
-.resultado.erro {
-background: #ffecec;
-color: #a00000;
+.erro {
+  background: #ffecec;
+  color: #a00000;
 }
 
 .km {
-text-align: right;
-font-size: 18px;
+  text-align: right;
 }
 
 .km-resultado {
-margin-top: 15px;
-text-align: center;
-font-size: 22px;
-font-weight: bold;
-color: #075e2f;
+  margin-top: 15px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+  color: #075e2f;
 }
 
 .observacao {
-font-size: 13px;
-color: #666;
-margin-top: 5px;
+  font-size: 13px;
+  color: #666;
+  margin-top: 5px;
 }
 
 .info {
-margin-top: 10px;
-padding: 10px;
-background: #f4f7f5;
-border-radius: 7px;
-font-size: 14px;
-color: #555;
+  margin-top: 10px;
+  padding: 10px;
+  background: #f4f7f5;
+  border-radius: 7px;
+  font-size: 14px;
 }
 
 .oculto {
-display: none;
+  display: none;
 }
-</style>
 
-</head> <body> <div class="container"> <h1>Controle de Frota COREN-PB</h1> <div id="statusViagem" class="status"> NENHUMA VIAGEM EM ANDAMENTO </div> <!-- ================================ SAÍDA ================================ --> <div id="areaSaida"> <h2>Registro de Saída</h2>
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Controle de Frota COREN-PB</h1>
+
+<div id="statusViagem" class="status">
+NENHUMA VIAGEM EM ANDAMENTO
+</div>
+
+
+<!-- =========================
+     SAÍDA
+========================= -->
+
+<div id="areaSaida">
+
+<h2>Registro de Saída</h2>
+
 <label>Motorista / Condutor</label>
 
 <input
-id="motorista"
-type="text"
-placeholder="Digite o nome do motorista"
+  id="motorista"
+  type="text"
+  placeholder="Digite o nome do motorista"
+>
 
 <label>Data de Saída</label>
 
 <input id="dataSaida" type="date">
+
 <label>Hora de Saída</label>
 
 <input id="horaSaida" type="time">
+
 <label>Veículo</label>
 
-<select id="veiculo" onchange="selecionarVeiculo()"> <option value=""> Selecione o veículo </option> <option value="SANDERO" data-placa="OFC-4143"> SANDERO — OFC-4143 </option> <option value="NISSAN FRONTIER" data-placa="PWC-1227"> NISSAN FRONTIER — PWC-1227 </option> <option value="NISSAN KICKS" data-placa="SLC-8F20"> NISSAN KICKS — SLC-8F20 </option> <option value="NISSAN KICKS" data-placa="SLC-8F40"> NISSAN KICKS — SLC-8F40 </option> <option value="NISSAN KICKS" data-placa="SLC-8F50"> NISSAN KICKS — SLC-8F50 </option> </select>
+<select id="veiculo" onchange="selecionarVeiculo()">
+
+<option value="">
+Selecione o veículo
+</option>
+
+<option value="SANDERO" data-placa="OFC-4143">
+SANDERO — OFC-4143
+</option>
+
+<option value="NISSAN FRONTIER" data-placa="PWC-1227">
+NISSAN FRONTIER — PWC-1227
+</option>
+
+<option value="NISSAN KICKS SLC-8F20" data-placa="SLC-8F20">
+NISSAN KICKS — SLC-8F20
+</option>
+
+<option value="NISSAN KICKS SLC-8F40" data-placa="SLC-8F40">
+NISSAN KICKS — SLC-8F40
+</option>
+
+<option value="NISSAN KICKS SLC-8F50" data-placa="SLC-8F50">
+NISSAN KICKS — SLC-8F50
+</option>
+
+</select>
+
 <label>Placa</label>
 
 <input
-id="placa"
-type="text"
-readonly
-placeholder="Preenchida automaticamente"
+  id="placa"
+  type="text"
+  readonly
+  placeholder="Preenchida automaticamente"
+>
 
 <label>Destino</label>
 
 <input
-id="destino"
-type="text"
-placeholder="Digite o destino"
+  id="destino"
+  type="text"
+  placeholder="Digite o destino"
+>
 
 <label>KM de Saída</label>
 
 <input
-id="kmSaida"
-class="km"
-type="text"
-inputmode="decimal"
-placeholder="Ex.: 10.000,50"
+  id="kmSaida"
+  class="km"
+  type="text"
+  inputmode="decimal"
+  placeholder="Ex.: 10.000,50"
+>
 
-<div class="observacao"> Aceita: 10000, 10000,50 ou 10.000,50. </div>
+<div class="observacao">
+Aceita: 10000, 10000,50 ou 10.000,50.
+</div>
+
 <button
-id="btnSaida"
-class="btn-saida"
-onclick="registrarSaida()"
-
+  id="btnSaida"
+  class="btn-saida"
+  onclick="registrarSaida()"
+>
 REGISTRAR SAÍDA
 </button>
 
-<div id="resultadoSaida" class="resultado" style="display:none" ></div> </div> <!-- ================================ CHEGADA ================================ --> <div id="areaChegada"> <h2>Registro de Chegada</h2> <div class="info"> Os dados da viagem são preenchidos automaticamente. </div>
+<div
+  id="resultadoSaida"
+  class="resultado"
+  style="display:none"
+></div>
+
+</div>
+
+
+<!-- =========================
+     CHEGADA
+========================= -->
+
+<div id="areaChegada">
+
+<h2>Registro de Chegada</h2>
+
+<div class="info">
+Os dados da viagem são preenchidos automaticamente.
+</div>
+
 <label>Motorista / Condutor</label>
 
-<input
-id="motoristaChegada"
-type="text"
-readonly
+<input id="motoristaChegada" type="text" readonly>
 
 <label>Veículo</label>
 
-<input
-id="veiculoChegada"
-type="text"
-readonly
+<input id="veiculoChegada" type="text" readonly>
 
 <label>Placa</label>
 
-<input
-id="placaChegada"
-type="text"
-readonly
+<input id="placaChegada" type="text" readonly>
 
 <label>Data de Chegada</label>
 
 <input id="dataChegada" type="date">
+
 <label>KM de Chegada</label>
 
 <input
-id="kmChegada"
-class="km"
-type="text"
-inputmode="decimal"
-placeholder="Ex.: 10.125,50"
+  id="kmChegada"
+  class="km"
+  type="text"
+  inputmode="decimal"
+  placeholder="Ex.: 10.125,50"
+>
 
-<div class="observacao"> Informe o KM mostrado no painel na chegada. </div>
+<div class="observacao">
+Informe o KM mostrado no painel na chegada.
+</div>
+
 <label>Hora de Chegada</label>
 
 <input id="horaChegada" type="time">
+
 <label>Local de Chegada</label>
 
 <input
-id="localChegada"
-type="text"
-value="João Pessoa - PB, Sede do COREN"
+  id="localChegada"
+  type="text"
+  value="João Pessoa - PB, Sede do COREN"
+>
 
 <label>Assinatura do Motorista</label>
 
-<textarea id="assinatura" rows="4" placeholder="Digite o nome do motorista" ></textarea> <div class="km-resultado"> KM Percorrido: <span id="kmPercorrido">0</span> </div>
-<button
-id="btnChegada"
-class="btn-chegada"
-onclick="registrarChegada()"
+<textarea
+  id="assinatura"
+  rows="4"
+  placeholder="Digite o nome do motorista"
+></textarea>
 
+<div class="km-resultado">
+KM Percorrido:
+<span id="kmPercorrido">0</span>
+</div>
+
+<button
+  id="btnChegada"
+  class="btn-chegada"
+  onclick="registrarChegada()"
+>
 REGISTRAR CHEGADA
 </button>
 
-<div id="resultadoChegada" class="resultado" style="display:none" ></div> </div> </div> <script>
-/* =========================================
-CONFIGURAÇÃO
-========================================= */
+<div
+  id="resultadoChegada"
+  class="resultado"
+  style="display:none"
+></div>
+
+</div>
+
+</div>
+
+
+<script>
 
 const URL_APPS_SCRIPT =
 "https://script.google.com/macros/s/AKfycbzu264tIZifiObEh9mdy0ulZGgVBjhSptcb0KuBUIfDQ3ex3NKX865GidwU8Z3MsUUM/exec";
@@ -263,802 +359,807 @@ const URL_APPS_SCRIPT =
 const CHAVE_VIAGEM =
 "controleFrotaViagemAberta";
 
-/* =========================================
-DATA
-========================================= */
+
+/* =========================
+   DATA
+========================= */
 
 function dataAtual() {
 
-const agora = new Date();
+  const agora = new Date();
 
-return agora.getFullYear() +
-"-" +
-String(agora.getMonth() + 1).padStart(2,"0") +
-"-" +
-String(agora.getDate()).padStart(2,"0");
+  return agora.getFullYear() + "-" +
+    String(agora.getMonth() + 1).padStart(2,"0") + "-" +
+    String(agora.getDate()).padStart(2,"0");
 
 }
 
-/* =========================================
-HORA
-========================================= */
+
+/* =========================
+   HORA
+========================= */
 
 function horaAtual() {
 
-const agora = new Date();
+  const agora = new Date();
 
-return String(
-agora.getHours()
-).padStart(2,"0") +
-":" +
-String(
-agora.getMinutes()
-).padStart(2,"0");
+  return String(agora.getHours()).padStart(2,"0") + ":" +
+         String(agora.getMinutes()).padStart(2,"0");
 
 }
 
-/* =========================================
-CONVERTER KM
-========================================= */
+
+/* =========================
+   KM
+========================= */
 
 function converterKm(valor) {
 
-if (
-valor === null ||
-valor === undefined
-) {
-return NaN;
-}
+  if (valor === null || valor === undefined) {
+    return NaN;
+  }
 
-let texto =
-String(valor)
-.trim()
-.replace(/\s/g,"");
+  let texto = String(valor).trim().replace(/\s/g,"");
 
-if (!texto) {
-return NaN;
-}
+  if (!texto) {
+    return NaN;
+  }
 
-if (
-texto.includes(".") &&
-texto.includes(",")
-) {
+  if (texto.includes(".") && texto.includes(",")) {
 
-texto =
-  texto
-    .replace(/\./g,"")
-    .replace(",",".");
+    texto = texto
+      .replace(/\./g,"")
+      .replace(",",".");
+  }
 
-}
+  else if (texto.includes(",")) {
 
-else if (
-texto.includes(",")
-) {
+    texto = texto.replace(",",".");
+  }
 
-texto =
-  texto.replace(",",".");
+  texto = texto.replace(/[^0-9.-]/g,"");
+
+  const numero = Number(texto);
+
+  return Number.isFinite(numero)
+    ? numero
+    : NaN;
 
 }
 
-texto =
-texto.replace(
-/[^0-9.-]/g,
-""
-);
 
-const numero =
-Number(texto);
-
-return Number.isFinite(numero)
-? numero
-: NaN;
-}
-
-/* =========================================
-FORMATAR KM
-========================================= */
+/* =========================
+   FORMATAR KM
+========================= */
 
 function formatarKm(valor) {
 
-if (
-!Number.isFinite(valor)
-) {
-return "0";
-}
+  if (!Number.isFinite(valor)) {
+    return "0";
+  }
 
-return valor.toLocaleString(
-"pt-BR",
-{
-maximumFractionDigits: 2
-}
-);
+  return valor.toLocaleString("pt-BR", {
+    maximumFractionDigits: 2
+  });
 
 }
 
-/* =========================================
-VEÍCULO
-========================================= */
+
+/* =========================
+   VEÍCULO
+========================= */
 
 function selecionarVeiculo() {
 
-const select =
-document.getElementById("veiculo");
+  const select =
+    document.getElementById("veiculo");
 
-const opcao =
-select.options[
-select.selectedIndex
-];
+  const opcao =
+    select.options[select.selectedIndex];
 
-const placa =
-opcao.getAttribute("data-placa") || "";
+  const placa =
+    opcao.getAttribute("data-placa") || "";
 
-document.getElementById("placa").value =
-placa;
+  document.getElementById("placa").value =
+    placa;
 
 }
 
-/* =========================================
-VIAGEM LOCAL
-========================================= */
+
+/* =========================
+   VIAGEM LOCAL
+========================= */
 
 function salvarViagem(dados) {
 
-localStorage.setItem(
-CHAVE_VIAGEM,
-JSON.stringify(dados)
-);
+  localStorage.setItem(
+    CHAVE_VIAGEM,
+    JSON.stringify(dados)
+  );
 
 }
+
 
 function lerViagem() {
 
-try {
+  const texto =
+    localStorage.getItem(CHAVE_VIAGEM);
 
-const texto =
-  localStorage.getItem(
-    CHAVE_VIAGEM
-  );
+  if (!texto) {
+    return null;
+  }
 
-if (!texto) {
-  return null;
-}
+  try {
+    return JSON.parse(texto);
+  }
 
-return JSON.parse(texto);
+  catch (erro) {
 
-} catch (erro) {
+    localStorage.removeItem(CHAVE_VIAGEM);
 
-console.error(erro);
+    return null;
 
-return null;
-
-}
+  }
 
 }
+
 
 function limparViagem() {
 
-localStorage.removeItem(
-CHAVE_VIAGEM
-);
+  localStorage.removeItem(
+    CHAVE_VIAGEM
+  );
 
 }
 
-/* =========================================
-PREENCHER CHEGADA
-========================================= */
+
+/* =========================
+   PREENCHER CHEGADA
+========================= */
 
 function preencherChegada(viagem) {
 
-document.getElementById(
-"motoristaChegada"
-).value =
-viagem.motorista || "";
+  document.getElementById(
+    "motoristaChegada"
+  ).value =
+    viagem.motorista || "";
 
-document.getElementById(
-"veiculoChegada"
-).value =
-viagem.veiculo || "";
+  document.getElementById(
+    "veiculoChegada"
+  ).value =
+    viagem.veiculo || "";
 
-document.getElementById(
-"placaChegada"
-).value =
-viagem.placa || "";
+  document.getElementById(
+    "placaChegada"
+  ).value =
+    viagem.placa || "";
 
-document.getElementById(
-"dataChegada"
-).value =
-dataAtual();
+  document.getElementById(
+    "dataChegada"
+  ).value =
+    dataAtual();
 
-document.getElementById(
-"horaChegada"
-).value =
-horaAtual();
+  document.getElementById(
+    "horaChegada"
+  ).value =
+    horaAtual();
 
 }
 
-/* =========================================
-ATUALIZAR TELA
-========================================= */
+
+/* =========================
+   TELA
+========================= */
 
 function atualizarTela() {
 
-const viagem =
-lerViagem();
+  const viagem =
+    lerViagem();
 
-const status =
-document.getElementById(
-"statusViagem"
-);
+  const status =
+    document.getElementById("statusViagem");
 
-const areaSaida =
-document.getElementById(
-"areaSaida"
-);
+  const areaSaida =
+    document.getElementById("areaSaida");
 
-if (viagem) {
+  if (viagem) {
 
-status.className =
-  "status aberta";
+    status.className =
+      "status aberta";
 
-status.innerHTML =
-  "🚗 VIAGEM EM ANDAMENTO<br><br>" +
-  "Motorista: " +
-  (viagem.motorista || "") +
-  "<br>" +
-  "Veículo: " +
-  (viagem.veiculo || "") +
-  "<br>" +
-  "Placa: " +
-  (viagem.placa || "");
+    status.innerHTML =
+      "🚗 VIAGEM EM ANDAMENTO<br><br>" +
+      "Motorista: " +
+      viagem.motorista +
+      "<br>Veículo: " +
+      viagem.veiculo +
+      "<br>Placa: " +
+      viagem.placa;
 
-areaSaida.classList.add(
-  "oculto"
-);
+    areaSaida.classList.add("oculto");
 
-preencherChegada(
-  viagem
-);
+    preencherChegada(viagem);
+
+  }
+
+  else {
+
+    status.className =
+      "status";
+
+    status.textContent =
+      "NENHUMA VIAGEM EM ANDAMENTO";
+
+    areaSaida.classList.remove("oculto");
+
+    document.getElementById(
+      "motoristaChegada"
+    ).value = "";
+
+    document.getElementById(
+      "veiculoChegada"
+    ).value = "";
+
+    document.getElementById(
+      "placaChegada"
+    ).value = "";
+
+  }
 
 }
 
-else {
 
-status.className =
-  "status";
-
-status.textContent =
-  "NENHUMA VIAGEM EM ANDAMENTO";
-
-areaSaida.classList.remove(
-  "oculto"
-);
-
-}
-
-}
-
-/* =========================================
-ENVIAR PARA APPS SCRIPT
-========================================= */
+/* =========================
+   ENVIAR
+========================= */
 
 async function enviarDados(dados) {
 
-const resposta =
-await fetch(
-URL_APPS_SCRIPT,
-{
-method: "POST",
+  const resposta =
+    await fetch(
+      URL_APPS_SCRIPT,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type":
+            "text/plain;charset=utf-8"
+        },
+        body:
+          JSON.stringify(dados),
+        redirect:
+          "follow"
+      }
+    );
 
-    headers: {
-      "Content-Type":
-        "text/plain;charset=utf-8"
-    },
+  const texto =
+    await resposta.text();
 
-    body:
-      JSON.stringify(dados),
+  let resultado;
 
-    redirect: "follow"
+  try {
+
+    resultado =
+      JSON.parse(texto);
+
   }
-);
 
-const texto =
-await resposta.text();
+  catch (erro) {
 
-let resultado;
+    throw new Error(
+      "Resposta inválida do Google Apps Script."
+    );
 
-try {
+  }
 
-resultado =
-  JSON.parse(texto);
+  if (
+    !resultado ||
+    resultado.sucesso !== true
+  ) {
 
-} catch (erro) {
+    throw new Error(
+      resultado &&
+      resultado.mensagem
+        ? resultado.mensagem
+        : "O servidor não confirmou a operação."
+    );
 
-throw new Error(
-  "Resposta inválida do Google Apps Script."
-);
+  }
 
-}
-
-if (
-!resultado ||
-resultado.sucesso !== true
-) {
-
-throw new Error(
-  resultado.mensagem ||
-  "O servidor não confirmou a operação."
-);
+  return resultado;
 
 }
 
-return resultado;
 
-}
-
-/* =========================================
-REGISTRAR SAÍDA
-========================================= */
+/* =========================
+   SAÍDA
+========================= */
 
 async function registrarSaida() {
 
-if (lerViagem()) {
+  if (lerViagem()) {
 
-mostrarResultado(
-  "saida",
-  "Já existe uma viagem em andamento.",
-  true
-);
+    atualizarTela();
 
-atualizarTela();
+    mostrarResultado(
+      "saida",
+      "Já existe uma viagem em andamento.",
+      true
+    );
 
-return;
+    return;
+
+  }
+
+  const motorista =
+    document.getElementById("motorista").value.trim();
+
+  const dataSaida =
+    document.getElementById("dataSaida").value;
+
+  const horaSaida =
+    document.getElementById("horaSaida").value;
+
+  const veiculo =
+    document.getElementById("veiculo").value;
+
+  const placa =
+    document.getElementById("placa").value.trim();
+
+  const destino =
+    document.getElementById("destino").value.trim();
+
+  const kmSaida =
+    converterKm(
+      document.getElementById("kmSaida").value
+    );
+
+
+  if (!motorista) {
+
+    mostrarResultado(
+      "saida",
+      "Digite o motorista.",
+      true
+    );
+
+    return;
+
+  }
+
+  if (!veiculo) {
+
+    mostrarResultado(
+      "saida",
+      "Escolha o veículo.",
+      true
+    );
+
+    return;
+
+  }
+
+  if (!destino) {
+
+    mostrarResultado(
+      "saida",
+      "Digite o destino.",
+      true
+    );
+
+    return;
+
+  }
+
+  if (!Number.isFinite(kmSaida)) {
+
+    mostrarResultado(
+      "saida",
+      "Informe um KM de saída válido.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  const dados = {
+
+    acao: "saida",
+
+    motorista:
+      motorista,
+
+    dataSaida:
+      dataSaida,
+
+    horaSaida:
+      horaSaida,
+
+    veiculo:
+      veiculo,
+
+    placa:
+      placa,
+
+    destino:
+      destino,
+
+    kmSaida:
+      kmSaida
+
+  };
+
+
+  const botao =
+    document.getElementById("btnSaida");
+
+  botao.disabled = true;
+
+  botao.textContent =
+    "ENVIANDO...";
+
+
+  try {
+
+    const resultado =
+      await enviarDados(dados);
+
+    if (resultado.sucesso === true) {
+
+      salvarViagem(dados);
+
+      atualizarTela();
+
+      mostrarResultado(
+        "saida",
+        "SAÍDA REGISTRADA. VIAGEM EM ANDAMENTO.",
+        false
+      );
+
+    }
+
+  }
+
+  catch (erro) {
+
+    mostrarResultado(
+      "saida",
+      "Erro ao registrar saída: " +
+      erro.message,
+      true
+    );
+
+  }
+
+  finally {
+
+    botao.disabled = false;
+
+    botao.textContent =
+      "REGISTRAR SAÍDA";
+
+  }
 
 }
 
-const motorista =
-document.getElementById(
-"motorista"
-).value.trim();
 
-const dataSaida =
-document.getElementById(
-"dataSaida"
-).value;
-
-const horaSaida =
-document.getElementById(
-"horaSaida"
-).value;
-
-const veiculo =
-document.getElementById(
-"veiculo"
-).value;
-
-const placa =
-document.getElementById(
-"placa"
-).value.trim().toUpperCase();
-
-const destino =
-document.getElementById(
-"destino"
-).value.trim();
-
-const kmSaida =
-converterKm(
-document.getElementById(
-"kmSaida"
-).value
-);
-
-if (!motorista) {
-mostrarResultado(
-"saida",
-"Digite o nome do motorista.",
-true
-);
-return;
-}
-
-if (!dataSaida || !horaSaida) {
-mostrarResultado(
-"saida",
-"Informe data e hora de saída.",
-true
-);
-return;
-}
-
-if (!veiculo || !placa) {
-mostrarResultado(
-"saida",
-"Escolha o veículo.",
-true
-);
-return;
-}
-
-if (!destino) {
-mostrarResultado(
-"saida",
-"Informe o destino.",
-true
-);
-return;
-}
-
-if (!Number.isFinite(kmSaida)) {
-mostrarResultado(
-"saida",
-"Informe um KM de saída válido.",
-true
-);
-return;
-}
-
-const dados = {
-
-acao: "saida",
-
-motorista: motorista,
-
-dataSaida: dataSaida,
-
-horaSaida: horaSaida,
-
-veiculo: veiculo,
-
-placa: placa,
-
-destino: destino,
-
-kmSaida: kmSaida
-
-};
-
-const botao =
-document.getElementById(
-"btnSaida"
-);
-
-botao.disabled = true;
-botao.textContent = "ENVIANDO...";
-
-try {
-
-const resultado =
-  await enviarDados(dados);
-
-if (
-  resultado.sucesso === true
-) {
-
-  salvarViagem(dados);
-
-  atualizarTela();
-
-  mostrarResultado(
-    "saida",
-    "SAÍDA REGISTRADA. VIAGEM EM ANDAMENTO.",
-    false
-  );
-
-}
-
-} catch (erro) {
-
-mostrarResultado(
-  "saida",
-  "Não foi possível registrar a saída: " +
-  erro.message,
-  true
-);
-
-} finally {
-
-botao.disabled = false;
-botao.textContent =
-  "REGISTRAR SAÍDA";
-
-}
-
-}
-
-/* =========================================
-KM PERCORRIDO
-========================================= */
+/* =========================
+   KM PERCORRIDO
+========================= */
 
 function calcularKmPercorrido() {
 
-const viagem =
-lerViagem();
+  const viagem =
+    lerViagem();
 
-if (!viagem) {
+  if (!viagem) {
 
-document.getElementById(
-  "kmPercorrido"
-).textContent = "0";
+    document.getElementById(
+      "kmPercorrido"
+    ).textContent = "0";
 
-return;
+    return;
 
-}
+  }
 
-const kmSaida =
-converterKm(
-viagem.kmSaida
-);
+  const kmSaida =
+    converterKm(viagem.kmSaida);
 
-const kmChegada =
-converterKm(
-document.getElementById(
-"kmChegada"
-).value
-);
+  const kmChegada =
+    converterKm(
+      document.getElementById(
+        "kmChegada"
+      ).value
+    );
 
-if (
-!Number.isFinite(kmSaida) ||
-!Number.isFinite(kmChegada) ||
-kmChegada < kmSaida
-) {
+  if (
+    !Number.isFinite(kmSaida) ||
+    !Number.isFinite(kmChegada) ||
+    kmChegada < kmSaida
+  ) {
 
-document.getElementById(
-  "kmPercorrido"
-).textContent = "0";
+    document.getElementById(
+      "kmPercorrido"
+    ).textContent = "0";
 
-return;
+    return;
 
-}
-
-document.getElementById(
-"kmPercorrido"
-).textContent =
-formatarKm(
-kmChegada - kmSaida
-);
-
-}
-
-document.getElementById(
-"kmChegada"
-).addEventListener(
-"input",
-calcularKmPercorrido
-);
-
-/* =========================================
-REGISTRAR CHEGADA
-========================================= */
-
-async function registrarChegada() {
-
-const viagem =
-lerViagem();
-
-if (!viagem) {
-
-mostrarResultado(
-  "chegada",
-  "Nenhuma viagem em andamento.",
-  true
-);
-
-atualizarTela();
-
-return;
-
-}
-
-const kmSaida =
-converterKm(
-viagem.kmSaida
-);
-
-const kmChegada =
-converterKm(
-document.getElementById(
-"kmChegada"
-).value
-);
-
-if (!Number.isFinite(kmChegada)) {
-
-mostrarResultado(
-  "chegada",
-  "Informe o KM de chegada.",
-  true
-);
-
-return;
-
-}
-
-if (kmChegada < kmSaida) {
-
-mostrarResultado(
-  "chegada",
-  "O KM de chegada não pode ser menor que o KM de saída.",
-  true
-);
-
-return;
-
-}
-
-const dados = {
-
-acao: "chegada",
-
-motorista:
-  viagem.motorista,
-
-veiculo:
-  viagem.veiculo,
-
-placa:
-  viagem.placa,
-
-dataSaida:
-  viagem.dataSaida,
-
-horaSaida:
-  viagem.horaSaida,
-
-destino:
-  viagem.destino,
-
-kmSaida:
-  kmSaida,
-
-dataChegada:
-  document.getElementById(
-    "dataChegada"
-  ).value,
-
-kmChegada:
-  kmChegada,
-
-horaChegada:
-  document.getElementById(
-    "horaChegada"
-  ).value,
-
-localChegada:
-  document.getElementById(
-    "localChegada"
-  ).value.trim() ||
-  "João Pessoa - PB, Sede do COREN",
-
-assinatura:
-  document.getElementById(
-    "assinatura"
-  ).value.trim(),
-
-kmPercorrido:
-  kmChegada - kmSaida
-
-};
-
-const botao =
-document.getElementById(
-"btnChegada"
-);
-
-botao.disabled = true;
-botao.textContent = "ENVIANDO...";
-
-try {
-
-const resultado =
-  await enviarDados(dados);
-
-if (
-  resultado.sucesso === true
-) {
-
-  /*
-  IMPORTANTE:
-  somente aqui a viagem é apagada
-  do celular.
-  */
-
-  limparViagem();
-
-  document.getElementById(
-    "kmChegada"
-  ).value = "";
-
-  document.getElementById(
-    "assinatura"
-  ).value = "";
+  }
 
   document.getElementById(
     "kmPercorrido"
-  ).textContent = "0";
-
-  atualizarTela();
-
-  mostrarResultado(
-    "chegada",
-    "CHEGADA REGISTRADA. VIAGEM ENCERRADA.",
-    false
-  );
+  ).textContent =
+    formatarKm(
+      kmChegada - kmSaida
+    );
 
 }
 
-} catch (erro) {
 
-mostrarResultado(
-  "chegada",
-  "ERRO AO REGISTRAR CHEGADA. A viagem continua em andamento. " +
-  erro.message,
-  true
+document.getElementById(
+  "kmChegada"
+).addEventListener(
+  "input",
+  calcularKmPercorrido
 );
 
-} finally {
 
-botao.disabled = false;
-botao.textContent =
-  "REGISTRAR CHEGADA";
+/* =========================
+   CHEGADA
+========================= */
+
+async function registrarChegada() {
+
+  const viagem =
+    lerViagem();
+
+  if (!viagem) {
+
+    atualizarTela();
+
+    mostrarResultado(
+      "chegada",
+      "Nenhuma viagem em andamento.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  const kmSaida =
+    converterKm(
+      viagem.kmSaida
+    );
+
+  const kmChegada =
+    converterKm(
+      document.getElementById(
+        "kmChegada"
+      ).value
+    );
+
+
+  if (!Number.isFinite(kmChegada)) {
+
+    mostrarResultado(
+      "chegada",
+      "Informe o KM de chegada.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  if (kmChegada < kmSaida) {
+
+    mostrarResultado(
+      "chegada",
+      "O KM de chegada não pode ser menor que o KM de saída.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  const dados = {
+
+    acao:
+      "chegada",
+
+    motorista:
+      viagem.motorista,
+
+    veiculo:
+      viagem.veiculo,
+
+    placa:
+      viagem.placa,
+
+    dataSaida:
+      viagem.dataSaida,
+
+    horaSaida:
+      viagem.horaSaida,
+
+    destino:
+      viagem.destino,
+
+    kmSaida:
+      kmSaida,
+
+    dataChegada:
+      document.getElementById(
+        "dataChegada"
+      ).value,
+
+    kmChegada:
+      kmChegada,
+
+    horaChegada:
+      document.getElementById(
+        "horaChegada"
+      ).value,
+
+    localChegada:
+      document.getElementById(
+        "localChegada"
+      ).value,
+
+    assinatura:
+      document.getElementById(
+        "assinatura"
+      ).value,
+
+    kmPercorrido:
+      kmChegada - kmSaida
+
+  };
+
+
+  const botao =
+    document.getElementById(
+      "btnChegada"
+    );
+
+  botao.disabled = true;
+
+  botao.textContent =
+    "ENCERRANDO...";
+
+
+  try {
+
+    const resultado =
+      await enviarDados(dados);
+
+
+    /*
+    ============================================
+    IMPORTANTE:
+    SOMENTE APÓS O GOOGLE CONFIRMAR,
+    APAGAMOS A VIAGEM DO CELULAR.
+    ============================================
+    */
+
+    if (
+      resultado.sucesso === true
+    ) {
+
+      limparViagem();
+
+      document.getElementById(
+        "kmChegada"
+      ).value = "";
+
+      document.getElementById(
+        "assinatura"
+      ).value = "";
+
+      document.getElementById(
+        "kmPercorrido"
+      ).textContent = "0";
+
+      atualizarTela();
+
+      mostrarResultado(
+        "chegada",
+        "CHEGADA REGISTRADA. VIAGEM ENCERRADA COM SUCESSO.",
+        false
+      );
+
+    }
+
+  }
+
+  catch (erro) {
+
+    mostrarResultado(
+      "chegada",
+      "ERRO AO REGISTRAR CHEGADA. A viagem continua em andamento. " +
+      erro.message,
+      true
+    );
+
+  }
+
+  finally {
+
+    botao.disabled = false;
+
+    botao.textContent =
+      "REGISTRAR CHEGADA";
+
+  }
 
 }
 
-}
 
-/* =========================================
-MENSAGEM
-========================================= */
+/* =========================
+   RESULTADO
+========================= */
 
 function mostrarResultado(
-tipo,
-mensagem,
-erro
+  tipo,
+  mensagem,
+  erro
 ) {
 
-const elemento =
-document.getElementById(
-tipo === "saida"
-? "resultadoSaida"
-: "resultadoChegada"
-);
+  const elemento =
+    document.getElementById(
+      tipo === "saida"
+        ? "resultadoSaida"
+        : "resultadoChegada"
+    );
 
-elemento.style.display =
-"block";
+  elemento.style.display =
+    "block";
 
-elemento.textContent =
-mensagem;
+  elemento.textContent =
+    mensagem;
 
-elemento.className =
-erro
-? "resultado erro"
-: "resultado";
+  elemento.className =
+    erro
+      ? "resultado erro"
+      : "resultado";
 
 }
 
-/* =========================================
-INICIALIZAÇÃO
-========================================= */
+
+/* =========================
+   INICIAR
+========================= */
 
 document.getElementById(
-"dataSaida"
+  "dataSaida"
 ).value =
-dataAtual();
+  dataAtual();
 
 document.getElementById(
-"horaSaida"
+  "horaSaida"
 ).value =
-horaAtual();
+  horaAtual();
 
 document.getElementById(
-"dataChegada"
+  "dataChegada"
 ).value =
-dataAtual();
+  dataAtual();
 
 document.getElementById(
-"horaChegada"
+  "horaChegada"
 ).value =
-horaAtual();
+  horaAtual();
+
 
 atualizarTela();
 
-</script> </body> </html>
+</script>
+
+</body>
+</html>
