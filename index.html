@@ -235,8 +235,14 @@ Motorista / Condutor
 <input
 id="motorista"
 type="text"
-placeholder="Digite o nome do motorista"
+placeholder="Digite nome e sobrenome do motorista"
+autocomplete="name"
 >
+
+<div class="info">
+Informe pelo menos o nome e o sobrenome do motorista.
+Ex.: João Silva ou Maria da Silva.
+</div>
 
 <label>
 Data de Saída
@@ -437,8 +443,14 @@ Local de Chegada
 <input
 id="localChegada"
 type="text"
-value="João Pessoa - PB, Sede do COREN"
+value="João Pessoa-PB, Sede do COREN-PB"
+placeholder="João Pessoa-PB, Sede do COREN-PB"
 >
+
+<div class="info">
+Local preenchido automaticamente como:
+<strong>João Pessoa-PB, Sede do COREN-PB</strong>
+</div>
 
 <label>
 Assinatura do Motorista
@@ -526,6 +538,14 @@ const CHAVE_VIAGEM =
 
 
 /* =====================================================
+LOCAL PADRÃO DE CHEGADA
+===================================================== */
+
+const LOCAL_CHEGADA_PADRAO =
+"João Pessoa-PB, Sede do COREN-PB";
+
+
+/* =====================================================
 DATA
 ===================================================== */
 
@@ -557,6 +577,33 @@ function horaAtual() {
     ":" +
     String(agora.getMinutes()).padStart(2,"0")
   );
+
+}
+
+
+/* =====================================================
+VALIDAR NOME E SOBRENOME
+===================================================== */
+
+function validarNomeCompleto(nome) {
+
+  const texto =
+    String(nome || "")
+      .trim()
+      .replace(/\s+/g, " ");
+
+  if (!texto) {
+
+    return false;
+
+  }
+
+  const partes =
+    texto.split(" ");
+
+  return partes.length >= 2 &&
+         partes[0].length >= 2 &&
+         partes[partes.length - 1].length >= 2;
 
 }
 
@@ -807,6 +854,17 @@ function atualizarTela() {
     ).value =
       horaAtual();
 
+
+    /*
+    Garante o local padrão sempre que
+    uma viagem estiver em andamento.
+    */
+
+    document.getElementById(
+      "localChegada"
+    ).value =
+      LOCAL_CHEGADA_PADRAO;
+
   }
 
   else {
@@ -832,6 +890,16 @@ function atualizarTela() {
     document.getElementById(
       "placaChegada"
     ).value = "";
+
+    /*
+    Mantém o local padrão mesmo quando
+    não existe viagem aberta.
+    */
+
+    document.getElementById(
+      "localChegada"
+    ).value =
+      LOCAL_CHEGADA_PADRAO;
 
   }
 
@@ -1132,13 +1200,38 @@ async function registrarSaida() {
     );
 
 
+  /* =====================================================
+     VALIDAÇÃO DO MOTORISTA
+  ===================================================== */
+
   if (!motorista) {
 
     mostrarResultado(
       "saida",
-      "Digite o nome do motorista.",
+      "Digite o nome e o sobrenome do motorista.",
       true
     );
+
+    document.getElementById(
+      "motorista"
+    ).focus();
+
+    return;
+
+  }
+
+
+  if (!validarNomeCompleto(motorista)) {
+
+    mostrarResultado(
+      "saida",
+      "Informe nome e sobrenome do motorista. Ex.: João Silva.",
+      true
+    );
+
+    document.getElementById(
+      "motorista"
+    ).focus();
 
     return;
 
@@ -1264,8 +1357,6 @@ async function registrarSaida() {
         false
       );
 
-
-      /* COMPROVANTE DA SAÍDA */
 
       mostrarComprovante(
         "SAÍDA",
@@ -1430,6 +1521,21 @@ async function registrarChegada() {
     );
 
 
+  /*
+  O local é automaticamente definido
+  como João Pessoa-PB, Sede do COREN-PB.
+  */
+
+  const localChegada =
+    LOCAL_CHEGADA_PADRAO;
+
+
+  const assinatura =
+    document.getElementById(
+      "assinatura"
+    ).value.trim();
+
+
   if (
     !Number.isFinite(kmChegada)
   ) {
@@ -1500,14 +1606,10 @@ async function registrarChegada() {
       ).value,
 
     localChegada:
-      document.getElementById(
-        "localChegada"
-      ).value.trim(),
+      localChegada,
 
     assinatura:
-      document.getElementById(
-        "assinatura"
-      ).value.trim(),
+      assinatura,
 
     kmPercorrido:
       kmChegada - kmSaida
@@ -1539,10 +1641,6 @@ async function registrarChegada() {
     if (
       resultado.sucesso === true
     ) {
-
-      /*
-      Primeiro mostramos o comprovante.
-      */
 
       mostrarComprovante(
         "CHEGADA",
@@ -1582,11 +1680,6 @@ async function registrarChegada() {
         }
       );
 
-
-      /*
-      Depois da confirmação do servidor,
-      encerra a viagem no celular.
-      */
 
       limparViagem();
 
@@ -1705,6 +1798,17 @@ document.getElementById(
   "horaChegada"
 ).value =
   horaAtual();
+
+
+/*
+Define automaticamente o local
+de chegada padrão.
+*/
+
+document.getElementById(
+  "localChegada"
+).value =
+  LOCAL_CHEGADA_PADRAO;
 
 
 /*
