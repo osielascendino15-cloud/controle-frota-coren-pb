@@ -141,6 +141,10 @@ button:disabled {
   display: none;
 }
 
+/* =========================
+   COMPROVANTE
+========================= */
+
 .comprovante {
   margin-top: 20px;
   padding: 20px;
@@ -212,6 +216,11 @@ class="status"
 >
 NENHUMA VIAGEM EM ANDAMENTO
 </div>
+
+
+<!-- =====================================================
+SAÍDA
+===================================================== -->
 
 <div id="areaSaida">
 
@@ -352,6 +361,11 @@ style="display:none"
 
 </div>
 
+
+<!-- =====================================================
+CHEGADA
+===================================================== -->
+
 <div id="areaChegada">
 
 <h2>
@@ -445,11 +459,12 @@ Assinatura do Motorista
 <textarea
 id="assinatura"
 rows="3"
-placeholder="Digite o nome do motorista"
+placeholder="Digite nome e sobrenome do motorista"
 ></textarea>
 
 <div class="info">
-A assinatura do motorista é obrigatória para encerrar a viagem.
+Informe o nome e o sobrenome do motorista.
+Ex.: João Silva ou Maria da Silva.
 </div>
 
 <div
@@ -477,6 +492,11 @@ style="display:none"
 
 </div>
 
+
+<!-- =====================================================
+COMPROVANTE
+===================================================== -->
+
 <div
 id="comprovante"
 class="comprovante"
@@ -503,17 +523,36 @@ BAIXAR / IMPRIMIR COMPROVANTE
 
 </div>
 
+
 <script>
+
+/* =====================================================
+GOOGLE APPS SCRIPT
+===================================================== */
 
 const URL_APPS_SCRIPT =
 "https://script.google.com/macros/s/AKfycbzu264tIZifiObEh9mdy0ulZGgVBjhSptcb0KuBUIfDQ3ex3NKX865GidwU8Z3MsUUM/exec";
 
+
+/* =====================================================
+CHAVE DA VIAGEM
+===================================================== */
+
 const CHAVE_VIAGEM =
 "controleFrotaViagem_FINAL_2026";
+
+
+/* =====================================================
+LOCAL PADRÃO DE CHEGADA
+===================================================== */
 
 const LOCAL_CHEGADA_PADRAO =
 "João Pessoa-PB, Sede do COREN-PB";
 
+
+/* =====================================================
+DATA
+===================================================== */
 
 function dataAtual() {
 
@@ -530,6 +569,10 @@ function dataAtual() {
 }
 
 
+/* =====================================================
+HORA
+===================================================== */
+
 function horaAtual() {
 
   const agora = new Date();
@@ -542,6 +585,10 @@ function horaAtual() {
 
 }
 
+
+/* =====================================================
+VALIDAR NOME E SOBRENOME
+===================================================== */
 
 function validarNomeCompleto(nome) {
 
@@ -565,6 +612,10 @@ function validarNomeCompleto(nome) {
 
 }
 
+
+/* =====================================================
+KM
+===================================================== */
 
 function converterKm(valor) {
 
@@ -623,6 +674,10 @@ function converterKm(valor) {
 }
 
 
+/* =====================================================
+FORMATAR KM
+===================================================== */
+
 function formatarKm(valor) {
 
   if (!Number.isFinite(valor)) {
@@ -640,6 +695,10 @@ function formatarKm(valor) {
 
 }
 
+
+/* =====================================================
+VEÍCULO
+===================================================== */
 
 function selecionarVeiculo() {
 
@@ -666,6 +725,10 @@ function selecionarVeiculo() {
 }
 
 
+/* =====================================================
+SALVAR VIAGEM
+===================================================== */
+
 function salvarViagem(dados) {
 
   localStorage.setItem(
@@ -675,6 +738,10 @@ function salvarViagem(dados) {
 
 }
 
+
+/* =====================================================
+LER VIAGEM
+===================================================== */
 
 function lerViagem() {
 
@@ -708,6 +775,10 @@ function lerViagem() {
 }
 
 
+/* =====================================================
+LIMPAR VIAGEM
+===================================================== */
+
 function limparViagem() {
 
   localStorage.removeItem(
@@ -716,6 +787,10 @@ function limparViagem() {
 
 }
 
+
+/* =====================================================
+ATUALIZAR TELA
+===================================================== */
 
 function atualizarTela() {
 
@@ -804,21 +879,17 @@ function atualizarTela() {
       "oculto"
     );
 
-
     document.getElementById(
       "motoristaChegada"
     ).value = "";
-
 
     document.getElementById(
       "veiculoChegada"
     ).value = "";
 
-
     document.getElementById(
       "placaChegada"
     ).value = "";
-
 
     document.getElementById(
       "localChegada"
@@ -829,6 +900,10 @@ function atualizarTela() {
 
 }
 
+
+/* =====================================================
+ENVIAR PARA APPS SCRIPT
+===================================================== */
 
 async function enviarDados(dados) {
 
@@ -888,6 +963,10 @@ async function enviarDados(dados) {
 
 }
 
+
+/* =====================================================
+COMPROVANTE
+===================================================== */
 
 function mostrarComprovante(tipo, dados) {
 
@@ -1040,12 +1119,20 @@ function mostrarComprovante(tipo, dados) {
 }
 
 
+/* =====================================================
+IMPRIMIR / BAIXAR
+===================================================== */
+
 function imprimirComprovante() {
 
   window.print();
 
 }
 
+
+/* =====================================================
+REGISTRAR SAÍDA
+===================================================== */
 
 async function registrarSaida() {
 
@@ -1107,6 +1194,10 @@ async function registrarSaida() {
       ).value
     );
 
+
+  /* =====================================================
+     VALIDAÇÃO DO MOTORISTA
+  ===================================================== */
 
   if (!motorista) {
 
@@ -1316,6 +1407,10 @@ async function registrarSaida() {
 }
 
 
+/* =====================================================
+CALCULAR KM
+===================================================== */
+
 function calcularKmPercorrido() {
 
   const viagem =
@@ -1382,6 +1477,10 @@ document.getElementById(
 );
 
 
+/* =====================================================
+REGISTRAR CHEGADA
+===================================================== */
+
 async function registrarChegada() {
 
   const viagem =
@@ -1429,13 +1528,31 @@ async function registrarChegada() {
 
   /* =====================================================
      ASSINATURA OBRIGATÓRIA
+     MESMA VALIDAÇÃO DA SAÍDA
   ===================================================== */
 
   if (!assinatura) {
 
     mostrarResultado(
       "chegada",
-      "A assinatura do motorista é obrigatória. A viagem continua em andamento.",
+      "Digite o nome e o sobrenome do motorista para registrar a chegada.",
+      true
+    );
+
+    document.getElementById(
+      "assinatura"
+    ).focus();
+
+    return;
+
+  }
+
+
+  if (!validarNomeCompleto(assinatura)) {
+
+    mostrarResultado(
+      "chegada",
+      "Informe nome e sobrenome do motorista. Ex.: João Silva.",
       true
     );
 
@@ -1595,22 +1712,18 @@ async function registrarChegada() {
 
       limparViagem();
 
-
       document.getElementById(
         "kmChegada"
       ).value = "";
-
 
       document.getElementById(
         "assinatura"
       ).value = "";
 
-
       document.getElementById(
         "kmPercorrido"
       ).textContent =
         "0";
-
 
       atualizarTela();
 
@@ -1650,6 +1763,10 @@ async function registrarChegada() {
 }
 
 
+/* =====================================================
+MENSAGEM
+===================================================== */
+
 function mostrarResultado(
   tipo,
   mensagem,
@@ -1684,6 +1801,10 @@ function mostrarResultado(
 }
 
 
+/* =====================================================
+INICIALIZAÇÃO
+===================================================== */
+
 document.getElementById(
   "dataSaida"
 ).value =
@@ -1713,6 +1834,10 @@ document.getElementById(
 ).value =
   LOCAL_CHEGADA_PADRAO;
 
+
+/*
+Remove chaves antigas.
+*/
 
 localStorage.removeItem(
   "controleFrotaViagemAberta"
