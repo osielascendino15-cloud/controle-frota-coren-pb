@@ -141,10 +141,6 @@ button:disabled {
   display: none;
 }
 
-/* =========================
-   COMPROVANTE
-========================= */
-
 .comprovante {
   margin-top: 20px;
   padding: 20px;
@@ -216,11 +212,6 @@ class="status"
 >
 NENHUMA VIAGEM EM ANDAMENTO
 </div>
-
-
-<!-- =====================================================
-SAÍDA
-===================================================== -->
 
 <div id="areaSaida">
 
@@ -361,11 +352,6 @@ style="display:none"
 
 </div>
 
-
-<!-- =====================================================
-CHEGADA
-===================================================== -->
-
 <div id="areaChegada">
 
 <h2>
@@ -462,6 +448,10 @@ rows="3"
 placeholder="Digite o nome do motorista"
 ></textarea>
 
+<div class="info">
+A assinatura do motorista é obrigatória para encerrar a viagem.
+</div>
+
 <div
 style="margin-top:20px;text-align:center;font-size:20px;font-weight:bold;color:#075e2f;"
 >
@@ -486,11 +476,6 @@ style="display:none"
 ></div>
 
 </div>
-
-
-<!-- =====================================================
-COMPROVANTE
-===================================================== -->
 
 <div
 id="comprovante"
@@ -518,36 +503,17 @@ BAIXAR / IMPRIMIR COMPROVANTE
 
 </div>
 
-
 <script>
-
-/* =====================================================
-GOOGLE APPS SCRIPT
-===================================================== */
 
 const URL_APPS_SCRIPT =
 "https://script.google.com/macros/s/AKfycbzu264tIZifiObEh9mdy0ulZGgVBjhSptcb0KuBUIfDQ3ex3NKX865GidwU8Z3MsUUM/exec";
 
-
-/* =====================================================
-CHAVE DA VIAGEM
-===================================================== */
-
 const CHAVE_VIAGEM =
 "controleFrotaViagem_FINAL_2026";
-
-
-/* =====================================================
-LOCAL PADRÃO DE CHEGADA
-===================================================== */
 
 const LOCAL_CHEGADA_PADRAO =
 "João Pessoa-PB, Sede do COREN-PB";
 
-
-/* =====================================================
-DATA
-===================================================== */
 
 function dataAtual() {
 
@@ -564,10 +530,6 @@ function dataAtual() {
 }
 
 
-/* =====================================================
-HORA
-===================================================== */
-
 function horaAtual() {
 
   const agora = new Date();
@@ -580,10 +542,6 @@ function horaAtual() {
 
 }
 
-
-/* =====================================================
-VALIDAR NOME E SOBRENOME
-===================================================== */
 
 function validarNomeCompleto(nome) {
 
@@ -607,10 +565,6 @@ function validarNomeCompleto(nome) {
 
 }
 
-
-/* =====================================================
-KM
-===================================================== */
 
 function converterKm(valor) {
 
@@ -669,10 +623,6 @@ function converterKm(valor) {
 }
 
 
-/* =====================================================
-FORMATAR KM
-===================================================== */
-
 function formatarKm(valor) {
 
   if (!Number.isFinite(valor)) {
@@ -690,10 +640,6 @@ function formatarKm(valor) {
 
 }
 
-
-/* =====================================================
-VEÍCULO
-===================================================== */
 
 function selecionarVeiculo() {
 
@@ -720,10 +666,6 @@ function selecionarVeiculo() {
 }
 
 
-/* =====================================================
-SALVAR VIAGEM
-===================================================== */
-
 function salvarViagem(dados) {
 
   localStorage.setItem(
@@ -733,10 +675,6 @@ function salvarViagem(dados) {
 
 }
 
-
-/* =====================================================
-LER VIAGEM
-===================================================== */
 
 function lerViagem() {
 
@@ -770,10 +708,6 @@ function lerViagem() {
 }
 
 
-/* =====================================================
-LIMPAR VIAGEM
-===================================================== */
-
 function limparViagem() {
 
   localStorage.removeItem(
@@ -782,10 +716,6 @@ function limparViagem() {
 
 }
 
-
-/* =====================================================
-ATUALIZAR TELA
-===================================================== */
 
 function atualizarTela() {
 
@@ -855,11 +785,6 @@ function atualizarTela() {
       horaAtual();
 
 
-    /*
-    Garante o local padrão sempre que
-    uma viagem estiver em andamento.
-    */
-
     document.getElementById(
       "localChegada"
     ).value =
@@ -879,22 +804,21 @@ function atualizarTela() {
       "oculto"
     );
 
+
     document.getElementById(
       "motoristaChegada"
     ).value = "";
+
 
     document.getElementById(
       "veiculoChegada"
     ).value = "";
 
+
     document.getElementById(
       "placaChegada"
     ).value = "";
 
-    /*
-    Mantém o local padrão mesmo quando
-    não existe viagem aberta.
-    */
 
     document.getElementById(
       "localChegada"
@@ -905,10 +829,6 @@ function atualizarTela() {
 
 }
 
-
-/* =====================================================
-ENVIAR PARA APPS SCRIPT
-===================================================== */
 
 async function enviarDados(dados) {
 
@@ -968,10 +888,6 @@ async function enviarDados(dados) {
 
 }
 
-
-/* =====================================================
-COMPROVANTE
-===================================================== */
 
 function mostrarComprovante(tipo, dados) {
 
@@ -1124,20 +1040,12 @@ function mostrarComprovante(tipo, dados) {
 }
 
 
-/* =====================================================
-IMPRIMIR / BAIXAR
-===================================================== */
-
 function imprimirComprovante() {
 
   window.print();
 
 }
 
-
-/* =====================================================
-REGISTRAR SAÍDA
-===================================================== */
 
 async function registrarSaida() {
 
@@ -1199,10 +1107,6 @@ async function registrarSaida() {
       ).value
     );
 
-
-  /* =====================================================
-     VALIDAÇÃO DO MOTORISTA
-  ===================================================== */
 
   if (!motorista) {
 
@@ -1412,10 +1316,6 @@ async function registrarSaida() {
 }
 
 
-/* =====================================================
-CALCULAR KM
-===================================================== */
-
 function calcularKmPercorrido() {
 
   const viagem =
@@ -1482,10 +1382,6 @@ document.getElementById(
 );
 
 
-/* =====================================================
-REGISTRAR CHEGADA
-===================================================== */
-
 async function registrarChegada() {
 
   const viagem =
@@ -1521,11 +1417,6 @@ async function registrarChegada() {
     );
 
 
-  /*
-  O local é automaticamente definido
-  como João Pessoa-PB, Sede do COREN-PB.
-  */
-
   const localChegada =
     LOCAL_CHEGADA_PADRAO;
 
@@ -1534,6 +1425,27 @@ async function registrarChegada() {
     document.getElementById(
       "assinatura"
     ).value.trim();
+
+
+  /* =====================================================
+     ASSINATURA OBRIGATÓRIA
+  ===================================================== */
+
+  if (!assinatura) {
+
+    mostrarResultado(
+      "chegada",
+      "A assinatura do motorista é obrigatória. A viagem continua em andamento.",
+      true
+    );
+
+    document.getElementById(
+      "assinatura"
+    ).focus();
+
+    return;
+
+  }
 
 
   if (
@@ -1683,18 +1595,22 @@ async function registrarChegada() {
 
       limparViagem();
 
+
       document.getElementById(
         "kmChegada"
       ).value = "";
+
 
       document.getElementById(
         "assinatura"
       ).value = "";
 
+
       document.getElementById(
         "kmPercorrido"
       ).textContent =
         "0";
+
 
       atualizarTela();
 
@@ -1734,10 +1650,6 @@ async function registrarChegada() {
 }
 
 
-/* =====================================================
-MENSAGEM
-===================================================== */
-
 function mostrarResultado(
   tipo,
   mensagem,
@@ -1772,10 +1684,6 @@ function mostrarResultado(
 }
 
 
-/* =====================================================
-INICIALIZAÇÃO
-===================================================== */
-
 document.getElementById(
   "dataSaida"
 ).value =
@@ -1800,20 +1708,11 @@ document.getElementById(
   horaAtual();
 
 
-/*
-Define automaticamente o local
-de chegada padrão.
-*/
-
 document.getElementById(
   "localChegada"
 ).value =
   LOCAL_CHEGADA_PADRAO;
 
-
-/*
-Remove chaves antigas.
-*/
 
 localStorage.removeItem(
   "controleFrotaViagemAberta"
