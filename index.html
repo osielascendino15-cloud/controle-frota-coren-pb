@@ -61,7 +61,8 @@ textarea {
   background: white;
 }
 
-input[readonly] {
+input[readonly],
+textarea[readonly] {
   background: #eeeeee;
 }
 
@@ -251,6 +252,7 @@ Data de Saída
 <input
 id="dataSaida"
 type="date"
+readonly
 >
 
 <label>
@@ -260,6 +262,7 @@ Hora de Saída
 <input
 id="horaSaida"
 type="time"
+readonly
 >
 
 <label>
@@ -373,7 +376,7 @@ Registro de Chegada
 </h2>
 
 <div class="info">
-Os dados do motorista, veículo e placa são preenchidos automaticamente.
+Os dados do motorista, veículo, placa, data, hora e local são preenchidos automaticamente.
 </div>
 
 <label>
@@ -413,6 +416,7 @@ Data de Chegada
 <input
 id="dataChegada"
 type="date"
+readonly
 >
 
 <label>
@@ -434,6 +438,7 @@ Hora de Chegada
 <input
 id="horaChegada"
 type="time"
+readonly
 >
 
 <label>
@@ -443,8 +448,8 @@ Local de Chegada
 <input
 id="localChegada"
 type="text"
+readonly
 value="João Pessoa-PB, Sede do COREN-PB"
-placeholder="João Pessoa-PB, Sede do COREN-PB"
 >
 
 <div class="info">
@@ -463,7 +468,7 @@ placeholder="Digite nome e sobrenome do motorista"
 ></textarea>
 
 <div class="info">
-Informe o nome e o sobrenome do motorista.
+A assinatura é obrigatória. Informe nome e sobrenome.
 Ex.: João Silva ou Maria da Silva.
 </div>
 
@@ -848,6 +853,12 @@ function atualizarTela() {
       viagem.placa || "";
 
 
+    /*
+    Data e hora são automáticas
+    no momento em que a chegada
+    está disponível.
+    */
+
     document.getElementById(
       "dataChegada"
     ).value =
@@ -879,6 +890,7 @@ function atualizarTela() {
       "oculto"
     );
 
+
     document.getElementById(
       "motoristaChegada"
     ).value = "";
@@ -890,6 +902,19 @@ function atualizarTela() {
     document.getElementById(
       "placaChegada"
     ).value = "";
+
+
+    document.getElementById(
+      "dataChegada"
+    ).value =
+      dataAtual();
+
+
+    document.getElementById(
+      "horaChegada"
+    ).value =
+      horaAtual();
+
 
     document.getElementById(
       "localChegada"
@@ -1151,6 +1176,11 @@ async function registrarSaida() {
   }
 
 
+  /*
+  Data e hora são obtidas automaticamente
+  no momento do registro da saída.
+  */
+
   const motorista =
     document.getElementById(
       "motorista"
@@ -1158,15 +1188,11 @@ async function registrarSaida() {
 
 
   const dataSaida =
-    document.getElementById(
-      "dataSaida"
-    ).value;
+    dataAtual();
 
 
   const horaSaida =
-    document.getElementById(
-      "horaSaida"
-    ).value;
+    horaAtual();
 
 
   const veiculo =
@@ -1516,20 +1542,31 @@ async function registrarChegada() {
     );
 
 
+  /*
+  Local, data e hora são automáticos.
+  */
+
   const localChegada =
     LOCAL_CHEGADA_PADRAO;
 
+
+  const dataChegada =
+    dataAtual();
+
+
+  const horaChegada =
+    horaAtual();
+
+
+  /*
+  Assinatura obrigatória.
+  */
 
   const assinatura =
     document.getElementById(
       "assinatura"
     ).value.trim();
 
-
-  /* =====================================================
-     ASSINATURA OBRIGATÓRIA
-     MESMA VALIDAÇÃO DA SAÍDA
-  ===================================================== */
 
   if (!assinatura) {
 
@@ -1547,6 +1584,10 @@ async function registrarChegada() {
 
   }
 
+
+  /*
+  Mesma validação usada na saída.
+  */
 
   if (!validarNomeCompleto(assinatura)) {
 
@@ -1622,17 +1663,13 @@ async function registrarChegada() {
       kmSaida,
 
     dataChegada:
-      document.getElementById(
-        "dataChegada"
-      ).value,
+      dataChegada,
 
     kmChegada:
       kmChegada,
 
     horaChegada:
-      document.getElementById(
-        "horaChegada"
-      ).value,
+      horaChegada,
 
     localChegada:
       localChegada,
@@ -1710,20 +1747,30 @@ async function registrarChegada() {
       );
 
 
+      /*
+      Somente depois que o servidor
+      confirmar sucesso, a viagem
+      é encerrada.
+      */
+
       limparViagem();
+
 
       document.getElementById(
         "kmChegada"
       ).value = "";
 
+
       document.getElementById(
         "assinatura"
       ).value = "";
+
 
       document.getElementById(
         "kmPercorrido"
       ).textContent =
         "0";
+
 
       atualizarTela();
 
