@@ -531,7 +531,7 @@ style="display:none"
 
 
 <!-- =====================================================
-ÁREA DE APLICATIVO ENCERRADO
+ÁREA ENCERRADA
 ===================================================== -->
 
 <div
@@ -549,13 +549,7 @@ O registro desta viagem foi concluído com sucesso.
 </p>
 
 <p>
-<strong>
-Para fazer um novo registro, feche esta tela e abra novamente o aplicativo pelo ícone/link normalmente.
-</strong>
-</p>
-
-<p>
-O aplicativo não será removido da tela inicial do celular.
+Para fazer um novo registro, abra novamente o aplicativo.
 </p>
 
 </div>
@@ -611,14 +605,6 @@ const CHAVE_VIAGEM =
 
 
 /* =====================================================
-CHAVE DA SESSÃO ENCERRADA
-===================================================== */
-
-const CHAVE_SESSAO_ENCERRADA =
-"controleFrotaSessaoEncerrada_2026";
-
-
-/* =====================================================
 LOCAL PADRÃO DE CHEGADA
 ===================================================== */
 
@@ -663,7 +649,7 @@ function horaAtual() {
 
 
 /* =====================================================
-VALIDAR NOME E SOBRENOME
+VALIDAR NOME COMPLETO
 ===================================================== */
 
 function validarNomeCompleto(nome) {
@@ -865,96 +851,10 @@ function limparViagem() {
 
 
 /* =====================================================
-VERIFICAR SESSÃO ENCERRADA
-===================================================== */
-
-function sessaoEncerrada() {
-
-  return (
-    localStorage.getItem(
-      CHAVE_SESSAO_ENCERRADA
-    ) === "SIM"
-  );
-
-}
-
-
-/* =====================================================
-MARCAR SESSÃO COMO ENCERRADA
-===================================================== */
-
-function marcarSessaoEncerrada() {
-
-  localStorage.setItem(
-    CHAVE_SESSAO_ENCERRADA,
-    "SIM"
-  );
-
-}
-
-
-/* =====================================================
-BLOQUEAR TELA
-===================================================== */
-
-function bloquearTelaDepoisDaChegada() {
-
-  document.getElementById(
-    "areaSaida"
-  ).classList.add(
-    "oculto"
-  );
-
-
-  document.getElementById(
-    "areaChegada"
-  ).classList.add(
-    "oculto"
-  );
-
-
-  document.getElementById(
-    "areaEncerrada"
-  ).style.display =
-    "block";
-
-
-  const status =
-    document.getElementById(
-      "statusViagem"
-    );
-
-
-  status.className =
-    "status encerrada";
-
-
-  status.innerHTML =
-    "✓ VIAGEM ENCERRADA<br><br>" +
-    "Para fazer um novo registro, " +
-    "abra novamente o aplicativo.";
-}
-
-
-/* =====================================================
 ATUALIZAR TELA
 ===================================================== */
 
 function atualizarTela() {
-
-  /*
-  Se a sessão já foi encerrada,
-  mantém a tela bloqueada.
-  */
-
-  if (sessaoEncerrada()) {
-
-    bloquearTelaDepoisDaChegada();
-
-    return;
-
-  }
-
 
   const viagem =
     lerViagem();
@@ -979,6 +879,15 @@ function atualizarTela() {
       "areaEncerrada"
     );
 
+
+  /*
+  IMPORTANTE:
+  Não existe mais bloqueio permanente
+  salvo no localStorage.
+
+  Quando o aplicativo for aberto novamente,
+  a tela normal estará disponível.
+  */
 
   areaEncerrada.style.display =
     "none";
@@ -1029,10 +938,6 @@ function atualizarTela() {
       viagem.placa || "";
 
 
-    /*
-    Data e hora automáticas.
-    */
-
     document.getElementById(
       "dataChegada"
     ).value =
@@ -1044,10 +949,6 @@ function atualizarTela() {
     ).value =
       horaAtual();
 
-
-    /*
-    Local automático.
-    */
 
     document.getElementById(
       "localChegada"
@@ -1063,6 +964,7 @@ function atualizarTela() {
 
     status.textContent =
       "NENHUMA VIAGEM EM ANDAMENTO";
+
 
     areaSaida.classList.remove(
       "oculto"
@@ -1339,20 +1241,6 @@ REGISTRAR SAÍDA
 
 async function registrarSaida() {
 
-  /*
-  Não permite novo registro se a sessão
-  já estiver encerrada.
-  */
-
-  if (sessaoEncerrada()) {
-
-    bloquearTelaDepoisDaChegada();
-
-    return;
-
-  }
-
-
   if (lerViagem()) {
 
     mostrarResultado(
@@ -1369,7 +1257,8 @@ async function registrarSaida() {
 
 
   /*
-  Data e hora automáticas.
+  Data e hora são obtidas automaticamente
+  no momento do registro.
   */
 
   const motorista =
@@ -1411,10 +1300,6 @@ async function registrarSaida() {
       ).value
     );
 
-
-  /* =====================================================
-     VALIDAÇÃO DO MOTORISTA
-  ===================================================== */
 
   if (!motorista) {
 
@@ -1700,20 +1585,6 @@ REGISTRAR CHEGADA
 
 async function registrarChegada() {
 
-  /*
-  Impede qualquer novo registro depois
-  que a sessão estiver encerrada.
-  */
-
-  if (sessaoEncerrada()) {
-
-    bloquearTelaDepoisDaChegada();
-
-    return;
-
-  }
-
-
   const viagem =
     lerViagem();
 
@@ -1748,12 +1619,17 @@ async function registrarChegada() {
 
 
   /*
-  Local, data e hora são automáticos.
+  Local automático.
   */
 
   const localChegada =
     LOCAL_CHEGADA_PADRAO;
 
+
+  /*
+  Data e hora automáticas no momento
+  do registro da chegada.
+  */
 
   const dataChegada =
     dataAtual();
@@ -1764,7 +1640,7 @@ async function registrarChegada() {
 
 
   /*
-  Assinatura obrigatória.
+  ASSINATURA OBRIGATÓRIA
   */
 
   const assinatura =
@@ -1789,10 +1665,6 @@ async function registrarChegada() {
 
   }
 
-
-  /*
-  Mesma validação usada na saída.
-  */
 
   if (!validarNomeCompleto(assinatura)) {
 
@@ -1957,18 +1829,16 @@ async function registrarChegada() {
 
 
       /*
-      Somente depois que o Google Apps Script
-      confirmar o sucesso:
-
-      1. encerra a viagem;
-      2. marca a sessão como encerrada;
-      3. bloqueia a tela para novo registro.
+      A viagem é encerrada somente depois
+      da confirmação do Google Apps Script.
       */
 
       limparViagem();
 
-      marcarSessaoEncerrada();
 
+      /*
+      Limpa os campos da chegada.
+      */
 
       document.getElementById(
         "kmChegada"
@@ -1986,11 +1856,49 @@ async function registrarChegada() {
         "0";
 
 
-      atualizarTela();
+      /*
+      Mostra a tela de viagem encerrada
+      apenas nesta abertura atual.
+      */
+
+      document.getElementById(
+        "areaSaida"
+      ).classList.add(
+        "oculto"
+      );
+
+
+      document.getElementById(
+        "areaChegada"
+      ).classList.add(
+        "oculto"
+      );
+
+
+      document.getElementById(
+        "areaEncerrada"
+      ).style.display =
+        "block";
+
+
+      const status =
+        document.getElementById(
+          "statusViagem"
+        );
+
+
+      status.className =
+        "status encerrada";
+
+
+      status.innerHTML =
+        "✓ VIAGEM ENCERRADA<br><br>" +
+        "Registro concluído com sucesso.<br>" +
+        "Abra novamente o aplicativo para um novo registro.";
 
 
       /*
-      Mensagem final.
+      Mensagem de sucesso.
       */
 
       const resultadoChegada =
@@ -2008,7 +1916,7 @@ async function registrarChegada() {
 
 
       resultadoChegada.textContent =
-        "CHEGADA REGISTRADA COM SUCESSO. VIAGEM ENCERRADA. ABRA NOVAMENTE O APLICATIVO PARA UM NOVO REGISTRO.";
+        "CHEGADA REGISTRADA COM SUCESSO. VIAGEM ENCERRADA.";
 
     }
 
@@ -2017,8 +1925,8 @@ async function registrarChegada() {
   catch (erro) {
 
     /*
-    Se houver erro no envio,
-    a viagem NÃO é encerrada.
+    Se ocorrer erro no envio,
+    a viagem continua aberta.
     */
 
     mostrarResultado(
@@ -2125,7 +2033,7 @@ document.getElementById(
 
 
 /*
-Remove apenas chaves antigas.
+Remove chaves antigas.
 */
 
 localStorage.removeItem(
@@ -2138,7 +2046,14 @@ localStorage.removeItem(
 
 
 /*
-Atualiza a tela.
+IMPORTANTE:
+Não existe mais nenhuma chave de
+"SESSÃO ENCERRADA" no localStorage.
+
+Assim, ao abrir novamente o aplicativo,
+a tela volta normalmente para o registro
+de uma nova saída.
+
 */
 
 atualizarTela();
@@ -2146,4 +2061,5 @@ atualizarTela();
 </script>
 
 </body>
+
 </html>
