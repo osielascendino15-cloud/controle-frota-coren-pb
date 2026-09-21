@@ -994,17 +994,43 @@ LIBERAR CAMPOS DA CHEGADA
 
 function liberarCamposChegada() {
 
-  document.getElementById(
-    "kmChegada"
-  ).disabled = false;
+  /*
+  KM DE CHEGADA:
+  FICA HABILITADO PARA DIGITAÇÃO E EDIÇÃO.
+  */
 
-  document.getElementById(
-    "assinatura"
-  ).disabled = false;
+  const kmChegada =
+    document.getElementById(
+      "kmChegada"
+    );
+
+  kmChegada.disabled = false;
+  kmChegada.readOnly = false;
+
+
+  /*
+  ASSINATURA:
+  FICA HABILITADA PARA DIGITAÇÃO E EDIÇÃO.
+  */
+
+  const assinatura =
+    document.getElementById(
+      "assinatura"
+    );
+
+  assinatura.disabled = false;
+  assinatura.readOnly = false;
+
+
+  /*
+  OBSERVAÇÃO:
+  CONTINUA HABILITADA.
+  */
 
   document.getElementById(
     "observacao"
   ).disabled = false;
+
 
   document.getElementById(
     "btnChegada"
@@ -1016,6 +1042,7 @@ function liberarCamposChegada() {
   ).innerHTML =
     "✓ Comprovante da saída salvo/imprimido em PDF. " +
     "Agora você pode preencher os dados da chegada.";
+
 
   document.getElementById(
     "bloqueioChegada"
@@ -1041,13 +1068,31 @@ BLOQUEAR CAMPOS DA CHEGADA
 
 function bloquearCamposChegada() {
 
+  /*
+  Enquanto a saída não tiver seu comprovante,
+  os campos permanecem bloqueados.
+
+  Quando liberados por liberarCamposChegada(),
+  KM e assinatura poderão ser digitados/alterados.
+  */
+
   document.getElementById(
     "kmChegada"
   ).disabled = true;
 
   document.getElementById(
+    "kmChegada"
+  ).readOnly = false;
+
+
+  document.getElementById(
     "assinatura"
   ).disabled = true;
+
+  document.getElementById(
+    "assinatura"
+  ).readOnly = false;
+
 
   document.getElementById(
     "observacao"
@@ -2289,254 +2334,4 @@ async function registrarChegada() {
 
 
       /*
-      Bloqueia novamente a chegada.
-      */
-
-      bloquearCamposChegada();
-
-
-      /*
-      Mostra tela encerrada.
-      */
-
-      document.getElementById(
-        "areaSaida"
-      ).classList.add(
-        "oculto"
-      );
-
-
-      document.getElementById(
-        "areaChegada"
-      ).classList.add(
-        "oculto"
-      );
-
-
-      document.getElementById(
-        "areaEncerrada"
-      ).style.display =
-        "block";
-
-
-      const status =
-        document.getElementById(
-          "statusViagem"
-        );
-
-
-      status.className =
-        "status encerrada";
-
-
-      status.innerHTML =
-        "✓ VIAGEM ENCERRADA<br><br>" +
-        "Registro concluído com sucesso.<br>" +
-        "Abra novamente o aplicativo para um novo registro.";
-
-
-      const resultadoChegada =
-        document.getElementById(
-          "resultadoChegada"
-        );
-
-
-      resultadoChegada.style.display =
-        "block";
-
-
-      resultadoChegada.className =
-        "resultado";
-
-
-      resultadoChegada.textContent =
-        "CHEGADA REGISTRADA COM SUCESSO. VIAGEM ENCERRADA.";
-
-    }
-
-  }
-
-  catch (erro) {
-
-    mostrarResultado(
-      "chegada",
-      "ERRO AO REGISTRAR CHEGADA: " +
-      erro.message +
-      ". A viagem continua em andamento.",
-      true
-    );
-
-  }
-
-  finally {
-
-    /*
-    Só libera o botão novamente se
-    ainda existir uma viagem aberta.
-    */
-
-    if (lerViagem()) {
-
-      if (pdfSaidaFoiSalvo()) {
-
-        botao.disabled =
-          false;
-
-      }
-
-      else {
-
-        botao.disabled =
-          true;
-
-      }
-
-    }
-
-    botao.textContent =
-      "REGISTRAR CHEGADA";
-
-  }
-
-}
-
-
-/* =====================================================
-MENSAGEM
-===================================================== */
-
-function mostrarResultado(
-  tipo,
-  mensagem,
-  erro
-) {
-
-  const id =
-    tipo === "saida"
-      ? "resultadoSaida"
-      : "resultadoChegada";
-
-
-  const elemento =
-    document.getElementById(
-      id
-    );
-
-
-  elemento.style.display =
-    "block";
-
-
-  elemento.textContent =
-    mensagem;
-
-
-  elemento.className =
-    erro
-      ? "resultado erro"
-      : "resultado";
-
-}
-
-
-/* =====================================================
-INICIALIZAÇÃO
-===================================================== */
-
-document.getElementById(
-  "dataSaida"
-).value =
-  dataAtual();
-
-
-document.getElementById(
-  "horaSaida"
-).value =
-  horaAtual();
-
-
-document.getElementById(
-  "dataChegada"
-).value =
-  dataAtual();
-
-
-document.getElementById(
-  "horaChegada"
-).value =
-  horaAtual();
-
-
-document.getElementById(
-  "localChegada"
-).value =
-  LOCAL_CHEGADA_PADRAO;
-
-
-/*
-Remove somente chaves antigas
-que não fazem mais parte do sistema.
-*/
-
-localStorage.removeItem(
-  "controleFrotaViagemAberta"
-);
-
-localStorage.removeItem(
-  "controleFrotaViagemAberta_V2"
-);
-
-
-/*
-Atualiza a tela.
-*/
-
-atualizarTela();
-
-
-/*
-Atualiza data/hora automaticamente
-enquanto a página estiver aberta.
-*/
-
-setInterval(
-  function() {
-
-    document.getElementById(
-      "dataChegada"
-    ).value =
-      dataAtual();
-
-    document.getElementById(
-      "horaChegada"
-    ).value =
-      horaAtual();
-
-    /*
-    Só atualiza data/hora da saída
-    quando não existe viagem aberta.
-    */
-
-    if (!lerViagem()) {
-
-      document.getElementById(
-        "dataSaida"
-      ).value =
-        dataAtual();
-
-      document.getElementById(
-        "horaSaida"
-      ).value =
-        horaAtual();
-
-    }
-
-  },
-  30000
-);
-
-</script>
-
-</body>
-
-</html>
+      Bloqueia
