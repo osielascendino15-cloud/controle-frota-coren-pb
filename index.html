@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,291 +8,427 @@
 <title>Controle de Frota COREN-PB</title>
 
 <style>
+* { box-sizing: border-box; }
 
-body{
-font-family:Arial,sans-serif;
-background:#f2f4f7;
-margin:0;
-padding:0;
+body {
+  font-family: Arial, sans-serif;
+  background:#f2f4f7;
+  margin:0;
+  padding:0;
+  color:#222;
 }
 
-.container{
-max-width:500px;
-margin:auto;
-padding:20px;
+.container {
+  max-width:520px;
+  margin:auto;
+  padding:15px;
 }
 
-.header{
-background:#07579c;
-color:white;
-text-align:center;
-padding:25px 15px;
-border-radius:0 0 18px 18px;
+.header {
+  background:#07579c;
+  color:white;
+  text-align:center;
+  padding:22px 15px;
+  border-radius:0 0 18px 18px;
 }
 
-.header h1{
-margin:0;
-font-size:24px;
+.header h1 {
+  margin:0;
+  font-size:24px;
 }
 
-.header p{
-margin:8px 0 0;
+.header p {
+  margin:7px 0 0;
 }
 
-.card{
-background:white;
-margin-top:20px;
-padding:20px;
-border-radius:15px;
-box-shadow:0 3px 10px rgba(0,0,0,.12);
+.card {
+  background:white;
+  padding:20px;
+  margin-top:18px;
+  border-radius:15px;
+  box-shadow:0 3px 10px rgba(0,0,0,.12);
 }
 
-label{
-display:block;
-font-weight:bold;
-margin-top:15px;
-margin-bottom:6px;
+.card h2 {
+  margin-top:0;
+  color:#07579c;
 }
 
-input{
-width:100%;
-padding:14px;
-border:1px solid #ccc;
-border-radius:8px;
-font-size:16px;
-box-sizing:border-box;
+.card-chegada {
+  border:3px solid #07579c;
+  box-shadow:0 5px 16px rgba(7,87,156,.25);
 }
 
-button{
-width:100%;
-margin-top:20px;
-padding:16px;
-border:0;
-border-radius:8px;
-color:white;
-font-size:17px;
-font-weight:bold;
-cursor:pointer;
+.card-chegada h2 {
+  text-align:center;
+  font-size:24px;
 }
 
-.btn-saida{
-background:#198754;
+.saida-minimizada {
+  padding:12px 18px;
 }
 
-.btn-chegada{
-background:#dc3545;
+.saida-minimizada .conteudo-saida {
+  display:none;
 }
 
-button:disabled{
-background:#999;
+.saida-minimizada h2 {
+  margin:0;
+  font-size:18px;
 }
 
-#mensagem{
-margin-top:15px;
-padding:12px;
-border-radius:8px;
-text-align:center;
-font-weight:bold;
-display:none;
+.resumo-saida {
+  display:none;
+  margin-top:10px;
+  padding:10px;
+  background:#eef6fc;
+  border-radius:8px;
+  line-height:1.5;
 }
 
-.sucesso{
-display:block!important;
-background:#d4edda;
-color:#155724;
+.saida-minimizada .resumo-saida {
+  display:block;
 }
 
-.erro{
-display:block!important;
-background:#f8d7da;
-color:#721c24;
+label {
+  display:block;
+  font-weight:bold;
+  margin-top:14px;
+  margin-bottom:6px;
 }
 
-.km{
-margin-top:15px;
-padding:12px;
-background:#eef5fb;
-text-align:center;
-border-radius:8px;
-font-weight:bold;
-color:#07579c;
+input,
+select,
+textarea {
+  width:100%;
+  padding:13px;
+  border:1px solid #bbb;
+  border-radius:8px;
+  font-size:16px;
+  background:white;
 }
 
-#areaChegada{
-display:none;
+textarea {
+  min-height:90px;
+  resize:vertical;
 }
 
-.status{
-margin-top:15px;
-padding:12px;
-background:#fff3cd;
-color:#856404;
-border-radius:8px;
-text-align:center;
-font-weight:bold;
+input:focus,
+select:focus,
+textarea:focus {
+  outline:3px solid rgba(7,87,156,.18);
+  border-color:#07579c;
 }
 
+input:disabled,
+select:disabled,
+textarea:disabled,
+input[readonly] {
+  background:#eee;
+  color:#555;
+  opacity:1;
+}
+
+button {
+  width:100%;
+  padding:15px;
+  border:none;
+  border-radius:9px;
+  margin-top:18px;
+  font-size:17px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.btn-principal {
+  background:#07579c;
+  color:white;
+}
+
+.btn-pdf {
+  background:#176b38;
+  color:white;
+}
+
+.btn-limpar {
+  background:#a11616;
+  color:white;
+}
+
+button:disabled {
+  background:#999;
+  cursor:not-allowed;
+}
+
+.mensagem {
+  display:none;
+  margin-top:15px;
+  padding:12px;
+  border-radius:8px;
+  font-weight:bold;
+  text-align:center;
+}
+
+.sucesso {
+  display:block;
+  background:#e7f7ec;
+  color:#176b38;
+}
+
+.erro {
+  display:block;
+  background:#fdeaea;
+  color:#a11616;
+}
+
+.aviso {
+  background:#fff4d8;
+  border:1px solid #e3bd57;
+  padding:12px;
+  border-radius:8px;
+  margin-bottom:15px;
+  font-weight:bold;
+  text-align:center;
+}
+
+#areaChegada {
+  display:none;
+}
+
+#areaEncerrada {
+  display:none;
+}
+
+.encerrada {
+  text-align:center;
+  padding:30px 20px;
+}
+
+.encerrada h2 {
+  color:#176b38;
+}
+
+.texto-pequeno {
+  font-size:13px;
+  color:#666;
+  text-align:center;
+  margin-top:8px;
+}
 </style>
 </head>
 
-
 <body>
+
+<div class="header">
+  <h1>CONTROLE DE FROTA</h1>
+  <p>COREN-PB</p>
+</div>
 
 <div class="container">
 
-<div class="header">
+<!-- REGISTRO DE SAÍDA -->
 
-<h1>🚗 CONTROLE DE FROTA</h1>
+<div class="card" id="cardSaida">
 
-<p>COREN-PB</p>
+<h2>Registro de Saída</h2>
 
-</div>
+<div class="resumo-saida" id="resumoSaida"></div>
 
+<div class="conteudo-saida">
 
-<div class="card">
-
-<form id="formulario">
-
-
-<label>Motorista / Condutor</label>
-<input
-id="motorista"
-type="text"
-placeholder="Nome do motorista"
-required
->
-
-
-<label>Hora de Saída</label>
+<label for="motorista">Motorista / Condutor</label>
 
 <input
-id="horaSaida"
-type="time"
-required
+  type="text"
+  id="motorista"
+  autocomplete="name"
+  placeholder="Digite nome e sobrenome"
 >
 
-
-<label>Veículo</label>
+<label for="dataSaida">Data de Saída</label>
 
 <input
-id="veiculo"
-type="text"
-placeholder="Veículo"
-required
+  type="date"
+  id="dataSaida"
+  readonly
 >
 
-
-<label>Placa</label>
+<label for="horaSaida">Hora de Saída</label>
 
 <input
-id="placa"
-type="text"
-maxlength="7"
-placeholder="Placa"
-required
+  type="time"
+  id="horaSaida"
+  readonly
 >
 
+<label for="veiculo">Veículo</label>
 
-<label>Destino</label>
+<select id="veiculo" onchange="atualizarPlaca()">
+
+<option value="">Selecione o veículo</option>
+
+<option value="SANDERO" data-placa="OFC-4143">
+SANDERO — OFC-4143
+</option>
+
+<option value="NISSAN FRONTIER" data-placa="PWC-1227">
+NISSAN FRONTIER — PWC-1227
+</option>
+
+<option value="NISSAN KICKS" data-placa="SLC-8F20">
+NISSAN KICKS — SLC-8F20
+</option>
+
+<option value="NISSAN KICKS" data-placa="SLC-8F40">
+NISSAN KICKS — SLC-8F40
+</option>
+
+<option value="NISSAN KICKS" data-placa="SLC-8F50">
+NISSAN KICKS — SLC-8F50
+</option>
+
+</select>
+
+<label for="placa">Placa</label>
 
 <input
-id="destino"
-type="text"
-placeholder="Destino"
-required
+  type="text"
+  id="placa"
+  readonly
 >
 
-
-<label>KM de Saída</label>
+<label for="destino">Destino</label>
 
 <input
-id="kmSaida"
-type="number"
-min="0"
-placeholder="KM de saída"
-required
+  type="text"
+  id="destino"
+  placeholder="Digite o destino"
 >
 
+<label for="kmSaida">KM de Saída</label>
+
+<input
+  type="text"
+  id="kmSaida"
+  inputmode="decimal"
+  placeholder="Ex.: 10500,5 ou 10500.5"
+>
 
 <button
-id="botaoSaida"
-class="btn-saida"
-type="button">
-
-🟢 SALVAR KM DE SAÍDA
-
+  class="btn-principal"
+  id="btnSaida"
+  onclick="registrarSaida()"
+>
+REGISTRAR SAÍDA
 </button>
 
+<div id="mensagemSaida" class="mensagem"></div>
 
-<div
-id="status"
-class="status">
-
-Nenhuma viagem em andamento.
-
+</div>
 </div>
 
 
-<div id="areaChegada">
+<!-- REGISTRO DE CHEGADA -->
 
+<div class="card card-chegada" id="areaChegada">
+
+<h2>REGISTRO DE CHEGADA</h2>
+
+<div class="aviso">
+Saída registrada. Complete agora o registro de chegada.
+</div>
+
+<label>Motorista / Condutor</label>
+<input type="text" id="motoristaChegada" readonly>
+
+<label>Veículo</label>
+<input type="text" id="veiculoChegada" readonly>
+
+<label>Placa</label>
+<input type="text" id="placaChegada" readonly>
+
+<label>Data de Chegada</label>
+<input type="date" id="dataChegada">
 
 <label>KM de Chegada</label>
 
 <input
-id="kmChegada"
-type="number"
-min="0"
-placeholder="KM de chegada"
+  type="text"
+  id="kmChegada"
+  inputmode="decimal"
+  placeholder="Ex.: 10520,5 ou 10520.5"
 >
-
 
 <label>Hora de Chegada</label>
+<input type="time" id="horaChegada" readonly>
+
+<label>Local de Chegada</label>
 
 <input
-id="horaChegada"
-type="time"
-readonly
+  type="text"
+  id="localChegada"
+  value="João Pessoa - PB, Sede do COREN"
 >
 
+<label>Assinatura do Motorista</label>
 
-<div class="km">
+<textarea
+  id="assinatura"
+  placeholder="Digite sua assinatura / nome completo"
+></textarea>
 
-KM PERCORRIDO:
+<label>Observação</label>
 
-<span id="kmPercorrido">0</span>
-
-KM
-
-</div>
-
-
-<label>✍️ Assinatura do Motorista</label>
-
-<input
-id="assinatura"
-type="text"
-placeholder="Digite o nome completo do motorista"
-autocomplete="name"
->
-
+<textarea
+  id="observacaoChegada"
+  placeholder="Se não houver ocorrência, digite SEM OBSERVAÇÃO"
+></textarea>
 
 <button
-id="botaoChegada"
-class="btn-chegada"
-type="button">
-
-🔴 ENCERRAR VIAGEM
-
+  class="btn-principal"
+  id="btnChegada"
+  onclick="registrarChegada()"
+>
+REGISTRAR CHEGADA
 </button>
 
+<div id="mensagemChegada" class="mensagem"></div>
+
+<button
+  class="btn-pdf"
+  id="btnPDF"
+  onclick="baixarPDF()"
+  style="display:none"
+>
+BAIXAR / SALVAR EM PDF
+</button>
+
+<button
+  class="btn-limpar"
+  id="btnLimparAntigo"
+  onclick="limparRegistroAntigo()"
+>
+LIMPAR REGISTRO ANTIGO / NOVO REGISTRO
+</button>
+
+<div class="texto-pequeno">
+Use este botão somente quando houver um registro antigo de teste preso neste aparelho.
+</div>
 
 </div>
 
 
-<div id="mensagem"></div>
+<!-- VIAGEM ENCERRADA -->
 
+<div class="card encerrada" id="areaEncerrada">
 
-</form>
+<h2>✓ VIAGEM ENCERRADA</h2>
+
+<p>O registro de saída e chegada foi concluído.</p>
+
+<p>
+Feche o aplicativo. Ao abrir novamente, estará disponível um novo Registro de Saída.
+</p>
 
 </div>
 
@@ -300,575 +437,1330 @@ type="button">
 
 <script>
 
+const URL_SCRIPT =
+"https://script.google.com/macros/s/AKfycbzu264tIZifiObEh9mdy0ulZGgVBjhSptcb0KuBUIfDQ3ex3NKX865GidwU8Z3MsUUM/exec";
 
-const URL_APPS_SCRIPT =
-"https://script.google.com/macros/s/AKfycbxPQx0vFT0XZbU4nUDO0NCqF2uxfpGOlhna6N9fAKE9h5mx2rVgZ3rdFFxPvclIIh4M/exec";
-
-
-const formulario =
-document.getElementById("formulario");
-
-const motorista =
-document.getElementById("motorista");
-
-const horaSaida =
-document.getElementById("horaSaida");
-
-const veiculo =
-document.getElementById("veiculo");
-
-const placa =
-document.getElementById("placa");
-
-const destino =
-document.getElementById("destino");
-
-const kmSaida =
-document.getElementById("kmSaida");
-
-const kmChegada =
-document.getElementById("kmChegada");
-
-const horaChegada =
-document.getElementById("horaChegada");
-
-const assinatura =
-document.getElementById("assinatura");
-
-const botaoSaida =
-document.getElementById("botaoSaida");
-
-const botaoChegada =
-document.getElementById("botaoChegada");
-
-const areaChegada =
-document.getElementById("areaChegada");
-
-const kmPercorrido =
-document.getElementById("kmPercorrido");
-
-const mensagem =
-document.getElementById("mensagem");
-
-const status =
-document.getElementById("status");
+let enviandoSaida = false;
+let enviandoChegada = false;
+let viagemAtual = null;
+let dadosPDF = null;
 
 
-/* HORA ATUAL */
+function campo(id) {
+  return document.getElementById(id);
+}
 
-function horaAtual(){
-
-const agora = new Date();
-
-return String(
-agora.getHours()
-).padStart(2,"0")
-+
-":"
-+
-String(
-agora.getMinutes()
-).padStart(2,"0");
-
+function valor(id) {
+  return campo(id).value.trim();
 }
 
 
-/* MENSAGEM */
+function dataHoje() {
 
-function mostrarMensagem(
-texto,
-tipo
-){
+  const agora = new Date();
 
-mensagem.textContent =
-texto;
+  const ano = agora.getFullYear();
 
-mensagem.className =
-tipo;
+  const mes =
+    String(agora.getMonth() + 1)
+    .padStart(2, "0");
 
+  const dia =
+    String(agora.getDate())
+    .padStart(2, "0");
+
+  return `${ano}-${mes}-${dia}`;
 }
 
 
-/* ENVIAR DADOS */
+function horaAgora() {
 
-function enviarDados(
-dados
-){
+  const agora = new Date();
 
-return fetch(
-URL_APPS_SCRIPT,
-{
-method:"POST",
+  const hora =
+    String(agora.getHours())
+    .padStart(2, "0");
 
-mode:"no-cors",
+  const minuto =
+    String(agora.getMinutes())
+    .padStart(2, "0");
 
-headers:{
-"Content-Type":
-"text/plain;charset=utf-8"
-},
-
-body:
-JSON.stringify(dados)
-
-}
-);
-
+  return `${hora}:${minuto}`;
 }
 
 
-/* INICIAR */
+function converterKM(valorKM) {
+
+  let texto =
+    String(valorKM || "")
+    .trim()
+    .replace(/\s/g, "");
+
+  if (!texto) {
+    return NaN;
+  }
+
+  const ultimaVirgula =
+    texto.lastIndexOf(",");
+
+  const ultimoPonto =
+    texto.lastIndexOf(".");
+
+  if (
+    ultimaVirgula >= 0 &&
+    ultimoPonto >= 0
+  ) {
+
+    if (ultimaVirgula > ultimoPonto) {
+
+      texto =
+        texto
+        .replace(/\./g, "")
+        .replace(",", ".");
+
+    } else {
+
+      texto =
+        texto.replace(/,/g, "");
+    }
+
+  } else if (ultimaVirgula >= 0) {
+
+    texto =
+      texto.replace(",", ".");
+  }
+
+  texto =
+    texto.replace(
+      /[^0-9.-]/g,
+      ""
+    );
+
+  const numero =
+    Number(texto);
+
+  return Number.isFinite(numero)
+    ? numero
+    : NaN;
+}
+
+
+function atualizarPlaca() {
+
+  const select =
+    campo("veiculo");
+
+  const opcao =
+    select.options[
+      select.selectedIndex
+    ];
+
+  campo("placa").value =
+    opcao &&
+    opcao.dataset.placa
+      ? opcao.dataset.placa
+      : "";
+}
+
+
+function nomeCompletoValido(nome) {
+
+  const partes =
+    nome
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+
+  return (
+    partes.length >= 2 &&
+    partes[0].length >= 2 &&
+    partes[1].length >= 2
+  );
+}
+
+
+function campoObrigatorio(id, mensagem) {
+
+  const elemento =
+    campo(id);
+
+  elemento.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+
+  setTimeout(function() {
+
+    elemento.focus();
+
+  }, 300);
+
+  alert(mensagem);
+
+  return false;
+}
+
+
+function mostrarMensagem(id, texto, tipo) {
+
+  const elemento =
+    campo(id);
+
+  elemento.textContent =
+    texto;
+
+  elemento.className =
+    "mensagem " + tipo;
+}
+
+
+function validarSaida() {
+
+  const motorista =
+    valor("motorista");
+
+  if (!motorista) {
+
+    return campoObrigatorio(
+      "motorista",
+      "Preencha o nome e sobrenome do motorista."
+    );
+  }
+
+  if (!nomeCompletoValido(motorista)) {
+
+    return campoObrigatorio(
+      "motorista",
+      "Digite pelo menos o nome e o sobrenome do motorista."
+    );
+  }
+
+  if (!valor("dataSaida")) {
+
+    return campoObrigatorio(
+      "dataSaida",
+      "A data de saída não foi preenchida."
+    );
+  }
+
+  if (!valor("veiculo")) {
+
+    return campoObrigatorio(
+      "veiculo",
+      "Selecione o veículo."
+    );
+  }
+
+  if (!valor("placa")) {
+
+    return campoObrigatorio(
+      "veiculo",
+      "Selecione um veículo com placa."
+    );
+  }
+
+  if (!valor("destino")) {
+
+    return campoObrigatorio(
+      "destino",
+      "Informe o destino."
+    );
+  }
+
+  const km =
+    converterKM(
+      valor("kmSaida")
+    );
+
+  if (
+    !Number.isFinite(km) ||
+    km < 0
+  ) {
+
+    return campoObrigatorio(
+      "kmSaida",
+      "Informe um KM de saída válido."
+    );
+  }
+
+  return true;
+}
+
+
+async function registrarSaida() {
+
+  if (enviandoSaida) {
+    return;
+  }
+
+  if (
+    localStorage.getItem(
+      "controleFrotaViagemAberta"
+    )
+  ) {
+
+    alert(
+      "Já existe uma saída registrada neste aparelho."
+    );
+
+    restaurarViagem();
+
+    return;
+  }
+
+  if (!validarSaida()) {
+    return;
+  }
+
+  /*
+    DATA E HORA SÃO ATUALIZADAS
+    AUTOMATICAMENTE NO MOMENTO
+    EXATO DO REGISTRO.
+  */
+
+  campo("dataSaida").value =
+    dataHoje();
+
+  campo("horaSaida").value =
+    horaAgora();
+
+  const dados = {
+
+    acao: "saida",
+
+    motorista:
+      valor("motorista"),
+
+    dataSaida:
+      valor("dataSaida"),
+
+    horaSaida:
+      valor("horaSaida"),
+
+    veiculo:
+      valor("veiculo"),
+
+    placa:
+      valor("placa"),
+
+    destino:
+      valor("destino"),
+
+    kmSaida:
+      converterKM(
+        valor("kmSaida")
+      )
+  };
+
+
+  enviandoSaida = true;
+
+  campo("btnSaida").disabled =
+    true;
+
+  campo("btnSaida").textContent =
+    "REGISTRANDO...";
+
+
+  try {
+
+    const resposta =
+      await fetch(
+        URL_SCRIPT,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "text/plain;charset=utf-8"
+          },
+
+          body:
+            JSON.stringify(dados)
+        }
+      );
+
+    const retorno =
+      await resposta.json();
+
+    if (!retorno.sucesso) {
+
+      throw new Error(
+        retorno.mensagem ||
+        "Não foi possível registrar a saída."
+      );
+    }
+
+    viagemAtual =
+      dados;
+
+    localStorage.setItem(
+      "controleFrotaViagemAberta",
+      JSON.stringify(dados)
+    );
+
+    localStorage.setItem(
+      "controleFrotaInicioViagem",
+      String(Date.now())
+    );
+
+    localStorage.removeItem(
+      "controleFrotaChegadaRegistrada"
+    );
+
+    localStorage.removeItem(
+      "controleFrotaUltimoPDF"
+    );
+
+    mostrarMensagem(
+      "mensagemSaida",
+      "Saída registrada com sucesso!",
+      "sucesso"
+    );
+
+    bloquearSaida();
+
+    prepararChegada();
+
+  } catch (erro) {
+
+    enviandoSaida =
+      false;
+
+    campo("btnSaida").disabled =
+      false;
+
+    campo("btnSaida").textContent =
+      "REGISTRAR SAÍDA";
+
+    mostrarMensagem(
+      "mensagemSaida",
+      "Não foi possível registrar a saída. " +
+      erro.message,
+      "erro"
+    );
+  }
+}
+
+
+function bloquearSaida() {
+
+  [
+    "motorista",
+    "veiculo",
+    "destino",
+    "kmSaida"
+  ].forEach(function(id) {
+
+    campo(id).disabled =
+      true;
+  });
+
+  campo("dataSaida").readOnly =
+    true;
+
+  campo("horaSaida").readOnly =
+    true;
+
+  campo("placa").readOnly =
+    true;
+
+  campo("btnSaida").disabled =
+    true;
+
+  campo("btnSaida").textContent =
+    "SAÍDA JÁ REGISTRADA";
+
+  campo("resumoSaida").innerHTML =
+
+    "<strong>Saída registrada</strong><br>" +
+
+    escapar(viagemAtual.motorista) +
+
+    "<br>" +
+
+    escapar(viagemAtual.veiculo) +
+
+    " — " +
+
+    escapar(viagemAtual.placa) +
+
+    "<br>Destino: " +
+
+    escapar(viagemAtual.destino) +
+
+    "<br>KM saída: " +
+
+    escapar(viagemAtual.kmSaida) +
+
+    "<br>Data de saída: " +
+
+    escapar(viagemAtual.dataSaida) +
+
+    "<br>Hora de saída: " +
+
+    escapar(viagemAtual.horaSaida);
+
+  campo("cardSaida")
+    .classList
+    .add("saida-minimizada");
+}
+
+
+function prepararChegada() {
+
+  campo("areaChegada")
+    .style.display =
+    "block";
+
+  campo("motoristaChegada").value =
+    viagemAtual.motorista || "";
+
+  campo("veiculoChegada").value =
+    viagemAtual.veiculo || "";
+
+  campo("placaChegada").value =
+    viagemAtual.placa || "";
+
+  if (!valor("dataChegada")) {
+
+    campo("dataChegada").value =
+      dataHoje();
+  }
+
+  campo("horaChegada").value =
+    horaAgora();
+
+  campo("areaChegada")
+    .scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
+  setTimeout(function() {
+
+    campo("kmChegada").focus();
+
+  }, 500);
+}
+
+
+function validarChegada() {
+
+  if (!valor("dataChegada")) {
+
+    return campoObrigatorio(
+      "dataChegada",
+      "Informe a data de chegada."
+    );
+  }
+
+  const kmSaida =
+    converterKM(
+      viagemAtual.kmSaida
+    );
+
+  const kmChegada =
+    converterKM(
+      valor("kmChegada")
+    );
+
+  if (!Number.isFinite(kmChegada)) {
+
+    return campoObrigatorio(
+      "kmChegada",
+      "Informe o KM de chegada."
+    );
+  }
+
+  if (kmChegada < kmSaida) {
+
+    return campoObrigatorio(
+      "kmChegada",
+      "O KM de chegada não pode ser menor que o KM de saída."
+    );
+  }
+
+  if (!valor("localChegada")) {
+
+    return campoObrigatorio(
+      "localChegada",
+      "Informe o local de chegada."
+    );
+  }
+
+  if (!valor("assinatura")) {
+
+    return campoObrigatorio(
+      "assinatura",
+      "Preencha a assinatura do motorista."
+    );
+  }
+
+  if (!valor("observacaoChegada")) {
+
+    return campoObrigatorio(
+      "observacaoChegada",
+      "Preencha a observação. Se não houver ocorrência, digite SEM OBSERVAÇÃO."
+    );
+  }
+
+  return true;
+}
+
+
+async function registrarChegada() {
+
+  if (enviandoChegada) {
+    return;
+  }
+
+  if (
+    localStorage.getItem(
+      "controleFrotaChegadaRegistrada"
+    ) === "sim"
+  ) {
+
+    alert(
+      "A chegada desta viagem já foi registrada."
+    );
+
+    return;
+  }
+
+  if (!viagemAtual) {
+
+    alert(
+      "Não existe uma saída aberta para registrar a chegada."
+    );
+
+    return;
+  }
+
+  if (!validarChegada()) {
+    return;
+  }
+
+  campo("horaChegada").value =
+    horaAgora();
+
+  const dados = {
+
+    acao: "chegada",
+
+    motorista:
+      viagemAtual.motorista,
+
+    dataSaida:
+      viagemAtual.dataSaida,
+
+    horaSaida:
+      viagemAtual.horaSaida,
+
+    veiculo:
+      viagemAtual.veiculo,
+
+    placa:
+      viagemAtual.placa,
+
+    destino:
+      viagemAtual.destino,
+
+    kmSaida:
+      viagemAtual.kmSaida,
+
+    dataChegada:
+      valor("dataChegada"),
+
+    kmChegada:
+      converterKM(
+        valor("kmChegada")
+      ),
+
+    horaChegada:
+      valor("horaChegada"),
+
+    localChegada:
+      valor("localChegada"),
+
+    assinatura:
+      valor("assinatura"),
+
+    observacaoChegada:
+      valor("observacaoChegada")
+  };
+
+
+  enviandoChegada =
+    true;
+
+  campo("btnChegada").disabled =
+    true;
+
+  campo("btnChegada").textContent =
+    "REGISTRANDO...";
+
+
+  try {
+
+    const resposta =
+      await fetch(
+        URL_SCRIPT,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "text/plain;charset=utf-8"
+          },
+
+          body:
+            JSON.stringify(dados)
+        }
+      );
+
+    const retorno =
+      await resposta.json();
+
+    if (!retorno.sucesso) {
+
+      throw new Error(
+        retorno.mensagem ||
+        "Não foi possível registrar a chegada."
+      );
+    }
+
+    localStorage.setItem(
+      "controleFrotaChegadaRegistrada",
+      "sim"
+    );
+
+    dadosPDF = {
+
+      ...viagemAtual,
+
+      ...dados,
+
+      kmPercorrido:
+        retorno.kmPercorrido
+    };
+
+    localStorage.setItem(
+      "controleFrotaUltimoPDF",
+      JSON.stringify(dadosPDF)
+    );
+
+    bloquearChegada();
+
+    mostrarMensagem(
+      "mensagemChegada",
+      "Chegada registrada com sucesso. Agora salve o comprovante em PDF.",
+      "sucesso"
+    );
+
+    campo("btnPDF")
+      .style.display =
+      "block";
+
+    campo("btnLimparAntigo")
+      .style.display =
+      "none";
+
+    campo("btnPDF")
+      .scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+
+  } catch (erro) {
+
+    enviandoChegada =
+      false;
+
+    campo("btnChegada").disabled =
+      false;
+
+    campo("btnChegada").textContent =
+      "REGISTRAR CHEGADA";
+
+    mostrarMensagem(
+      "mensagemChegada",
+      "Não foi possível registrar a chegada. " +
+      erro.message,
+      "erro"
+    );
+  }
+}
+
+
+function bloquearChegada() {
+
+  [
+    "dataChegada",
+    "kmChegada",
+    "localChegada",
+    "assinatura",
+    "observacaoChegada"
+  ].forEach(function(id) {
+
+    campo(id).disabled =
+      true;
+  });
+
+  campo("horaChegada").readOnly =
+    true;
+
+  campo("btnChegada").disabled =
+    true;
+
+  campo("btnChegada").textContent =
+    "CHEGADA JÁ REGISTRADA";
+}
+
+
+function limparRegistroAntigo() {
+
+  const confirmar =
+    confirm(
+      "Deseja limpar somente o registro antigo armazenado neste aparelho?\n\n" +
+      "Esta ação NÃO apaga os dados da planilha."
+    );
+
+  if (!confirmar) {
+    return;
+  }
+
+  localStorage.removeItem(
+    "controleFrotaViagemAberta"
+  );
+
+  localStorage.removeItem(
+    "controleFrotaChegadaRegistrada"
+  );
+
+  localStorage.removeItem(
+    "controleFrotaUltimoPDF"
+  );
+
+  localStorage.removeItem(
+    "controleFrotaInicioViagem"
+  );
+
+  sessionStorage.removeItem(
+    "controleFrotaSessaoEncerrada"
+  );
+
+  window.location.reload();
+}
+
+
+function baixarPDF() {
+
+  if (!dadosPDF) {
+
+    const salvo =
+      localStorage.getItem(
+        "controleFrotaUltimoPDF"
+      );
+
+    if (salvo) {
+
+      try {
+
+        dadosPDF =
+          JSON.parse(salvo);
+
+      } catch (erro) {
+
+        dadosPDF =
+          null;
+      }
+    }
+  }
+
+  if (!dadosPDF) {
+
+    alert(
+      "Não existem dados para gerar o PDF."
+    );
+
+    return;
+  }
+
+  const janela =
+    window.open(
+      "",
+      "_blank"
+    );
+
+  if (!janela) {
+
+    alert(
+      "O navegador bloqueou a janela do PDF. Permita pop-ups e tente novamente."
+    );
+
+    return;
+  }
+
+  const html = `
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Registro de Viagem - COREN-PB</title>
+
+<style>
+
+body {
+  font-family:Arial,sans-serif;
+  padding:25px;
+  color:#222;
+}
+
+h1 {
+  text-align:center;
+  margin-bottom:5px;
+}
+
+h2 {
+  text-align:center;
+  margin-top:0;
+  margin-bottom:25px;
+}
+
+table {
+  width:100%;
+  border-collapse:collapse;
+}
+
+td {
+  border:1px solid #555;
+  padding:9px;
+}
+
+td:first-child {
+  width:38%;
+  font-weight:bold;
+  background:#eee;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>CONTROLE DE FROTA</h1>
+<h2>COREN-PB</h2>
+
+<table>
+
+<tr>
+<td>Motorista / Condutor</td>
+<td>${escapar(dadosPDF.motorista)}</td>
+</tr>
+
+<tr>
+<td>Data de Saída</td>
+<td>${escapar(dadosPDF.dataSaida)}</td>
+</tr>
+
+<tr>
+<td>Hora de Saída</td>
+<td>${escapar(dadosPDF.horaSaida)}</td>
+</tr>
+
+<tr>
+<td>Veículo</td>
+<td>${escapar(dadosPDF.veiculo)}</td>
+</tr>
+
+<tr>
+<td>Placa</td>
+<td>${escapar(dadosPDF.placa)}</td>
+</tr>
+
+<tr>
+<td>Destino</td>
+<td>${escapar(dadosPDF.destino)}</td>
+</tr>
+
+<tr>
+<td>KM de Saída</td>
+<td>${escapar(dadosPDF.kmSaida)}</td>
+</tr>
+
+<tr>
+<td>Data de Chegada</td>
+<td>${escapar(dadosPDF.dataChegada)}</td>
+</tr>
+
+<tr>
+<td>KM de Chegada</td>
+<td>${escapar(dadosPDF.kmChegada)}</td>
+</tr>
+
+<tr>
+<td>Hora de Chegada</td>
+<td>${escapar(dadosPDF.horaChegada)}</td>
+</tr>
+
+<tr>
+<td>KM Percorrido</td>
+<td>${escapar(dadosPDF.kmPercorrido)}</td>
+</tr>
+
+<tr>
+<td>Local de Chegada</td>
+<td>${escapar(dadosPDF.localChegada)}</td>
+</tr>
+
+<tr>
+<td>Assinatura</td>
+<td>${escapar(dadosPDF.assinatura)}</td>
+</tr>
+
+<tr>
+<td>Observação</td>
+<td>${escapar(dadosPDF.observacaoChegada)}</td>
+</tr>
+
+</table>
+
+<script>
+
+window.onload = function() {
+
+  setTimeout(function() {
+    window.print();
+  }, 400);
+
+};
+
+<\/script>
+
+</body>
+</html>
+`;
+
+  janela.document.open();
+  janela.document.write(html);
+  janela.document.close();
+
+  sessionStorage.setItem(
+    "controleFrotaSessaoEncerrada",
+    "sim"
+  );
+
+  localStorage.removeItem(
+    "controleFrotaViagemAberta"
+  );
+
+  localStorage.removeItem(
+    "controleFrotaChegadaRegistrada"
+  );
+
+  localStorage.removeItem(
+    "controleFrotaUltimoPDF"
+  );
+
+  localStorage.removeItem(
+    "controleFrotaInicioViagem"
+  );
+
+  viagemAtual =
+    null;
+
+  setTimeout(function() {
+
+    encerrarTela();
+
+  }, 700);
+}
+
+
+function escapar(texto) {
+
+  return String(
+    texto === undefined ||
+    texto === null
+      ? ""
+      : texto
+  )
+  .replace(/&/g, "&amp;")
+  .replace(/</g, "&lt;")
+  .replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;")
+  .replace(/'/g, "&#039;");
+}
+
+
+function encerrarTela() {
+
+  campo("cardSaida")
+    .style.display =
+    "none";
+
+  campo("areaChegada")
+    .style.display =
+    "none";
+
+  campo("areaEncerrada")
+    .style.display =
+    "block";
+}
+
+
+function restaurarViagem() {
+
+  const salva =
+    localStorage.getItem(
+      "controleFrotaViagemAberta"
+    );
+
+  if (!salva) {
+    return false;
+  }
+
+  try {
+
+    viagemAtual =
+      JSON.parse(salva);
+
+    if (
+      !viagemAtual ||
+      !viagemAtual.motorista ||
+      !viagemAtual.veiculo ||
+      !viagemAtual.placa ||
+      !viagemAtual.dataSaida ||
+      !viagemAtual.horaSaida ||
+      !Number.isFinite(
+        converterKM(
+          viagemAtual.kmSaida
+        )
+      )
+    ) {
+
+      limparDadosLocaisSemPerguntar();
+
+      return false;
+    }
+
+    campo("motorista").value =
+      viagemAtual.motorista || "";
+
+    campo("dataSaida").value =
+      viagemAtual.dataSaida || "";
+
+    campo("horaSaida").value =
+      viagemAtual.horaSaida || "";
+
+    campo("destino").value =
+      viagemAtual.destino || "";
+
+    campo("kmSaida").value =
+      viagemAtual.kmSaida ?? "";
+
+    campo("placa").value =
+      viagemAtual.placa || "";
+
+    const select =
+      campo("veiculo");
+
+    for (
+      let i = 0;
+      i < select.options.length;
+      i++
+    ) {
+
+      const opcao =
+        select.options[i];
+
+      if (
+        opcao.value ===
+          viagemAtual.veiculo &&
+        opcao.dataset.placa ===
+          viagemAtual.placa
+      ) {
+
+        select.selectedIndex =
+          i;
+
+        break;
+      }
+    }
+
+    bloquearSaida();
+
+    prepararChegada();
+
+    if (
+      localStorage.getItem(
+        "controleFrotaChegadaRegistrada"
+      ) === "sim"
+    ) {
+
+      const ultimoPDF =
+        localStorage.getItem(
+          "controleFrotaUltimoPDF"
+        );
+
+      if (ultimoPDF) {
+
+        try {
+
+          dadosPDF =
+            JSON.parse(ultimoPDF);
+
+          campo("dataChegada").value =
+            dadosPDF.dataChegada || "";
+
+          campo("kmChegada").value =
+            dadosPDF.kmChegada ?? "";
+
+          campo("horaChegada").value =
+            dadosPDF.horaChegada || "";
+
+          campo("localChegada").value =
+            dadosPDF.localChegada || "";
+
+          campo("assinatura").value =
+            dadosPDF.assinatura || "";
+
+          campo("observacaoChegada").value =
+            dadosPDF.observacaoChegada || "";
+
+          bloquearChegada();
+
+          campo("btnPDF")
+            .style.display =
+            "block";
+
+          campo("btnLimparAntigo")
+            .style.display =
+            "none";
+
+        } catch (erro) {
+
+          console.error(erro);
+        }
+      }
+    }
+
+    return true;
+
+  } catch (erro) {
+
+    console.error(
+      "Erro ao restaurar viagem:",
+      erro
+    );
+
+    limparDadosLocaisSemPerguntar();
+
+    return false;
+  }
+}
+
+
+function limparDadosLocaisSemPerguntar() {
+
+  localStorage.removeItem(
+    "controleFrotaViagemAberta"
+  );
+
+  localStorage.removeItem(
+    "controleFrotaChegadaRegistrada"
+  );
+
+  localStorage.removeItem(
+    "controleFrotaUltimoPDF"
+  );
+
+  localStorage.removeItem(
+    "controleFrotaInicioViagem"
+  );
+
+  viagemAtual =
+    null;
+
+  dadosPDF =
+    null;
+}
+
+
+function prepararNovaSaida() {
+
+  campo("areaChegada")
+    .style.display =
+    "none";
+
+  campo("areaEncerrada")
+    .style.display =
+    "none";
+
+  campo("cardSaida")
+    .style.display =
+    "block";
+
+  campo("cardSaida")
+    .classList
+    .remove(
+      "saida-minimizada"
+    );
+
+  /*
+    DATA E HORA AUTOMÁTICAS
+    E BLOQUEADAS PARA ALTERAÇÃO.
+  */
+
+  campo("dataSaida").value =
+    dataHoje();
+
+  campo("horaSaida").value =
+    horaAgora();
+
+  setTimeout(function() {
+
+    campo("motorista").focus();
+
+  }, 200);
+}
+
 
 window.addEventListener(
-"load",
-function(){
+  "DOMContentLoaded",
+  function() {
 
-const viagem =
-localStorage.getItem(
-"viagemAberta"
+    if (
+      sessionStorage.getItem(
+        "controleFrotaSessaoEncerrada"
+      ) === "sim"
+    ) {
+
+      sessionStorage.removeItem(
+        "controleFrotaSessaoEncerrada"
+      );
+
+      encerrarTela();
+
+      return;
+    }
+
+    const restaurada =
+      restaurarViagem();
+
+    if (restaurada) {
+      return;
+    }
+
+    prepararNovaSaida();
+
+  }
 );
-
-if(viagem){
-
-const dados =
-JSON.parse(viagem);
-
-
-motorista.value =
-dados.motorista;
-
-horaSaida.value =
-dados.horaSaida;
-
-veiculo.value =
-dados.veiculo;
-
-placa.value =
-dados.placa;
-
-destino.value =
-dados.destino;
-
-kmSaida.value =
-dados.kmSaida;
-
-
-motorista.disabled =
-true;
-
-horaSaida.disabled =
-true;
-
-veiculo.disabled =
-true;
-
-placa.disabled =
-true;
-
-destino.disabled =
-true;
-
-kmSaida.disabled =
-true;
-
-
-botaoSaida.style.display =
-"none";
-
-areaChegada.style.display =
-"block";
-
-status.textContent =
-"🚗 VIAGEM EM ANDAMENTO — informe o KM de chegada.";
-
-}
-
-else{
-
-horaSaida.value =
-horaAtual();
-
-}
-
-}
-);
-
-
-/* SALVAR SAÍDA */
-
-botaoSaida.addEventListener(
-"click",
-async function(){
-
-if(
-!formulario.checkValidity()
-){
-
-formulario.reportValidity();
-
-return;
-
-}
-
-
-const dados = {
-
-acao:"saida",
-
-motorista:
-motorista.value.trim(),
-
-horaSaida:
-horaSaida.value,
-
-veiculo:
-veiculo.value.trim(),
-
-placa:
-placa.value
-.trim()
-.toUpperCase(),
-
-destino:
-destino.value.trim(),
-
-kmSaida:
-kmSaida.value
-
-};
-
-
-botaoSaida.disabled =
-true;
-
-botaoSaida.textContent =
-"SALVANDO...";
-
-
-try{
-
-await enviarDados(
-dados
-);
-
-
-localStorage.setItem(
-"viagemAberta",
-JSON.stringify(dados)
-);
-
-
-mostrarMensagem(
-"KM de saída salvo com sucesso!",
-"sucesso"
-);
-
-
-motorista.disabled =
-true;
-
-horaSaida.disabled =
-true;
-
-veiculo.disabled =
-true;
-
-placa.disabled =
-true;
-
-destino.disabled =
-true;
-
-kmSaida.disabled =
-true;
-
-
-botaoSaida.style.display =
-"none";
-
-areaChegada.style.display =
-"block";
-
-
-status.textContent =
-"🚗 VIAGEM EM ANDAMENTO — informe o KM de chegada.";
-
-}
-
-catch(erro){
-
-mostrarMensagem(
-"Erro ao salvar o KM de saída.",
-"erro"
-);
-
-botaoSaida.disabled =
-false;
-
-botaoSaida.textContent =
-"🟢 SALVAR KM DE SAÍDA";
-
-}
-
-}
-);
-
-
-/* KM DE CHEGADA */
-
-kmChegada.addEventListener(
-"input",
-function(){
-
-const saida =
-Number(kmSaida.value);
-
-const chegada =
-Number(kmChegada.value);
-
-
-if(
-kmChegada.value !== "" &&
-chegada >= saida
-){
-
-kmPercorrido.textContent =
-chegada - saida;
-
-
-/* HORA AUTOMÁTICA */
-
-horaChegada.value =
-horaAtual();
-
-}
-
-else{
-
-kmPercorrido.textContent =
-"0";
-
-horaChegada.value =
-"";
-
-}
-
-}
-);
-
-
-/* ENCERRAR */
-
-botaoChegada.addEventListener(
-"click",
-async function(){
-
-if(
-kmChegada.value === ""
-){
-
-mostrarMensagem(
-"Informe o KM de chegada.",
-"erro"
-);
-
-return;
-
-}
-
-
-if(
-assinatura.value.trim() === ""
-){
-
-mostrarMensagem(
-"Digite o nome do motorista no campo Assinatura.",
-"erro"
-);
-
-assinatura.focus();
-
-return;
-
-}
-
-
-const saida =
-Number(kmSaida.value);
-
-const chegada =
-Number(kmChegada.value);
-
-
-if(
-chegada < saida
-){
-
-mostrarMensagem(
-"O KM de chegada não pode ser menor que o KM de saída.",
-"erro"
-);
-
-return;
-
-}
-
-
-const viagem =
-JSON.parse(
-localStorage.getItem(
-"viagemAberta"
-)
-);
-
-
-if(!viagem){
-
-mostrarMensagem(
-"Viagem não encontrada.",
-"erro"
-);
-
-return;
-
-}
-
-
-const horaFinal =
-horaAtual();
-
-
-horaChegada.value =
-horaFinal;
-
-
-const dados = {
-
-acao:"chegada",
-
-motorista:
-viagem.motorista,
-
-horaSaida:
-viagem.horaSaida,
-
-veiculo:
-viagem.veiculo,
-
-placa:
-viagem.placa,
-
-destino:
-viagem.destino,
-
-kmSaida:
-viagem.kmSaida,
-
-kmChegada:
-kmChegada.value,
-
-horaChegada:
-horaFinal,
-
-assinatura:
-assinatura.value.trim()
-
-};
-
-
-botaoChegada.disabled =
-true;
-
-botaoChegada.textContent =
-"ENCERRANDO...";
-
-
-try{
-
-await enviarDados(
-dados
-);
-
-
-localStorage.removeItem(
-"viagemAberta"
-);
-
-
-mostrarMensagem(
-"Viagem encerrada com sucesso!",
-"sucesso"
-);
-
-
-status.textContent =
-"Nenhuma viagem em andamento.";
-
-
-formulario.reset();
-
-
-horaSaida.value =
-horaAtual();
-
-
-areaChegada.style.display =
-"none";
-
-
-botaoSaida.style.display =
-"block";
-
-
-botaoSaida.disabled =
-false;
-
-botaoSaida.textContent =
-"🟢 SALVAR KM DE SAÍDA";
-
-
-motorista.disabled =
-false;
-
-horaSaida.disabled =
-false;
-
-veiculo.disabled =
-false;
-
-placa.disabled =
-false;
-
-destino.disabled =
-false;
-
-kmSaida.disabled =
-false;
-
-
-kmPercorrido.textContent =
-"0";
-
-}
-
-catch(erro){
-
-mostrarMensagem(
-"Não foi possível encerrar a viagem.",
-"erro"
-);
-
-
-botaoChegada.disabled =
-false;
-
-botaoChegada.textContent =
-"🔴 ENCERRAR VIAGEM";
-
-}
-
-}
-);
-
 
 </script>
 
