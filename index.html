@@ -123,7 +123,8 @@ textarea:focus {
 input:disabled,
 select:disabled,
 textarea:disabled,
-input[readonly] {
+input[readonly],
+textarea[readonly] {
   background:#eee;
   color:#555;
   opacity:1;
@@ -226,7 +227,7 @@ button:disabled {
 
 <div class="container">
 
-<!-- REGISTRO DE SAÍDA -->
+<!-- SAÍDA -->
 
 <div class="card" id="cardSaida">
 
@@ -237,7 +238,6 @@ button:disabled {
 <div class="conteudo-saida">
 
 <label for="motorista">Motorista / Condutor</label>
-
 <input
   type="text"
   id="motorista"
@@ -246,7 +246,6 @@ button:disabled {
 >
 
 <label for="dataSaida">Data de Saída</label>
-
 <input
   type="date"
   id="dataSaida"
@@ -254,7 +253,6 @@ button:disabled {
 >
 
 <label for="horaSaida">Hora de Saída</label>
-
 <input
   type="time"
   id="horaSaida"
@@ -290,15 +288,9 @@ NISSAN KICKS — SLC-8F50
 </select>
 
 <label for="placa">Placa</label>
-
-<input
-  type="text"
-  id="placa"
-  readonly
->
+<input type="text" id="placa" readonly>
 
 <label for="destino">Destino</label>
-
 <input
   type="text"
   id="destino"
@@ -306,7 +298,6 @@ NISSAN KICKS — SLC-8F50
 >
 
 <label for="kmSaida">KM de Saída</label>
-
 <input
   type="text"
   id="kmSaida"
@@ -328,7 +319,7 @@ REGISTRAR SAÍDA
 </div>
 
 
-<!-- REGISTRO DE CHEGADA -->
+<!-- CHEGADA -->
 
 <div class="card card-chegada" id="areaChegada">
 
@@ -348,10 +339,9 @@ Saída registrada. Complete agora o registro de chegada.
 <input type="text" id="placaChegada" readonly>
 
 <label>Data de Chegada</label>
-<input type="date" id="dataChegada">
+<input type="date" id="dataChegada" readonly>
 
 <label>KM de Chegada</label>
-
 <input
   type="text"
   id="kmChegada"
@@ -363,7 +353,6 @@ Saída registrada. Complete agora o registro de chegada.
 <input type="time" id="horaChegada" readonly>
 
 <label>Local de Chegada</label>
-
 <input
   type="text"
   id="localChegada"
@@ -371,14 +360,17 @@ Saída registrada. Complete agora o registro de chegada.
 >
 
 <label>Assinatura do Motorista</label>
-
-<textarea
+<input
+  type="text"
   id="assinatura"
-  placeholder="Digite sua assinatura / nome completo"
-></textarea>
+  readonly
+>
+
+<div class="texto-pequeno">
+A assinatura é preenchida automaticamente com o nome do motorista.
+</div>
 
 <label>Observação</label>
-
 <textarea
   id="observacaoChegada"
   placeholder="Se não houver ocorrência, digite SEM OBSERVAÇÃO"
@@ -418,7 +410,7 @@ Use este botão somente quando houver um registro antigo de teste preso neste ap
 </div>
 
 
-<!-- VIAGEM ENCERRADA -->
+<!-- ENCERRADA -->
 
 <div class="card encerrada" id="areaEncerrada">
 
@@ -585,15 +577,13 @@ function campoObrigatorio(id, mensagem) {
     campo(id);
 
   elemento.scrollIntoView({
-    behavior: "smooth",
-    block: "center"
+    behavior:"smooth",
+    block:"center"
   });
 
   setTimeout(function() {
-
     elemento.focus();
-
-  }, 300);
+  },300);
 
   alert(mensagem);
 
@@ -620,7 +610,6 @@ function validarSaida() {
     valor("motorista");
 
   if (!motorista) {
-
     return campoObrigatorio(
       "motorista",
       "Preencha o nome e sobrenome do motorista."
@@ -628,39 +617,20 @@ function validarSaida() {
   }
 
   if (!nomeCompletoValido(motorista)) {
-
     return campoObrigatorio(
       "motorista",
       "Digite pelo menos o nome e o sobrenome do motorista."
     );
   }
 
-  if (!valor("dataSaida")) {
-
-    return campoObrigatorio(
-      "dataSaida",
-      "A data de saída não foi preenchida."
-    );
-  }
-
   if (!valor("veiculo")) {
-
     return campoObrigatorio(
       "veiculo",
       "Selecione o veículo."
     );
   }
 
-  if (!valor("placa")) {
-
-    return campoObrigatorio(
-      "veiculo",
-      "Selecione um veículo com placa."
-    );
-  }
-
   if (!valor("destino")) {
-
     return campoObrigatorio(
       "destino",
       "Informe o destino."
@@ -676,7 +646,6 @@ function validarSaida() {
     !Number.isFinite(km) ||
     km < 0
   ) {
-
     return campoObrigatorio(
       "kmSaida",
       "Informe um KM de saída válido."
@@ -712,11 +681,7 @@ async function registrarSaida() {
     return;
   }
 
-  /*
-    DATA E HORA SÃO ATUALIZADAS
-    AUTOMATICAMENTE NO MOMENTO
-    EXATO DO REGISTRO.
-  */
+  /* DATA E HORA AUTOMÁTICAS */
 
   campo("dataSaida").value =
     dataHoje();
@@ -726,7 +691,7 @@ async function registrarSaida() {
 
   const dados = {
 
-    acao: "saida",
+    acao:"saida",
 
     motorista:
       valor("motorista"),
@@ -768,9 +733,9 @@ async function registrarSaida() {
       await fetch(
         URL_SCRIPT,
         {
-          method: "POST",
+          method:"POST",
 
-          headers: {
+          headers:{
             "Content-Type":
               "text/plain;charset=utf-8"
           },
@@ -851,9 +816,7 @@ function bloquearSaida() {
     "destino",
     "kmSaida"
   ].forEach(function(id) {
-
-    campo(id).disabled =
-      true;
+    campo(id).disabled = true;
   });
 
   campo("dataSaida").readOnly =
@@ -922,38 +885,38 @@ function prepararChegada() {
   campo("placaChegada").value =
     viagemAtual.placa || "";
 
-  if (!valor("dataChegada")) {
+  /*
+    DATA DE CHEGADA AUTOMÁTICA
+    E NÃO ALTERÁVEL
+  */
 
-    campo("dataChegada").value =
-      dataHoje();
-  }
+  campo("dataChegada").value =
+    dataHoje();
 
   campo("horaChegada").value =
     horaAgora();
 
+  /*
+    ASSINATURA AUTOMÁTICA:
+    MESMO NOME DO MOTORISTA
+  */
+
+  campo("assinatura").value =
+    viagemAtual.motorista || "";
+
   campo("areaChegada")
     .scrollIntoView({
-      behavior: "smooth",
-      block: "start"
+      behavior:"smooth",
+      block:"start"
     });
 
   setTimeout(function() {
-
     campo("kmChegada").focus();
-
-  }, 500);
+  },500);
 }
 
 
 function validarChegada() {
-
-  if (!valor("dataChegada")) {
-
-    return campoObrigatorio(
-      "dataChegada",
-      "Informe a data de chegada."
-    );
-  }
 
   const kmSaida =
     converterKM(
@@ -991,10 +954,11 @@ function validarChegada() {
 
   if (!valor("assinatura")) {
 
-    return campoObrigatorio(
-      "assinatura",
-      "Preencha a assinatura do motorista."
+    alert(
+      "Não foi possível preencher automaticamente a assinatura."
     );
+
+    return false;
   }
 
   if (!valor("observacaoChegada")) {
@@ -1037,16 +1001,28 @@ async function registrarChegada() {
     return;
   }
 
-  if (!validarChegada()) {
-    return;
-  }
+  /*
+    ATUALIZA AUTOMATICAMENTE
+    DATA, HORA E ASSINATURA
+    NO MOMENTO DA CHEGADA
+  */
+
+  campo("dataChegada").value =
+    dataHoje();
 
   campo("horaChegada").value =
     horaAgora();
 
+  campo("assinatura").value =
+    viagemAtual.motorista || "";
+
+  if (!validarChegada()) {
+    return;
+  }
+
   const dados = {
 
-    acao: "chegada",
+    acao:"chegada",
 
     motorista:
       viagemAtual.motorista,
@@ -1107,9 +1083,9 @@ async function registrarChegada() {
       await fetch(
         URL_SCRIPT,
         {
-          method: "POST",
+          method:"POST",
 
-          headers: {
+          headers:{
             "Content-Type":
               "text/plain;charset=utf-8"
           },
@@ -1168,8 +1144,8 @@ async function registrarChegada() {
 
     campo("btnPDF")
       .scrollIntoView({
-        behavior: "smooth",
-        block: "center"
+        behavior:"smooth",
+        block:"center"
       });
 
   } catch (erro) {
@@ -1196,18 +1172,20 @@ async function registrarChegada() {
 function bloquearChegada() {
 
   [
-    "dataChegada",
     "kmChegada",
     "localChegada",
-    "assinatura",
     "observacaoChegada"
   ].forEach(function(id) {
-
-    campo(id).disabled =
-      true;
+    campo(id).disabled = true;
   });
 
+  campo("dataChegada").readOnly =
+    true;
+
   campo("horaChegada").readOnly =
+    true;
+
+  campo("assinatura").readOnly =
     true;
 
   campo("btnChegada").disabled =
@@ -1254,6 +1232,8 @@ function limparRegistroAntigo() {
 }
 
 
+/* PDF COM SAÍDA E CHEGADA DESTACADAS */
+
 function baixarPDF() {
 
   if (!dadosPDF) {
@@ -1266,14 +1246,10 @@ function baixarPDF() {
     if (salvo) {
 
       try {
-
         dadosPDF =
           JSON.parse(salvo);
-
       } catch (erro) {
-
-        dadosPDF =
-          null;
+        dadosPDF = null;
       }
     }
   }
@@ -1303,13 +1279,12 @@ function baixarPDF() {
   }
 
   const html = `
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Registro de Viagem - COREN-PB</title>
 
@@ -1323,13 +1298,39 @@ body {
 
 h1 {
   text-align:center;
-  margin-bottom:5px;
+  margin-bottom:4px;
+  color:#07579c;
 }
 
-h2 {
+.subtitulo {
   text-align:center;
-  margin-top:0;
+  font-size:18px;
+  font-weight:bold;
   margin-bottom:25px;
+}
+
+.bloco {
+  margin-top:20px;
+  border:2px solid #07579c;
+  border-radius:8px;
+  overflow:hidden;
+}
+
+.titulo-bloco {
+  background:#07579c;
+  color:white;
+  padding:11px;
+  text-align:center;
+  font-size:18px;
+  font-weight:bold;
+}
+
+.titulo-chegada {
+  background:#176b38;
+}
+
+.bloco-chegada {
+  border-color:#176b38;
 }
 
 table {
@@ -1338,23 +1339,53 @@ table {
 }
 
 td {
-  border:1px solid #555;
+  border:1px solid #aaa;
   padding:9px;
 }
 
 td:first-child {
   width:38%;
   font-weight:bold;
-  background:#eee;
+  background:#f1f1f1;
+}
+
+.assinatura {
+  margin-top:30px;
+  text-align:center;
+}
+
+.linha-assinatura {
+  width:70%;
+  margin:35px auto 5px auto;
+  border-top:1px solid #222;
+}
+
+@media print {
+
+  body {
+    padding:5px;
+  }
+
 }
 
 </style>
+
 </head>
 
 <body>
 
 <h1>CONTROLE DE FROTA</h1>
-<h2>COREN-PB</h2>
+
+<div class="subtitulo">
+COREN-PB — REGISTRO DE VIAGEM
+</div>
+
+
+<div class="bloco">
+
+<div class="titulo-bloco">
+REGISTRO DE SAÍDA
+</div>
 
 <table>
 
@@ -1365,7 +1396,7 @@ td:first-child {
 
 <tr>
 <td>Data de Saída</td>
-<td>${escapar(dadosPDF.dataSaida)}</td>
+<td>${formatarData(dadosPDF.dataSaida)}</td>
 </tr>
 
 <tr>
@@ -1393,19 +1424,32 @@ td:first-child {
 <td>${escapar(dadosPDF.kmSaida)}</td>
 </tr>
 
-<tr>
-<td>Data de Chegada</td>
-<td>${escapar(dadosPDF.dataChegada)}</td>
-</tr>
+</table>
+
+</div>
+
+
+<div class="bloco bloco-chegada">
+
+<div class="titulo-bloco titulo-chegada">
+REGISTRO DE CHEGADA
+</div>
+
+<table>
 
 <tr>
-<td>KM de Chegada</td>
-<td>${escapar(dadosPDF.kmChegada)}</td>
+<td>Data de Chegada</td>
+<td>${formatarData(dadosPDF.dataChegada)}</td>
 </tr>
 
 <tr>
 <td>Hora de Chegada</td>
 <td>${escapar(dadosPDF.horaChegada)}</td>
+</tr>
+
+<tr>
+<td>KM de Chegada</td>
+<td>${escapar(dadosPDF.kmChegada)}</td>
 </tr>
 
 <tr>
@@ -1419,16 +1463,34 @@ td:first-child {
 </tr>
 
 <tr>
-<td>Assinatura</td>
-<td>${escapar(dadosPDF.assinatura)}</td>
-</tr>
-
-<tr>
 <td>Observação</td>
 <td>${escapar(dadosPDF.observacaoChegada)}</td>
 </tr>
 
+<tr>
+<td>Assinatura do Motorista</td>
+<td><strong>${escapar(dadosPDF.assinatura)}</strong></td>
+</tr>
+
 </table>
+
+</div>
+
+
+<div class="assinatura">
+
+<div class="linha-assinatura"></div>
+
+<strong>
+${escapar(dadosPDF.assinatura)}
+</strong>
+
+<br>
+
+Motorista / Condutor
+
+</div>
+
 
 <script>
 
@@ -1436,7 +1498,7 @@ window.onload = function() {
 
   setTimeout(function() {
     window.print();
-  }, 400);
+  },400);
 
 };
 
@@ -1471,14 +1533,35 @@ window.onload = function() {
     "controleFrotaInicioViagem"
   );
 
-  viagemAtual =
-    null;
+  viagemAtual = null;
 
   setTimeout(function() {
-
     encerrarTela();
+  },700);
+}
 
-  }, 700);
+
+function formatarData(data) {
+
+  if (!data) {
+    return "";
+  }
+
+  const partes =
+    String(data).split("-");
+
+  if (partes.length === 3) {
+
+    return escapar(
+      partes[2] +
+      "/" +
+      partes[1] +
+      "/" +
+      partes[0]
+    );
+  }
+
+  return escapar(data);
 }
 
 
@@ -1490,11 +1573,11 @@ function escapar(texto) {
       ? ""
       : texto
   )
-  .replace(/&/g, "&amp;")
-  .replace(/</g, "&lt;")
-  .replace(/>/g, "&gt;")
-  .replace(/"/g, "&quot;")
-  .replace(/'/g, "&#039;");
+  .replace(/&/g,"&amp;")
+  .replace(/</g,"&lt;")
+  .replace(/>/g,"&gt;")
+  .replace(/"/g,"&quot;")
+  .replace(/'/g,"&#039;");
 }
 
 
@@ -1684,11 +1767,8 @@ function limparDadosLocaisSemPerguntar() {
     "controleFrotaInicioViagem"
   );
 
-  viagemAtual =
-    null;
-
-  dadosPDF =
-    null;
+  viagemAtual = null;
+  dadosPDF = null;
 }
 
 
@@ -1713,8 +1793,8 @@ function prepararNovaSaida() {
     );
 
   /*
-    DATA E HORA AUTOMÁTICAS
-    E BLOQUEADAS PARA ALTERAÇÃO.
+    DATA E HORA DA SAÍDA
+    AUTOMÁTICAS
   */
 
   campo("dataSaida").value =
@@ -1724,10 +1804,8 @@ function prepararNovaSaida() {
     horaAgora();
 
   setTimeout(function() {
-
     campo("motorista").focus();
-
-  }, 200);
+  },200);
 }
 
 
@@ -1740,10 +1818,6 @@ window.addEventListener(
         "controleFrotaSessaoEncerrada"
       ) === "sim"
     ) {
-
-      sessionStorage.removeItem(
-        "controleFrotaSessaoEncerrada"
-      );
 
       encerrarTela();
 
