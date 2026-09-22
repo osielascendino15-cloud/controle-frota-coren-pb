@@ -151,11 +151,6 @@ button {
   color:white;
 }
 
-.btn-limpar {
-  background:#a11616;
-  color:white;
-}
-
 button:disabled {
   background:#999;
   cursor:not-allowed;
@@ -227,7 +222,7 @@ button:disabled {
 
 <div class="container">
 
-<!-- SAÍDA -->
+<!-- REGISTRO DE SAÍDA -->
 
 <div class="card" id="cardSaida">
 
@@ -319,7 +314,7 @@ REGISTRAR SAÍDA
 </div>
 
 
-<!-- CHEGADA -->
+<!-- REGISTRO DE CHEGADA -->
 
 <div class="card card-chegada" id="areaChegada">
 
@@ -395,22 +390,10 @@ REGISTRAR CHEGADA
 BAIXAR / SALVAR EM PDF
 </button>
 
-<button
-  class="btn-limpar"
-  id="btnLimparAntigo"
-  onclick="limparRegistroAntigo()"
->
-LIMPAR REGISTRO ANTIGO / NOVO REGISTRO
-</button>
-
-<div class="texto-pequeno">
-Use este botão somente quando houver um registro antigo de teste preso neste aparelho.
-</div>
-
 </div>
 
 
-<!-- ENCERRADA -->
+<!-- VIAGEM ENCERRADA -->
 
 <div class="card encerrada" id="areaEncerrada">
 
@@ -681,8 +664,6 @@ async function registrarSaida() {
     return;
   }
 
-  /* DATA E HORA AUTOMÁTICAS */
-
   campo("dataSaida").value =
     dataHoje();
 
@@ -885,21 +866,11 @@ function prepararChegada() {
   campo("placaChegada").value =
     viagemAtual.placa || "";
 
-  /*
-    DATA DE CHEGADA AUTOMÁTICA
-    E NÃO ALTERÁVEL
-  */
-
   campo("dataChegada").value =
     dataHoje();
 
   campo("horaChegada").value =
     horaAgora();
-
-  /*
-    ASSINATURA AUTOMÁTICA:
-    MESMO NOME DO MOTORISTA
-  */
 
   campo("assinatura").value =
     viagemAtual.motorista || "";
@@ -1000,12 +971,6 @@ async function registrarChegada() {
 
     return;
   }
-
-  /*
-    ATUALIZA AUTOMATICAMENTE
-    DATA, HORA E ASSINATURA
-    NO MOMENTO DA CHEGADA
-  */
 
   campo("dataChegada").value =
     dataHoje();
@@ -1138,10 +1103,6 @@ async function registrarChegada() {
       .style.display =
       "block";
 
-    campo("btnLimparAntigo")
-      .style.display =
-      "none";
-
     campo("btnPDF")
       .scrollIntoView({
         behavior:"smooth",
@@ -1195,44 +1156,6 @@ function bloquearChegada() {
     "CHEGADA JÁ REGISTRADA";
 }
 
-
-function limparRegistroAntigo() {
-
-  const confirmar =
-    confirm(
-      "Deseja limpar somente o registro antigo armazenado neste aparelho?\n\n" +
-      "Esta ação NÃO apaga os dados da planilha."
-    );
-
-  if (!confirmar) {
-    return;
-  }
-
-  localStorage.removeItem(
-    "controleFrotaViagemAberta"
-  );
-
-  localStorage.removeItem(
-    "controleFrotaChegadaRegistrada"
-  );
-
-  localStorage.removeItem(
-    "controleFrotaUltimoPDF"
-  );
-
-  localStorage.removeItem(
-    "controleFrotaInicioViagem"
-  );
-
-  sessionStorage.removeItem(
-    "controleFrotaSessaoEncerrada"
-  );
-
-  window.location.reload();
-}
-
-
-/* PDF COM SAÍDA E CHEGADA DESTACADAS */
 
 function baixarPDF() {
 
@@ -1722,10 +1645,6 @@ function restaurarViagem() {
             .style.display =
             "block";
 
-          campo("btnLimparAntigo")
-            .style.display =
-            "none";
-
         } catch (erro) {
 
           console.error(erro);
@@ -1791,11 +1710,6 @@ function prepararNovaSaida() {
     .remove(
       "saida-minimizada"
     );
-
-  /*
-    DATA E HORA DA SAÍDA
-    AUTOMÁTICAS
-  */
 
   campo("dataSaida").value =
     dataHoje();
