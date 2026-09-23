@@ -320,6 +320,15 @@ Motorista / Condutor
   placeholder="Digite nome e sobrenome"
 >
 
+<label for="numeroPortaria">
+Nº da Portaria
+</label>
+
+<input
+  type="text"
+  id="numeroPortaria"
+  placeholder="Ex.: 123/2026"
+>
 
 <label for="dataSaida">
 Data de Saída
@@ -510,7 +519,6 @@ Data de Chegada
 <label>
 KM de Chegada
 </label>
-
 <input
   type="text"
   id="kmChegada"
@@ -548,12 +556,13 @@ Assinatura do Motorista
 <input
   type="text"
   id="assinatura"
+  placeholder="Assinatura eletrônica será realizada pelo GOV.BR"
   readonly
 >
 
 
 <div class="texto-pequeno">
-A assinatura é preenchida automaticamente com o nome do motorista.
+A assinatura eletrônica será realizada após a geração do PDF pelo GOV.BR.
 </div>
 
 
@@ -591,6 +600,15 @@ Observação
 📄 BAIXAR / SALVAR EM PDF
 </button>
 
+<button
+  class="btn-principal"
+  id="btnGovBr"
+  onclick="abrirGovBr()"
+  style="display:none"
+>
+🔐 ASSINAR NO GOV.BR
+</button>
+
 </div>
 
 
@@ -619,7 +637,8 @@ Feche o aplicativo. Ao abrir novamente, estará disponível um novo Registro de 
 
 
 <script>
-  const URL_SCRIPT =
+
+const URL_SCRIPT =
 "https://script.google.com/macros/s/AKfycbzu264tIZifiObEh9mdy0ulZGgVBjhSptcb0KuBUIfDQ3ex3NKX865GidwU8Z3MsUUM/exec";
 
 let enviandoSaida = false;
@@ -824,6 +843,14 @@ function validarSaida() {
     );
   }
 
+  if (!valor("numeroPortaria")) {
+
+    return campoObrigatorio(
+      "numeroPortaria",
+      "Informe o Nº da Portaria."
+    );
+  }
+
   if (!valor("destino")) {
 
     return campoObrigatorio(
@@ -882,6 +909,9 @@ async function registrarSaida() {
 
   campo("horaSaida").value =
     horaAgora();
+
+  const numeroPortariaAtual =
+    valor("numeroPortaria");
 
   const dados = {
 
@@ -959,6 +989,11 @@ async function registrarSaida() {
     );
 
     localStorage.setItem(
+      "controleFrotaNumeroPortaria",
+      numeroPortariaAtual
+    );
+
+    localStorage.setItem(
       "controleFrotaInicioViagem",
       String(Date.now())
     );
@@ -1000,10 +1035,13 @@ async function registrarSaida() {
     );
   }
 }
-  function bloquearSaida() {
+
+
+function bloquearSaida() {
 
   [
     "motorista",
+    "numeroPortaria",
     "veiculo",
     "destino",
     "kmSaida"
@@ -1040,6 +1078,12 @@ async function registrarSaida() {
 
     escapar(viagemAtual.placa) +
 
+    "<br>Nº da Portaria: " +
+
+    escapar(
+      localStorage.getItem("controleFrotaNumeroPortaria") || ""
+    ) +
+
     "<br>Destino: " +
 
     escapar(viagemAtual.destino) +
@@ -1060,9 +1104,7 @@ async function registrarSaida() {
     .classList
     .add("saida-minimizada");
 }
-
-
-function prepararChegada() {
+  function prepararChegada() {
 
   campo("areaChegada")
     .style.display =
@@ -1082,9 +1124,6 @@ function prepararChegada() {
 
   campo("horaChegada").value =
     horaAgora();
-
-  campo("assinatura").value =
-    viagemAtual.motorista || "";
 
   campo("areaChegada")
     .scrollIntoView({
@@ -1134,15 +1173,6 @@ function validarChegada() {
     );
   }
 
-  if (!valor("assinatura")) {
-
-    alert(
-      "Não foi possível preencher automaticamente a assinatura."
-    );
-
-    return false;
-  }
-
   if (!valor("observacaoChegada")) {
 
     return campoObrigatorio(
@@ -1188,9 +1218,6 @@ async function registrarChegada() {
 
   campo("horaChegada").value =
     horaAgora();
-
-  campo("assinatura").value =
-    viagemAtual.motorista || "";
 
   if (!validarChegada()) {
     return;
@@ -1339,7 +1366,9 @@ async function registrarChegada() {
     );
   }
 }
-  function bloquearChegada() {
+
+
+function bloquearChegada() {
 
   [
     "kmChegada",
@@ -1530,6 +1559,11 @@ REGISTRO DE SAÍDA
 </tr>
 
 <tr>
+<td>Nº da Portaria</td>
+<td>${escapar(localStorage.getItem("controleFrotaNumeroPortaria") || "")}</td>
+</tr>
+
+<tr>
 <td>Data de Saída</td>
 <td>${formatarData(dadosPDF.dataSaida)}</td>
 </tr>
@@ -1603,8 +1637,12 @@ REGISTRO DE CHEGADA
 </tr>
 
 <tr>
-<td>Assinatura do Motorista</td>
-<td><strong>${escapar(dadosPDF.assinatura)}</strong></td>
+<td>Assinatura do Motorista / Condutor</td>
+<td>
+<strong>
+Documento destinado à assinatura eletrônica pelo GOV.BR
+</strong>
+</td>
 </tr>
 
 </table>
@@ -1617,7 +1655,7 @@ REGISTRO DE CHEGADA
 <div class="linha-assinatura"></div>
 
 <strong>
-${escapar(dadosPDF.assinatura)}
+ASSINATURA ELETRÔNICA PELO GOV.BR
 </strong>
 
 <br>
@@ -1673,9 +1711,23 @@ window.onload = function() {
 
   viagemAtual = null;
 
-  setTimeout(function() {
-    encerrarTela();
-  },700);
+  campo("btnGovBr").style.display =
+    "block";
+
+  campo("btnGovBr").scrollIntoView({
+    behavior:"smooth",
+    block:"center"
+  });
+
+}
+
+
+function abrirGovBr() {
+
+  window.open(
+    "https://assinador.iti.br/",
+    "_blank"
+  );
 }
   function formatarData(data) {
 
@@ -1770,6 +1822,11 @@ function restaurarViagem() {
 
     campo("motorista").value =
       viagemAtual.motorista || "";
+
+    campo("numeroPortaria").value =
+      localStorage.getItem(
+        "controleFrotaNumeroPortaria"
+      ) || "";
 
     campo("dataSaida").value =
       viagemAtual.dataSaida || "";
@@ -1885,6 +1942,10 @@ function limparDadosLocaisSemPerguntar() {
 
   localStorage.removeItem(
     "controleFrotaViagemAberta"
+  );
+
+  localStorage.removeItem(
+    "controleFrotaNumeroPortaria"
   );
 
   localStorage.removeItem(
