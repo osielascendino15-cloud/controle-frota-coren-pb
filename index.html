@@ -8,116 +8,160 @@
 <title>Controle de Frota COREN-PB</title>
 
 <style>
-* { box-sizing: border-box; }
+
+* {
+  box-sizing: border-box;
+}
 
 body {
   font-family: Arial, sans-serif;
-  background:#f2f4f7;
-  margin:0;
-  padding:0;
-  color:#222;
+  background: linear-gradient(180deg, #e8f8fb 0%, #f2f4f7 45%, #eef5fb 100%);
+  margin: 0;
+  padding: 0;
+  color: #222;
 }
 
 .container {
-  max-width:520px;
-  margin:auto;
-  padding:15px;
+  max-width: 520px;
+  margin: auto;
+  padding: 15px;
 }
 
+/* CABEÇALHO */
+
 .header {
-  background:#07579c;
-  color:white;
-  text-align:center;
-  padding:22px 15px;
-  border-radius:0 0 18px 18px;
+  background: linear-gradient(135deg, #07579c 0%, #087fb8 55%, #13a9b5 100%);
+  color: white;
+  text-align: center;
+  padding: 20px 15px 24px;
+  border-radius: 0 0 22px 22px;
+  box-shadow: 0 5px 18px rgba(7,87,156,.25);
+}
+
+.logo-coren {
+  background: white;
+  max-width: 430px;
+  margin: 0 auto 12px;
+  padding: 6px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.16);
+}
+
+.logo-coren img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 9px;
+}
+
+.carro {
+  font-size: 52px;
+  line-height: 1;
+  margin: 10px 0 6px;
 }
 
 .header h1 {
-  margin:0;
-  font-size:24px;
+  margin: 0;
+  font-size: 24px;
+  letter-spacing: .6px;
 }
 
 .header p {
-  margin:7px 0 0;
+  margin: 7px 0 0;
+  font-size: 17px;
+  font-weight: bold;
 }
 
+/* CARTÕES */
+
 .card {
-  background:white;
-  padding:20px;
-  margin-top:18px;
-  border-radius:15px;
-  box-shadow:0 3px 10px rgba(0,0,0,.12);
+  background: white;
+  padding: 20px;
+  margin-top: 18px;
+  border-radius: 15px;
+  border-top: 5px solid #13a9b5;
+  box-shadow: 0 3px 12px rgba(0,0,0,.12);
 }
 
 .card h2 {
-  margin-top:0;
-  color:#07579c;
+  margin-top: 0;
+  color: #07579c;
 }
 
+/* ÁREA DE CHEGADA */
+
 .card-chegada {
-  border:3px solid #07579c;
-  box-shadow:0 5px 16px rgba(7,87,156,.25);
+  border: 3px solid #176b38;
+  border-top: 6px solid #176b38;
+  box-shadow: 0 5px 16px rgba(23,107,56,.20);
 }
 
 .card-chegada h2 {
-  text-align:center;
-  font-size:24px;
+  text-align: center;
+  font-size: 24px;
+  color: #176b38;
 }
 
+/* SAÍDA MINIMIZADA */
+
 .saida-minimizada {
-  padding:12px 18px;
+  padding: 12px 18px;
 }
 
 .saida-minimizada .conteudo-saida {
-  display:none;
+  display: none;
 }
 
 .saida-minimizada h2 {
-  margin:0;
-  font-size:18px;
+  margin: 0;
+  font-size: 18px;
 }
 
 .resumo-saida {
-  display:none;
-  margin-top:10px;
-  padding:10px;
-  background:#eef6fc;
-  border-radius:8px;
-  line-height:1.5;
+  display: none;
+  margin-top: 10px;
+  padding: 10px;
+  background: #eaf7fc;
+  border-left: 5px solid #13a9b5;
+  border-radius: 8px;
+  line-height: 1.5;
 }
 
 .saida-minimizada .resumo-saida {
-  display:block;
+  display: block;
 }
 
+/* CAMPOS */
+
 label {
-  display:block;
-  font-weight:bold;
-  margin-top:14px;
-  margin-bottom:6px;
+  display: block;
+  font-weight: bold;
+  margin-top: 14px;
+  margin-bottom: 6px;
+  color: #17435f;
 }
 
 input,
 select,
 textarea {
-  width:100%;
-  padding:13px;
-  border:1px solid #bbb;
-  border-radius:8px;
-  font-size:16px;
-  background:white;
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #9fc4d6;
+  border-radius: 8px;
+  font-size: 16px;
+  background: white;
 }
 
 textarea {
-  min-height:90px;
-  resize:vertical;
+  min-height: 90px;
+  resize: vertical;
 }
 
 input:focus,
 select:focus,
 textarea:focus {
-  outline:3px solid rgba(7,87,156,.18);
-  border-color:#07579c;
+  outline: 3px solid rgba(7,87,156,.18);
+  border-color: #07579c;
 }
 
 input:disabled,
@@ -125,114 +169,150 @@ select:disabled,
 textarea:disabled,
 input[readonly],
 textarea[readonly] {
-  background:#eee;
-  color:#555;
-  opacity:1;
+  background: #eee;
+  color: #555;
+  opacity: 1;
 }
 
+/* BOTÕES */
+
 button {
-  width:100%;
-  padding:15px;
-  border:none;
-  border-radius:9px;
-  margin-top:18px;
-  font-size:17px;
-  font-weight:bold;
-  cursor:pointer;
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 9px;
+  margin-top: 18px;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .btn-principal {
-  background:#07579c;
-  color:white;
+  background: linear-gradient(135deg, #07579c, #087fb8);
+  color: white;
+  box-shadow: 0 4px 10px rgba(7,87,156,.22);
 }
 
 .btn-pdf {
-  background:#176b38;
-  color:white;
+  background: linear-gradient(135deg, #176b38, #239a54);
+  color: white;
+  box-shadow: 0 4px 10px rgba(23,107,56,.22);
 }
 
 button:disabled {
-  background:#999;
-  cursor:not-allowed;
+  background: #999;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
+/* MENSAGENS */
+
 .mensagem {
-  display:none;
-  margin-top:15px;
-  padding:12px;
-  border-radius:8px;
-  font-weight:bold;
-  text-align:center;
+  display: none;
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  text-align: center;
 }
 
 .sucesso {
-  display:block;
-  background:#e7f7ec;
-  color:#176b38;
+  display: block;
+  background: #e7f7ec;
+  color: #176b38;
 }
 
 .erro {
-  display:block;
-  background:#fdeaea;
-  color:#a11616;
+  display: block;
+  background: #fdeaea;
+  color: #a11616;
 }
 
 .aviso {
-  background:#fff4d8;
-  border:1px solid #e3bd57;
-  padding:12px;
-  border-radius:8px;
-  margin-bottom:15px;
-  font-weight:bold;
-  text-align:center;
+  background: #fff7d6;
+  border: 1px solid #e7bd45;
+  color: #6a5200;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-weight: bold;
+  text-align: center;
 }
 
 #areaChegada {
-  display:none;
+  display: none;
 }
 
 #areaEncerrada {
-  display:none;
+  display: none;
 }
 
 .encerrada {
-  text-align:center;
-  padding:30px 20px;
+  text-align: center;
+  padding: 30px 20px;
 }
 
 .encerrada h2 {
-  color:#176b38;
+  color: #176b38;
 }
 
 .texto-pequeno {
-  font-size:13px;
-  color:#666;
-  text-align:center;
-  margin-top:8px;
+  font-size: 13px;
+  color: #666;
+  text-align: center;
+  margin-top: 8px;
 }
+
 </style>
+
 </head>
 
 <body>
 
+<!-- CABEÇALHO -->
+
 <div class="header">
+
+  <div class="logo-coren">
+    <img
+      src="coren-pb.png"
+      alt="COREN-PB - Conselho Regional de Enfermagem da Paraíba"
+    >
+  </div>
+
+  <div class="carro">
+    🚙
+  </div>
+
   <h1>CONTROLE DE FROTA</h1>
+
   <p>COREN-PB</p>
+
 </div>
 
+
 <div class="container">
+
 
 <!-- REGISTRO DE SAÍDA -->
 
 <div class="card" id="cardSaida">
 
-<h2>Registro de Saída</h2>
+<h2>🚗 Registro de Saída</h2>
 
-<div class="resumo-saida" id="resumoSaida"></div>
+<div
+  class="resumo-saida"
+  id="resumoSaida">
+</div>
+
 
 <div class="conteudo-saida">
 
-<label for="motorista">Motorista / Condutor</label>
+
+<label for="motorista">
+Motorista / Condutor
+</label>
+
 <input
   type="text"
   id="motorista"
@@ -240,59 +320,107 @@ button:disabled {
   placeholder="Digite nome e sobrenome"
 >
 
-<label for="dataSaida">Data de Saída</label>
+
+<label for="dataSaida">
+Data de Saída
+</label>
+
 <input
   type="date"
   id="dataSaida"
   readonly
 >
 
-<label for="horaSaida">Hora de Saída</label>
+
+<label for="horaSaida">
+Hora de Saída
+</label>
+
 <input
   type="time"
   id="horaSaida"
   readonly
 >
 
-<label for="veiculo">Veículo</label>
 
-<select id="veiculo" onchange="atualizarPlaca()">
+<label for="veiculo">
+Veículo
+</label>
 
-<option value="">Selecione o veículo</option>
 
-<option value="SANDERO" data-placa="OFC-4143">
+<select
+  id="veiculo"
+  onchange="atualizarPlaca()"
+>
+
+<option value="">
+Selecione o veículo
+</option>
+
+<option
+  value="SANDERO"
+  data-placa="OFC-4143"
+>
 SANDERO — OFC-4143
 </option>
 
-<option value="NISSAN FRONTIER" data-placa="PWC-1227">
+<option
+  value="NISSAN FRONTIER"
+  data-placa="PWC-1227"
+>
 NISSAN FRONTIER — PWC-1227
 </option>
 
-<option value="NISSAN KICKS" data-placa="SLC-8F20">
+<option
+  value="NISSAN KICKS"
+  data-placa="SLC-8F20"
+>
 NISSAN KICKS — SLC-8F20
 </option>
 
-<option value="NISSAN KICKS" data-placa="SLC-8F40">
+<option
+  value="NISSAN KICKS"
+  data-placa="SLC-8F40"
+>
 NISSAN KICKS — SLC-8F40
 </option>
 
-<option value="NISSAN KICKS" data-placa="SLC-8F50">
+<option
+  value="NISSAN KICKS"
+  data-placa="SLC-8F50"
+>
 NISSAN KICKS — SLC-8F50
 </option>
 
 </select>
 
-<label for="placa">Placa</label>
-<input type="text" id="placa" readonly>
 
-<label for="destino">Destino</label>
+<label for="placa">
+Placa
+</label>
+
+<input
+  type="text"
+  id="placa"
+  readonly
+>
+
+
+<label for="destino">
+Destino
+</label>
+
 <input
   type="text"
   id="destino"
   placeholder="Digite o destino"
 >
 
-<label for="kmSaida">KM de Saída</label>
+
+<label for="kmSaida">
+KM de Saída
+</label>
+
 <input
   type="text"
   id="kmSaida"
@@ -300,43 +428,89 @@ NISSAN KICKS — SLC-8F50
   placeholder="Ex.: 10500,5 ou 10500.5"
 >
 
+
 <button
   class="btn-principal"
   id="btnSaida"
   onclick="registrarSaida()"
 >
-REGISTRAR SAÍDA
+🚙 REGISTRAR SAÍDA
 </button>
 
-<div id="mensagemSaida" class="mensagem"></div>
+
+<div
+  id="mensagemSaida"
+  class="mensagem">
+</div>
 
 </div>
+
 </div>
 
 
 <!-- REGISTRO DE CHEGADA -->
 
-<div class="card card-chegada" id="areaChegada">
+<div
+  class="card card-chegada"
+  id="areaChegada"
+>
 
-<h2>REGISTRO DE CHEGADA</h2>
+<h2>🏁 REGISTRO DE CHEGADA</h2>
+
 
 <div class="aviso">
 Saída registrada. Complete agora o registro de chegada.
 </div>
 
-<label>Motorista / Condutor</label>
-<input type="text" id="motoristaChegada" readonly>
 
-<label>Veículo</label>
-<input type="text" id="veiculoChegada" readonly>
+<label>
+Motorista / Condutor
+</label>
 
-<label>Placa</label>
-<input type="text" id="placaChegada" readonly>
+<input
+  type="text"
+  id="motoristaChegada"
+  readonly
+>
 
-<label>Data de Chegada</label>
-<input type="date" id="dataChegada" readonly>
 
-<label>KM de Chegada</label>
+<label>
+Veículo
+</label>
+
+<input
+  type="text"
+  id="veiculoChegada"
+  readonly
+>
+
+
+<label>
+Placa
+</label>
+
+<input
+  type="text"
+  id="placaChegada"
+  readonly
+>
+
+
+<label>
+Data de Chegada
+</label>
+
+<input
+  type="date"
+  id="dataChegada"
+  readonly
+>
+
+
+<label>
+KM de Chegada
+</label>
+
 <input
   type="text"
   id="kmChegada"
@@ -344,42 +518,69 @@ Saída registrada. Complete agora o registro de chegada.
   placeholder="Ex.: 10520,5 ou 10520.5"
 >
 
-<label>Hora de Chegada</label>
-<input type="time" id="horaChegada" readonly>
 
-<label>Local de Chegada</label>
+<label>
+Hora de Chegada
+</label>
+
+<input
+  type="time"
+  id="horaChegada"
+  readonly
+>
+
+
+<label>
+Local de Chegada
+</label>
+
 <input
   type="text"
   id="localChegada"
   value="João Pessoa - PB, Sede do COREN"
 >
 
-<label>Assinatura do Motorista</label>
+
+<label>
+Assinatura do Motorista
+</label>
+
 <input
   type="text"
   id="assinatura"
   readonly
 >
 
+
 <div class="texto-pequeno">
 A assinatura é preenchida automaticamente com o nome do motorista.
 </div>
 
-<label>Observação</label>
+
+<label>
+Observação
+</label>
+
 <textarea
   id="observacaoChegada"
   placeholder="Se não houver ocorrência, digite SEM OBSERVAÇÃO"
 ></textarea>
+
 
 <button
   class="btn-principal"
   id="btnChegada"
   onclick="registrarChegada()"
 >
-REGISTRAR CHEGADA
+🏁 REGISTRAR CHEGADA
 </button>
 
-<div id="mensagemChegada" class="mensagem"></div>
+
+<div
+  id="mensagemChegada"
+  class="mensagem">
+</div>
+
 
 <button
   class="btn-pdf"
@@ -387,7 +588,7 @@ REGISTRAR CHEGADA
   onclick="baixarPDF()"
   style="display:none"
 >
-BAIXAR / SALVAR EM PDF
+📄 BAIXAR / SALVAR EM PDF
 </button>
 
 </div>
@@ -395,11 +596,18 @@ BAIXAR / SALVAR EM PDF
 
 <!-- VIAGEM ENCERRADA -->
 
-<div class="card encerrada" id="areaEncerrada">
+<div
+  class="card encerrada"
+  id="areaEncerrada"
+>
 
-<h2>✓ VIAGEM ENCERRADA</h2>
+<h2>
+✓ VIAGEM ENCERRADA
+</h2>
 
-<p>O registro de saída e chegada foi concluído.</p>
+<p>
+O registro de saída e chegada foi concluído.
+</p>
 
 <p>
 Feche o aplicativo. Ao abrir novamente, estará disponível um novo Registro de Saída.
@@ -411,8 +619,7 @@ Feche o aplicativo. Ao abrir novamente, estará disponível um novo Registro de 
 
 
 <script>
-
-const URL_SCRIPT =
+  const URL_SCRIPT =
 "https://script.google.com/macros/s/AKfycbzu264tIZifiObEh9mdy0ulZGgVBjhSptcb0KuBUIfDQ3ex3NKX865GidwU8Z3MsUUM/exec";
 
 let enviandoSaida = false;
@@ -424,6 +631,7 @@ let dadosPDF = null;
 function campo(id) {
   return document.getElementById(id);
 }
+
 
 function valor(id) {
   return campo(id).value.trim();
@@ -593,6 +801,7 @@ function validarSaida() {
     valor("motorista");
 
   if (!motorista) {
+
     return campoObrigatorio(
       "motorista",
       "Preencha o nome e sobrenome do motorista."
@@ -600,6 +809,7 @@ function validarSaida() {
   }
 
   if (!nomeCompletoValido(motorista)) {
+
     return campoObrigatorio(
       "motorista",
       "Digite pelo menos o nome e o sobrenome do motorista."
@@ -607,6 +817,7 @@ function validarSaida() {
   }
 
   if (!valor("veiculo")) {
+
     return campoObrigatorio(
       "veiculo",
       "Selecione o veículo."
@@ -614,6 +825,7 @@ function validarSaida() {
   }
 
   if (!valor("destino")) {
+
     return campoObrigatorio(
       "destino",
       "Informe o destino."
@@ -629,6 +841,7 @@ function validarSaida() {
     !Number.isFinite(km) ||
     km < 0
   ) {
+
     return campoObrigatorio(
       "kmSaida",
       "Informe um KM de saída válido."
@@ -787,9 +1000,7 @@ async function registrarSaida() {
     );
   }
 }
-
-
-function bloquearSaida() {
+  function bloquearSaida() {
 
   [
     "motorista",
@@ -1128,9 +1339,7 @@ async function registrarChegada() {
     );
   }
 }
-
-
-function bloquearChegada() {
+  function bloquearChegada() {
 
   [
     "kmChegada",
@@ -1169,9 +1378,12 @@ function baixarPDF() {
     if (salvo) {
 
       try {
+
         dadosPDF =
           JSON.parse(salvo);
+
       } catch (erro) {
+
         dadosPDF = null;
       }
     }
@@ -1432,8 +1644,11 @@ window.onload = function() {
 `;
 
   janela.document.open();
+
   janela.document.write(html);
+
   janela.document.close();
+
 
   sessionStorage.setItem(
     "controleFrotaSessaoEncerrada",
@@ -1462,9 +1677,7 @@ window.onload = function() {
     encerrarTela();
   },700);
 }
-
-
-function formatarData(data) {
+  function formatarData(data) {
 
   if (!data) {
     return "";
@@ -1687,6 +1900,7 @@ function limparDadosLocaisSemPerguntar() {
   );
 
   viagemAtual = null;
+
   dadosPDF = null;
 }
 
@@ -1753,4 +1967,5 @@ window.addEventListener(
 </script>
 
 </body>
+
 </html>
