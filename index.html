@@ -758,15 +758,14 @@ function mostrarMensagem(id, texto, tipo) {
 }
 
 function limparMensagem(id) {
-
-  const elemento = campo(id);
+    const elemento = campo(id);
 
   elemento.textContent = "";
   elemento.className = "mensagem";
   elemento.style.display = "none";
 }
 
-  /* =====================================================
+/* =====================================================
    VALIDAR DADOS ANTES DA FOTO
 ===================================================== */
 
@@ -1496,9 +1495,7 @@ async function registrarSaida() {
     destino: destino,
     kmSaida: String(kmSaida)
   };
-
-
-  try {
+    try {
 
     const resposta =
       await fetch(
@@ -1697,7 +1694,8 @@ function preencherChegada() {
   atualizarResumoSaida();
 }
 
-  /* =====================================================
+
+/* =====================================================
    RESUMO DA SAÍDA
 ===================================================== */
 
@@ -2499,7 +2497,6 @@ body {
 </head>
 
 <body>
-
 <div class="cabecalho">
   <h1>RELATÓRIO DE VIAGEM</h1>
   <p>CONTROLE DE FROTA — COREN-PB</p>
@@ -2551,7 +2548,6 @@ body {
 
 </div>
 
-
 <div class="bloco">
 
   <h2>🏁 Dados da Chegada</h2>
@@ -2588,7 +2584,6 @@ body {
 
 </div>
 
-
 <div class="bloco">
 
   <h2>📷 Validação Fotográfica</h2>
@@ -2610,7 +2605,6 @@ body {
 
     </div>
 
-
     <div class="foto">
 
       <strong>Foto da Chegada</strong>
@@ -2630,11 +2624,9 @@ body {
 
 </div>
 
-
 <div class="rodape">
 Relatório gerado pelo Controle de Frota — COREN-PB
 </div>
-
 
 <div class="nao-imprimir">
 
@@ -2660,7 +2652,6 @@ IMPRIMIR / SALVAR COMO PDF
 </body>
 </html>
 `;
-
 
   janela.document.open();
 
@@ -2734,7 +2725,6 @@ function encerrarViagem() {
     "controleFrotaHoraFotoChegada"
   );
 
-
   fotos = {
     saida: "",
     chegada: "",
@@ -2745,7 +2735,6 @@ function encerrarViagem() {
   viagemAtual = null;
   dadosPDF = null;
 
-
   campo("cardSaida").style.display =
     "none";
 
@@ -2754,7 +2743,6 @@ function encerrarViagem() {
 
   campo("areaEncerrada").style.display =
     "block";
-
 
   campo("areaEncerrada")
     .scrollIntoView({
@@ -2788,7 +2776,87 @@ window.addEventListener(
 
 
 /* =====================================================
-   INICIAR APLICATIVO
+   GARANTIR RETORNO À CHEGADA
+
+   Esta parte mantém a saída registrada mesmo depois
+   de sair do aplicativo e entrar novamente.
+===================================================== */
+
+function garantirTelaDaViagemEmAndamento() {
+
+  const salvo =
+    localStorage.getItem(
+      "controleFrotaViagemAtual"
+    );
+
+  if (!salvo) {
+    return;
+  }
+
+  try {
+
+    const viagemSalva =
+      JSON.parse(salvo);
+
+    if (!viagemSalva) {
+      return;
+    }
+
+    viagemAtual = viagemSalva;
+
+    preencherChegada();
+
+    bloquearCamposSaida();
+
+    campo("cardSaida").style.display =
+      "none";
+
+    campo("areaChegada").style.display =
+      "block";
+
+    campo("areaEncerrada").style.display =
+      "none";
+
+  }
+
+  catch (erro) {
+
+    console.warn(
+      "Não foi possível recuperar a viagem em andamento:",
+      erro
+    );
+  }
+}
+
+
+/*
+  Verifica novamente quando o aplicativo volta
+  para a tela depois de ficar em segundo plano.
+*/
+
+window.addEventListener(
+  "pageshow",
+  function() {
+
+    garantirTelaDaViagemEmAndamento();
+  }
+);
+
+
+document.addEventListener(
+  "visibilitychange",
+  function() {
+
+    if (!document.hidden) {
+
+      garantirTelaDaViagemEmAndamento();
+    }
+  }
+);
+
+
+/* =====================================================
+   INICIALIZAÇÃO DO APLICATIVO
 ===================================================== */
 
 document.addEventListener(
@@ -2923,4 +2991,3 @@ document.addEventListener(
 
 </body>
 </html>
-  
