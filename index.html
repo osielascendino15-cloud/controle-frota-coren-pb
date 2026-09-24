@@ -700,7 +700,8 @@ function numeroKM(valorRecebido) {
 
   const ultimoPonto =
     texto.lastIndexOf(".");
-    if (
+
+  if (
     ultimaVirgula >= 0 &&
     ultimoPonto >= 0 &&
     ultimaVirgula > ultimoPonto
@@ -852,9 +853,7 @@ function validarAntesDaFoto(tipo) {
       return false;
     }
   }
-
-
-  if (tipo === "chegada") {
+    if (tipo === "chegada") {
 
     if (!viagemAtual) {
 
@@ -1137,12 +1136,6 @@ function capturarFoto() {
       "✓ Foto da saída registrada em " +
       horario;
 
-    /*
-      Depois da fotografia:
-      bloqueia somente os dados da saída.
-      O botão REGISTRAR SAÍDA permanece disponível.
-    */
-
     bloquearCamposSaida();
   }
 
@@ -1152,14 +1145,18 @@ function capturarFoto() {
     fotos.chegada = imagem;
     fotos.horaChegada = horario;
 
-    /*
-      A HORA DA CHEGADA é registrada
-      no momento da fotografia.
-      Ela NÃO é copiada da hora da saída.
-    */
-
     campo("horaChegada").value =
       horaAgora();
+
+    /*
+      Guarda também a hora da chegada separadamente.
+      Assim, se o aplicativo for fechado antes de
+      registrar a chegada, a hora não será perdida.
+    */
+    localStorage.setItem(
+      "controleFrotaHoraChegada",
+      campo("horaChegada").value
+    );
 
     const preview =
       campo("previewChegada");
@@ -1172,12 +1169,6 @@ function capturarFoto() {
     ).textContent =
       "✓ Foto da chegada registrada em " +
       horario;
-
-    /*
-      Depois da fotografia:
-      bloqueia somente os dados da chegada.
-      O botão REGISTRAR CHEGADA permanece disponível.
-    */
 
     bloquearCamposChegada();
   }
@@ -1329,12 +1320,6 @@ function bloquearCamposSaida() {
     }
   });
 
-  /*
-    IMPORTANTE:
-    btnSaida NÃO entra na lista.
-    Portanto REGISTRAR SAÍDA continua funcionando.
-  */
-
   campo("placa").readOnly = true;
   campo("dataSaida").readOnly = true;
   campo("horaSaida").readOnly = true;
@@ -1364,12 +1349,6 @@ function bloquearCamposChegada() {
     }
   });
 
-  /*
-    IMPORTANTE:
-    btnChegada NÃO entra na lista.
-    Portanto REGISTRAR CHEGADA continua funcionando.
-  */
-
   campo("motoristaChegada").readOnly = true;
   campo("numeroPortariaChegada").readOnly = true;
   campo("destinoChegada").readOnly = true;
@@ -1379,7 +1358,9 @@ function bloquearCamposChegada() {
   campo("dataChegada").readOnly = true;
   campo("horaChegada").readOnly = true;
 }
-  /* =====================================================
+
+
+/* =====================================================
    REGISTRAR SAÍDA
 ===================================================== */
 
@@ -1639,6 +1620,13 @@ async function registrarSaida() {
     };
 
 
+    /*
+      IMPORTANTE:
+      a viagem é salva no aparelho depois que
+      a saída foi confirmada pelo servidor.
+      Enquanto ela existir, ao reabrir o aplicativo
+      ele deverá voltar para REGISTRO DE CHEGADA.
+    */
     localStorage.setItem(
       "controleFrotaViagemAtual",
       JSON.stringify(viagemAtual)
@@ -1658,6 +1646,11 @@ async function registrarSaida() {
 
     localStorage.removeItem(
       "controleFrotaDadosPDF"
+    );
+
+
+    localStorage.removeItem(
+      "controleFrotaHoraChegada"
     );
 
 
@@ -1711,15 +1704,6 @@ async function registrarSaida() {
     );
 
 
-    /*
-      Como a foto já foi tirada,
-      os dados permanecem protegidos.
-
-      IMPORTANTE:
-      o botão REGISTRAR SAÍDA
-      continuará disponível para tentar novamente.
-    */
-
     bloquearCamposSaida();
 
   }
@@ -1746,10 +1730,6 @@ function preencherChegada() {
     return;
   }
 
-
-  /*
-    Repete automaticamente os dados da saída.
-  */
 
   campo("motoristaChegada").value =
     viagemAtual.motorista || "";
@@ -1779,31 +1759,12 @@ function preencherChegada() {
     dataHoje();
 
 
-  /*
-    MUITO IMPORTANTE:
-
-    A hora da saída NÃO será repetida
-    na hora da chegada.
-
-    A hora da chegada somente será
-    preenchida quando a foto da chegada
-    for capturada.
-  */
-
   if (!fotos.chegada) {
 
     campo("horaChegada").value =
       "";
   }
 
-
-  /*
-    KM DE CHEGADA NÃO É COPIADO.
-
-    Se ainda não existe uma chegada
-    registrada, ele fica livre para
-    o motorista digitar.
-  */
 
   if (
     localStorage.getItem(
@@ -1818,9 +1779,7 @@ function preencherChegada() {
 
   atualizarResumoSaida();
 }
-
-
-/* =====================================================
+  /* =====================================================
    RESUMO DA SAÍDA
 ===================================================== */
 
@@ -1829,7 +1788,6 @@ function atualizarResumoSaida() {
   if (!viagemAtual) {
     return;
   }
-
 
   campo("resumoSaida").innerHTML =
 
@@ -1885,11 +1843,9 @@ function restaurarViagem() {
       "controleFrotaViagemAtual"
     );
 
-
   if (!salvo) {
-    return;
+    return false;
   }
-
 
   try {
 
@@ -1907,35 +1863,29 @@ function restaurarViagem() {
 
     viagemAtual = null;
 
-    return;
+    return false;
   }
 
-
   if (!viagemAtual) {
-    return;
+    return false;
   }
 
 
   campo("motorista").value =
     viagemAtual.motorista || "";
 
-
   campo("numeroPortaria").value =
     viagemAtual.numeroPortaria || "";
-
 
   campo("dataSaida").value =
     viagemAtual.dataSaida ||
     dataHoje();
 
-
   campo("horaSaida").value =
     viagemAtual.horaSaida || "";
 
-
   campo("destino").value =
     viagemAtual.destino || "";
-
 
   campo("kmSaida").value =
     viagemAtual.kmSaida ?? "";
@@ -1944,9 +1894,7 @@ function restaurarViagem() {
   const select =
     campo("veiculo");
 
-
   let encontrou = false;
-
 
   for (
     let i = 0;
@@ -1956,7 +1904,6 @@ function restaurarViagem() {
 
     const opcao =
       select.options[i];
-
 
     if (
       opcao.value ===
@@ -2008,15 +1955,25 @@ function restaurarViagem() {
   bloquearCamposSaida();
 
 
-  campo("cardSaida")
-    .classList.add(
-      "saida-minimizada"
-    );
+  /*
+    CORREÇÃO PRINCIPAL:
+
+    Se existe uma saída já registrada,
+    o aplicativo NÃO volta para uma nova saída.
+
+    Ao reabrir o aplicativo, a área de saída
+    fica escondida e o motorista volta
+    diretamente para REGISTRO DE CHEGADA.
+  */
+
+  campo("cardSaida").style.display =
+    "none";
+
+  campo("areaChegada").style.display =
+    "block";
 
 
-  campo("areaChegada")
-    .style.display =
-      "block";
+  return true;
 }
 
 
@@ -2029,7 +1986,6 @@ async function registrarChegada() {
   if (enviandoChegada) {
     return;
   }
-
 
   limparMensagem(
     "mensagemChegada"
@@ -2064,11 +2020,6 @@ async function registrarChegada() {
     valor("dataChegada") ||
     dataHoje();
 
-
-  /*
-    A hora precisa ter sido criada
-    no momento da fotografia.
-  */
 
   const horaChegada =
     valor("horaChegada");
@@ -2317,6 +2268,12 @@ async function registrarChegada() {
     );
 
 
+    localStorage.setItem(
+      "controleFrotaHoraChegada",
+      horaChegada
+    );
+
+
     salvarFotosTemporarias();
 
     bloquearCamposChegada();
@@ -2358,12 +2315,6 @@ async function registrarChegada() {
     );
 
 
-    /*
-      A fotografia já foi feita.
-      Os dados permanecem protegidos,
-      mas REGISTRAR CHEGADA continua disponível.
-    */
-
     bloquearCamposChegada();
 
   }
@@ -2385,7 +2336,8 @@ async function registrarChegada() {
   }
 }
 
-  /* =====================================================
+
+/* =====================================================
    RESTAURAR DADOS PARA PDF
 ===================================================== */
 
@@ -2661,161 +2613,157 @@ body {
 @media print {
 
   .nao-imprimir {
-    display: none;
+    display: none !important;
   }
+
 }
 
 </style>
-
 </head>
 
 <body>
 
 <div class="cabecalho">
+  <h1>RELATÓRIO DE VIAGEM</h1>
+  <p>CONTROLE DE FROTA — COREN-PB</p>
+</div>
 
-<h1>CONTROLE DE FROTA — COREN-PB</h1>
+<div class="bloco">
 
-<p>RELATÓRIO DE SAÍDA E CHEGADA</p>
+  <h2>🚙 Dados da Saída</h2>
+
+  <div class="linha">
+    <strong>Motorista / Condutor:</strong>
+    ${escaparHTML(dadosPDF.motorista)}
+  </div>
+
+  <div class="linha">
+    <strong>Nº da Portaria:</strong>
+    ${escaparHTML(dadosPDF.numeroPortaria)}
+  </div>
+
+  <div class="linha">
+    <strong>Data de Saída:</strong>
+    ${escaparHTML(formatarDataBR(dadosPDF.dataSaida))}
+  </div>
+
+  <div class="linha">
+    <strong>Hora de Saída:</strong>
+    ${escaparHTML(dadosPDF.horaSaida)}
+  </div>
+
+  <div class="linha">
+    <strong>Veículo:</strong>
+    ${escaparHTML(dadosPDF.veiculo)}
+  </div>
+
+  <div class="linha">
+    <strong>Placa:</strong>
+    ${escaparHTML(dadosPDF.placa)}
+  </div>
+
+  <div class="linha">
+    <strong>Destino:</strong>
+    ${escaparHTML(dadosPDF.destino)}
+  </div>
+
+  <div class="linha">
+    <strong>KM de Saída:</strong>
+    ${escaparHTML(formatarKM(dadosPDF.kmSaida))}
+  </div>
 
 </div>
 
 
 <div class="bloco">
 
-<h2>Identificação</h2>
+  <h2>🏁 Dados da Chegada</h2>
 
-<div class="linha">
-<strong>Motorista / Condutor:</strong>
-${escaparHTML(dadosPDF.motorista)}
-</div>
+  <div class="linha">
+    <strong>Data de Chegada:</strong>
+    ${escaparHTML(formatarDataBR(dadosPDF.dataChegada))}
+  </div>
 
-<div class="linha">
-<strong>Nº da Portaria:</strong>
-${escaparHTML(dadosPDF.numeroPortaria)}
-</div>
+  <div class="linha">
+    <strong>Hora de Chegada:</strong>
+    ${escaparHTML(dadosPDF.horaChegada)}
+  </div>
 
-<div class="linha">
-<strong>Veículo:</strong>
-${escaparHTML(dadosPDF.veiculo)}
-</div>
+  <div class="linha">
+    <strong>KM de Chegada:</strong>
+    ${escaparHTML(formatarKM(dadosPDF.kmChegada))}
+  </div>
 
-<div class="linha">
-<strong>Placa:</strong>
-${escaparHTML(dadosPDF.placa)}
-</div>
+  <div class="linha">
+    <strong>KM Percorrido:</strong>
+    ${escaparHTML(formatarKM(dadosPDF.kmPercorrido))}
+  </div>
 
-</div>
+  <div class="linha">
+    <strong>Local de Chegada:</strong>
+    ${escaparHTML(dadosPDF.localChegada)}
+  </div>
 
-
-<div class="bloco">
-
-<h2>Saída</h2>
-
-<div class="linha">
-<strong>Data:</strong>
-${escaparHTML(formatarDataBR(dadosPDF.dataSaida))}
-</div>
-
-<div class="linha">
-<strong>Hora:</strong>
-${escaparHTML(dadosPDF.horaSaida)}
-</div>
-
-<div class="linha">
-<strong>Destino:</strong>
-${escaparHTML(dadosPDF.destino)}
-</div>
-
-<div class="linha">
-<strong>KM de Saída:</strong>
-${escaparHTML(formatarKM(dadosPDF.kmSaida))}
-</div>
+  <div class="linha">
+    <strong>Observação:</strong>
+    ${escaparHTML(dadosPDF.observacao)}
+  </div>
 
 </div>
 
 
 <div class="bloco">
 
-<h2>Chegada</h2>
+  <h2>📷 Validação Fotográfica</h2>
 
-<div class="linha">
-<strong>Data:</strong>
-${escaparHTML(formatarDataBR(dadosPDF.dataChegada))}
-</div>
+  <div class="fotos">
 
-<div class="linha">
-<strong>Hora:</strong>
-${escaparHTML(dadosPDF.horaChegada)}
-</div>
+    <div class="foto">
 
-<div class="linha">
-<strong>KM de Chegada:</strong>
-${escaparHTML(formatarKM(dadosPDF.kmChegada))}
-</div>
+      <strong>Foto da Saída</strong>
 
-<div class="linha">
-<strong>KM Percorrido:</strong>
-${escaparHTML(formatarKM(dadosPDF.kmPercorrido))}
-</div>
+      <img
+        src="${fotos.saida}"
+        alt="Registro fotográfico da saída"
+      >
 
-<div class="linha">
-<strong>Local de Chegada:</strong>
-${escaparHTML(dadosPDF.localChegada)}
-</div>
+      <div class="horario-foto">
+        ${escaparHTML(fotos.horaSaida)}
+      </div>
 
-<div class="linha">
-<strong>Observação:</strong>
-${escaparHTML(dadosPDF.observacao)}
-</div>
-
-</div>
+    </div>
 
 
-<div class="bloco">
+    <div class="foto">
 
-<h2>Validação Fotográfica</h2>
+      <strong>Foto da Chegada</strong>
 
-<div class="fotos">
+      <img
+        src="${fotos.chegada}"
+        alt="Registro fotográfico da chegada"
+      >
 
-<div class="foto">
+      <div class="horario-foto">
+        ${escaparHTML(fotos.horaChegada)}
+      </div>
 
-<strong>Foto da Saída</strong>
+    </div>
 
-<img
-  src="${fotos.saida}"
-  alt="Foto da saída"
->
-
-<div class="horario-foto">
-${escaparHTML(fotos.horaSaida)}
-</div>
-
-</div>
-
-
-<div class="foto">
-
-<strong>Foto da Chegada</strong>
-
-<img
-  src="${fotos.chegada}"
-  alt="Foto da chegada"
->
-
-<div class="horario-foto">
-${escaparHTML(fotos.horaChegada)}
-</div>
-
-</div>
-
-</div>
+  </div>
 
 </div>
 
 
 <div class="rodape">
+  Relatório gerado pelo Controle de Frota do COREN-PB.
+</div>
 
-Relatório gerado pelo Controle de Frota — COREN-PB
+
+<div class="nao-imprimir">
+
+  <button onclick="window.print()">
+    IMPRIMIR / SALVAR EM PDF
+  </button>
 
 </div>
 
@@ -2824,18 +2772,17 @@ Relatório gerado pelo Controle de Frota — COREN-PB
 
 window.onload = function() {
 
-  setTimeout(
-    function() {
-      window.print();
-    },
-    700
-  );
+  setTimeout(function() {
+
+    window.print();
+
+  }, 500);
+
 };
 
 <\/script>
 
 </body>
-
 </html>
 `;
 
@@ -2845,39 +2792,6 @@ window.onload = function() {
   janela.document.write(html);
 
   janela.document.close();
-
-
-  setTimeout(
-    function() {
-
-      alert(
-        "Na tela que abriu, escolha SALVAR COMO PDF. Depois volte ao aplicativo e toque em 'JÁ SALVEI O PDF — ENCERRAR E APAGAR FOTOS'. Ao finalizar, feche a tela e abra novamente o aplicativo para registrar uma nova saída."
-      );
-
-    },
-    1200
-  );
-}
-
-
-/* =====================================================
-   CONFIRMAR ENCERRAMENTO
-===================================================== */
-
-function confirmarEncerramento() {
-
-  const confirmou =
-    confirm(
-      "Você já salvou o relatório em PDF?\n\nAo continuar, as fotografias desta viagem serão apagadas deste aparelho."
-    );
-
-
-  if (!confirmou) {
-    return;
-  }
-
-
-  encerrarViagem();
 }
 
 
@@ -2885,48 +2799,28 @@ function confirmarEncerramento() {
    ENCERRAR VIAGEM
 ===================================================== */
 
-function encerrarViagem() {
+function confirmarEncerramento() {
 
-  limparDadosLocaisSemPerguntar();
+  const confirmar =
+    window.confirm(
+      "Confirma que o relatório PDF já foi salvo? Após continuar, as fotos e os dados temporários desta viagem serão apagados deste aparelho."
+    );
 
+  if (!confirmar) {
+    return;
+  }
 
-  viagemAtual = null;
-
-  dadosPDF = null;
-
-
-  fotos = {
-    saida: "",
-    chegada: "",
-    horaSaida: "",
-    horaChegada: ""
-  };
-
-
-  campo("cardSaida").style.display =
-    "none";
-
-
-  campo("areaChegada").style.display =
-    "none";
-
-
-  campo("areaEncerrada").style.display =
-    "block";
-
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
+  encerrarViagem();
 }
 
 
-/* =====================================================
-   LIMPAR DADOS LOCAIS
-===================================================== */
+function encerrarViagem() {
 
-function limparDadosLocaisSemPerguntar() {
+  /*
+    Somente aqui a viagem em andamento é apagada.
+    Portanto, fechar o aplicativo antes de concluir
+    a chegada NÃO apaga a saída registrada.
+  */
 
   localStorage.removeItem(
     "controleFrotaViagemAtual"
@@ -2959,11 +2853,42 @@ function limparDadosLocaisSemPerguntar() {
   localStorage.removeItem(
     "controleFrotaHoraFotoChegada"
   );
+
+  localStorage.removeItem(
+    "controleFrotaHoraChegada"
+  );
+
+
+  viagemAtual = null;
+  dadosPDF = null;
+
+  fotos = {
+    saida: "",
+    chegada: "",
+    horaSaida: "",
+    horaChegada: ""
+  };
+
+
+  campo("cardSaida").style.display =
+    "none";
+
+  campo("areaChegada").style.display =
+    "none";
+
+  campo("areaEncerrada").style.display =
+    "block";
+
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
 }
 
 
 /* =====================================================
-   AVISO AO TENTAR FECHAR DURANTE VIAGEM
+   PROTEGER CONTRA FECHAMENTO ACIDENTAL
 ===================================================== */
 
 window.addEventListener(
@@ -2994,8 +2919,7 @@ document.addEventListener(
   function() {
 
     /*
-      Data e hora da saída são criadas
-      quando o aplicativo é aberto.
+      Preenche data e hora para uma NOVA saída.
     */
 
     campo("dataSaida").value =
@@ -3003,15 +2927,6 @@ document.addEventListener(
 
     campo("horaSaida").value =
       horaAgora();
-
-
-    /*
-      Data da chegada pode ser preparada,
-      mas a HORA DA CHEGADA fica vazia.
-
-      Ela só será preenchida quando
-      a foto da chegada for capturada.
-    */
 
     campo("dataChegada").value =
       dataHoje();
@@ -3021,23 +2936,22 @@ document.addEventListener(
 
 
     /*
-      Primeiro verifica se existe
-      uma viagem realmente registrada
-      e ainda em andamento.
+      PRIMEIRO verificamos se existe uma saída
+      realmente registrada no aparelho.
     */
 
-    restaurarViagem();
+    const existeViagem =
+      restaurarViagem();
 
 
-    /*
-      Somente restaura fotos se existe
-      uma viagem em andamento.
+    if (existeViagem) {
 
-      Isso evita que uma foto antiga
-      bloqueie uma NOVA saída.
-    */
+      /*
+        Existe uma viagem em andamento.
 
-    if (viagemAtual) {
+        Restaura as fotografias e mantém
+        a saída protegida.
+      */
 
       restaurarFotosTemporarias();
 
@@ -3045,20 +2959,57 @@ document.addEventListener(
 
 
       /*
-        Preenche novamente os dados
-        automáticos da chegada.
+        CORREÇÃO PRINCIPAL:
+
+        Ao fechar e abrir novamente o aplicativo,
+        se a saída já foi registrada, NÃO mostra
+        uma nova tela de saída.
+
+        Abre diretamente o REGISTRO DE CHEGADA.
       */
 
-      preencherChegada();
+      campo("cardSaida").style.display =
+        "none";
+
+      campo("areaChegada").style.display =
+        "block";
 
 
-      const chegadaRegistrada =
+      /*
+        Se a foto da chegada já tiver sido feita
+        antes de fechar o aplicativo, restaura
+        também a hora exata que foi salva.
+      */
+
+      if (fotos.chegada) {
+
+        const horaChegadaSalva =
+          localStorage.getItem(
+            "controleFrotaHoraChegada"
+          );
+
+        if (horaChegadaSalva) {
+
+          campo("horaChegada").value =
+            horaChegadaSalva;
+        }
+
+        bloquearCamposChegada();
+      }
+
+
+      /*
+        Se a chegada já foi registrada,
+        restaura os dados do PDF e mantém
+        os botões para salvar o relatório
+        e encerrar a viagem.
+      */
+
+      if (
         localStorage.getItem(
           "controleFrotaChegadaRegistrada"
-        ) === "1";
-
-
-      if (chegadaRegistrada) {
+        ) === "1"
+      ) {
 
         restaurarDadosPDF();
 
@@ -3072,38 +3023,34 @@ document.addEventListener(
 
         campo("btnEncerrar").style.display =
           "block";
-
       }
 
-      else if (fotos.chegada) {
 
-        /*
-          Se a foto da chegada já havia
-          sido tirada antes de fechar
-          acidentalmente o navegador,
-          restaura também a hora correspondente.
-        */
+      /*
+        Leva a tela diretamente para
+        REGISTRO DE CHEGADA.
+      */
 
-        campo("horaChegada").value =
-          horaAgora();
+      setTimeout(function() {
 
-        bloquearCamposChegada();
-      }
+        campo("areaChegada")
+          .scrollIntoView({
+            behavior: "auto",
+            block: "start"
+          });
+
+      }, 100);
 
     }
 
     else {
 
       /*
-        NÃO EXISTE VIAGEM EM ANDAMENTO.
+        NÃO existe saída registrada.
 
-        Portanto qualquer fotografia antiga
-        que tenha permanecido no navegador
-        deve ser apagada.
-
-        Isso corrige o problema que estava
-        bloqueando todos os campos numa
-        nova saída.
+        Qualquer fotografia antiga que tenha
+        ficado no navegador é apagada para
+        não bloquear uma nova viagem.
       */
 
       localStorage.removeItem(
@@ -3122,6 +3069,18 @@ document.addEventListener(
         "controleFrotaHoraFotoChegada"
       );
 
+      localStorage.removeItem(
+        "controleFrotaHoraChegada"
+      );
+
+      localStorage.removeItem(
+        "controleFrotaChegadaRegistrada"
+      );
+
+      localStorage.removeItem(
+        "controleFrotaDadosPDF"
+      );
+
 
       fotos = {
         saida: "",
@@ -3129,47 +3088,23 @@ document.addEventListener(
         horaSaida: "",
         horaChegada: ""
       };
-    }
 
-  }
-);
-
-
-/* =====================================================
-   ATUALIZAR DATA DE CHEGADA AO INFORMAR KM
-===================================================== */
-
-campo("kmChegada")
-  .addEventListener(
-    "input",
-    function() {
-
-      if (!valor("dataChegada")) {
-
-        campo("dataChegada").value =
-          dataHoje();
-      }
 
       /*
-        NÃO preencher a hora aqui.
-        A hora será registrada somente
-        no momento da foto da chegada.
+        Garante que uma nova viagem
+        comece na tela de saída.
       */
+
+      campo("cardSaida").style.display =
+        "block";
+
+      campo("areaChegada").style.display =
+        "none";
+
+      campo("areaEncerrada").style.display =
+        "none";
     }
-  );
 
-
-/* =====================================================
-   FECHAR CÂMERA SE O APP FOR PARA SEGUNDO PLANO
-===================================================== */
-
-document.addEventListener(
-  "visibilitychange",
-  function() {
-
-    if (document.hidden) {
-      fecharCamera();
-    }
   }
 );
 
@@ -3177,4 +3112,3 @@ document.addEventListener(
 
 </body>
 </html>
-  
