@@ -766,8 +766,7 @@ function limparMensagem(id) {
   elemento.style.display = "none";
 }
 
-
-/* =====================================================
+  /* =====================================================
    VALIDAR DADOS ANTES DA FOTO
 ===================================================== */
 
@@ -853,7 +852,8 @@ function validarAntesDaFoto(tipo) {
       return false;
     }
   }
-    if (tipo === "chegada") {
+
+  if (tipo === "chegada") {
 
     if (!viagemAtual) {
 
@@ -1148,11 +1148,6 @@ function capturarFoto() {
     campo("horaChegada").value =
       horaAgora();
 
-    /*
-      Guarda também a hora da chegada separadamente.
-      Assim, se o aplicativo for fechado antes de
-      registrar a chegada, a hora não será perdida.
-    */
     localStorage.setItem(
       "controleFrotaHoraChegada",
       campo("horaChegada").value
@@ -1257,14 +1252,10 @@ function restaurarFotosTemporarias() {
       campo("previewSaida").src =
         fotos.saida;
 
-      campo(
-        "previewSaida"
-      ).style.display =
+      campo("previewSaida").style.display =
         "block";
 
-      campo(
-        "estadoFotoSaida"
-      ).textContent =
+      campo("estadoFotoSaida").textContent =
         "✓ Foto da saída restaurada.";
     }
 
@@ -1273,14 +1264,10 @@ function restaurarFotosTemporarias() {
       campo("previewChegada").src =
         fotos.chegada;
 
-      campo(
-        "previewChegada"
-      ).style.display =
+      campo("previewChegada").style.display =
         "block";
 
-      campo(
-        "estadoFotoChegada"
-      ).textContent =
+      campo("estadoFotoChegada").textContent =
         "✓ Foto da chegada restaurada.";
     }
   }
@@ -1498,54 +1485,17 @@ async function registrarSaida() {
     "REGISTRANDO SAÍDA...";
 
 
-  const dados =
-    new URLSearchParams();
-
-
-  dados.append(
-    "acao",
-    "saida"
-  );
-
-  dados.append(
-    "motorista",
-    motorista
-  );
-
-  dados.append(
-    "numeroPortaria",
-    numeroPortaria
-  );
-
-  dados.append(
-    "dataSaida",
-    dataSaida
-  );
-
-  dados.append(
-    "horaSaida",
-    horaSaida
-  );
-
-  dados.append(
-    "veiculo",
-    veiculo
-  );
-
-  dados.append(
-    "placa",
-    placa
-  );
-
-  dados.append(
-    "destino",
-    destino
-  );
-
-  dados.append(
-    "kmSaida",
-    String(kmSaida)
-  );
+  const dados = {
+    acao: "saida",
+    motorista: motorista,
+    numeroPortaria: numeroPortaria,
+    dataSaida: dataSaida,
+    horaSaida: horaSaida,
+    veiculo: veiculo,
+    placa: placa,
+    destino: destino,
+    kmSaida: String(kmSaida)
+  };
 
 
   try {
@@ -1555,7 +1505,7 @@ async function registrarSaida() {
         URL_SCRIPT,
         {
           method: "POST",
-          body: dados
+          body: JSON.stringify(dados)
         }
       );
 
@@ -1594,39 +1544,17 @@ async function registrarSaida() {
 
     viagemAtual = {
 
-      motorista:
-        motorista,
-
-      numeroPortaria:
-        numeroPortaria,
-
-      dataSaida:
-        dataSaida,
-
-      horaSaida:
-        horaSaida,
-
-      veiculo:
-        veiculo,
-
-      placa:
-        placa,
-
-      destino:
-        destino,
-
-      kmSaida:
-        kmSaida
+      motorista: motorista,
+      numeroPortaria: numeroPortaria,
+      dataSaida: dataSaida,
+      horaSaida: horaSaida,
+      veiculo: veiculo,
+      placa: placa,
+      destino: destino,
+      kmSaida: kmSaida
     };
 
 
-    /*
-      IMPORTANTE:
-      a viagem é salva no aparelho depois que
-      a saída foi confirmada pelo servidor.
-      Enquanto ela existir, ao reabrir o aplicativo
-      ele deverá voltar para REGISTRO DE CHEGADA.
-    */
     localStorage.setItem(
       "controleFrotaViagemAtual",
       JSON.stringify(viagemAtual)
@@ -1675,9 +1603,8 @@ async function registrarSaida() {
       );
 
 
-    campo("areaChegada")
-      .style.display =
-        "block";
+    campo("areaChegada").style.display =
+      "block";
 
 
     campo("areaChegada")
@@ -1730,41 +1657,32 @@ function preencherChegada() {
     return;
   }
 
-
   campo("motoristaChegada").value =
     viagemAtual.motorista || "";
-
 
   campo("numeroPortariaChegada").value =
     viagemAtual.numeroPortaria || "";
 
-
   campo("destinoChegada").value =
     viagemAtual.destino || "";
-
 
   campo("kmSaidaChegada").value =
     viagemAtual.kmSaida ?? "";
 
-
   campo("veiculoChegada").value =
     viagemAtual.veiculo || "";
-
 
   campo("placaChegada").value =
     viagemAtual.placa || "";
 
-
   campo("dataChegada").value =
     dataHoje();
-
 
   if (!fotos.chegada) {
 
     campo("horaChegada").value =
       "";
   }
-
 
   if (
     localStorage.getItem(
@@ -1776,9 +1694,9 @@ function preencherChegada() {
       "";
   }
 
-
   atualizarResumoSaida();
 }
+
   /* =====================================================
    RESUMO DA SAÍDA
 ===================================================== */
@@ -1870,7 +1788,6 @@ function restaurarViagem() {
     return false;
   }
 
-
   campo("motorista").value =
     viagemAtual.motorista || "";
 
@@ -1956,13 +1873,8 @@ function restaurarViagem() {
 
 
   /*
-    CORREÇÃO PRINCIPAL:
-
-    Se existe uma saída já registrada,
-    o aplicativo NÃO volta para uma nova saída.
-
-    Ao reabrir o aplicativo, a área de saída
-    fica escondida e o motorista volta
+    Se existe uma saída registrada,
+    ao reabrir o aplicativo ele volta
     diretamente para REGISTRO DE CHEGADA.
   */
 
@@ -2120,50 +2032,15 @@ async function registrarChegada() {
     "REGISTRANDO CHEGADA...";
 
 
-  const dados =
-    new URLSearchParams();
-
-
-  dados.append(
-    "acao",
-    "chegada"
-  );
-
-
-  dados.append(
-    "placa",
-    viagemAtual.placa
-  );
-
-
-  dados.append(
-    "kmChegada",
-    String(kmChegada)
-  );
-
-
-  dados.append(
-    "dataChegada",
-    dataChegada
-  );
-
-
-  dados.append(
-    "horaChegada",
-    horaChegada
-  );
-
-
-  dados.append(
-    "localChegada",
-    localChegada
-  );
-
-
-  dados.append(
-    "observacao",
-    observacao
-  );
+  const dados = {
+    acao: "chegada",
+    placa: viagemAtual.placa,
+    kmChegada: String(kmChegada),
+    dataChegada: dataChegada,
+    horaChegada: horaChegada,
+    localChegada: localChegada,
+    observacao: observacao
+  };
 
 
   try {
@@ -2173,7 +2050,7 @@ async function registrarChegada() {
         URL_SCRIPT,
         {
           method: "POST",
-          body: dados
+          body: JSON.stringify(dados)
         }
       );
 
@@ -2644,7 +2521,7 @@ body {
 
   <div class="linha">
     <strong>Data de Saída:</strong>
-    ${escaparHTML(formatarDataBR(dadosPDF.dataSaida))}
+    ${formatarDataBR(dadosPDF.dataSaida)}
   </div>
 
   <div class="linha">
@@ -2669,7 +2546,7 @@ body {
 
   <div class="linha">
     <strong>KM de Saída:</strong>
-    ${escaparHTML(formatarKM(dadosPDF.kmSaida))}
+    ${formatarKM(dadosPDF.kmSaida)}
   </div>
 
 </div>
@@ -2681,7 +2558,7 @@ body {
 
   <div class="linha">
     <strong>Data de Chegada:</strong>
-    ${escaparHTML(formatarDataBR(dadosPDF.dataChegada))}
+    ${formatarDataBR(dadosPDF.dataChegada)}
   </div>
 
   <div class="linha">
@@ -2691,12 +2568,12 @@ body {
 
   <div class="linha">
     <strong>KM de Chegada:</strong>
-    ${escaparHTML(formatarKM(dadosPDF.kmChegada))}
+    ${formatarKM(dadosPDF.kmChegada)}
   </div>
 
   <div class="linha">
     <strong>KM Percorrido:</strong>
-    ${escaparHTML(formatarKM(dadosPDF.kmPercorrido))}
+    ${formatarKM(dadosPDF.kmPercorrido)}
   </div>
 
   <div class="linha">
@@ -2728,7 +2605,7 @@ body {
       >
 
       <div class="horario-foto">
-        ${escaparHTML(fotos.horaSaida)}
+        ${escaparHTML(fotos.horaSaida || "")}
       </div>
 
     </div>
@@ -2744,7 +2621,7 @@ body {
       >
 
       <div class="horario-foto">
-        ${escaparHTML(fotos.horaChegada)}
+        ${escaparHTML(fotos.horaChegada || "")}
       </div>
 
     </div>
@@ -2755,32 +2632,30 @@ body {
 
 
 <div class="rodape">
-  Relatório gerado pelo Controle de Frota do COREN-PB.
+Relatório gerado pelo Controle de Frota — COREN-PB
 </div>
 
 
 <div class="nao-imprimir">
 
-  <button onclick="window.print()">
-    IMPRIMIR / SALVAR EM PDF
-  </button>
+<button
+  onclick="window.print()"
+  style="
+    width:100%;
+    padding:14px;
+    margin-top:20px;
+    background:#176b38;
+    color:white;
+    border:0;
+    border-radius:8px;
+    font-size:16px;
+    font-weight:bold;
+  "
+>
+IMPRIMIR / SALVAR COMO PDF
+</button>
 
 </div>
-
-
-<script>
-
-window.onload = function() {
-
-  setTimeout(function() {
-
-    window.print();
-
-  }, 500);
-
-};
-
-<\/script>
 
 </body>
 </html>
@@ -2789,21 +2664,24 @@ window.onload = function() {
 
   janela.document.open();
 
-  janela.document.write(html);
+  janela.document.write(
+    html
+  );
 
   janela.document.close();
+
 }
 
 
 /* =====================================================
-   ENCERRAR VIAGEM
+   CONFIRMAR ENCERRAMENTO
 ===================================================== */
 
 function confirmarEncerramento() {
 
   const confirmar =
     window.confirm(
-      "Confirma que o relatório PDF já foi salvo? Após continuar, as fotos e os dados temporários desta viagem serão apagados deste aparelho."
+      "Confirma que o PDF já foi salvo? Ao continuar, as fotos e os dados temporários desta viagem serão apagados deste aparelho."
     );
 
   if (!confirmar) {
@@ -2814,13 +2692,11 @@ function confirmarEncerramento() {
 }
 
 
-function encerrarViagem() {
+/* =====================================================
+   ENCERRAR VIAGEM
+===================================================== */
 
-  /*
-    Somente aqui a viagem em andamento é apagada.
-    Portanto, fechar o aplicativo antes de concluir
-    a chegada NÃO apaga a saída registrada.
-  */
+function encerrarViagem() {
 
   localStorage.removeItem(
     "controleFrotaViagemAtual"
@@ -2839,6 +2715,10 @@ function encerrarViagem() {
   );
 
   localStorage.removeItem(
+    "controleFrotaHoraChegada"
+  );
+
+  localStorage.removeItem(
     "controleFrotaFotoSaida"
   );
 
@@ -2854,13 +2734,6 @@ function encerrarViagem() {
     "controleFrotaHoraFotoChegada"
   );
 
-  localStorage.removeItem(
-    "controleFrotaHoraChegada"
-  );
-
-
-  viagemAtual = null;
-  dadosPDF = null;
 
   fotos = {
     saida: "",
@@ -2868,6 +2741,9 @@ function encerrarViagem() {
     horaSaida: "",
     horaChegada: ""
   };
+
+  viagemAtual = null;
+  dadosPDF = null;
 
 
   campo("cardSaida").style.display =
@@ -2880,20 +2756,21 @@ function encerrarViagem() {
     "block";
 
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
+  campo("areaEncerrada")
+    .scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
 }
 
 
 /* =====================================================
-   PROTEGER CONTRA FECHAMENTO ACIDENTAL
+   PROTEÇÃO AO FECHAR A PÁGINA
 ===================================================== */
 
 window.addEventListener(
   "beforeunload",
-  function(evento) {
+  function(event) {
 
     if (
       viagemAtual &&
@@ -2902,25 +2779,21 @@ window.addEventListener(
       ) !== "1"
     ) {
 
-      evento.preventDefault();
+      event.preventDefault();
 
-      evento.returnValue = "";
+      event.returnValue = "";
     }
   }
 );
 
 
 /* =====================================================
-   INICIALIZAÇÃO DO APLICATIVO
+   INICIAR APLICATIVO
 ===================================================== */
 
 document.addEventListener(
   "DOMContentLoaded",
   function() {
-
-    /*
-      Preenche data e hora para uma NOVA saída.
-    */
 
     campo("dataSaida").value =
       dataHoje();
@@ -2931,42 +2804,16 @@ document.addEventListener(
     campo("dataChegada").value =
       dataHoje();
 
-    campo("horaChegada").value =
-      "";
 
-
-    /*
-      PRIMEIRO verificamos se existe uma saída
-      realmente registrada no aparelho.
-    */
-
-    const existeViagem =
+    const temViagem =
       restaurarViagem();
 
 
-    if (existeViagem) {
-
-      /*
-        Existe uma viagem em andamento.
-
-        Restaura as fotografias e mantém
-        a saída protegida.
-      */
+    if (temViagem) {
 
       restaurarFotosTemporarias();
 
       bloquearCamposSaida();
-
-
-      /*
-        CORREÇÃO PRINCIPAL:
-
-        Ao fechar e abrir novamente o aplicativo,
-        se a saída já foi registrada, NÃO mostra
-        uma nova tela de saída.
-
-        Abre diretamente o REGISTRO DE CHEGADA.
-      */
 
       campo("cardSaida").style.display =
         "none";
@@ -2975,35 +2822,22 @@ document.addEventListener(
         "block";
 
 
-      /*
-        Se a foto da chegada já tiver sido feita
-        antes de fechar o aplicativo, restaura
-        também a hora exata que foi salva.
-      */
-
       if (fotos.chegada) {
 
-        const horaChegadaSalva =
+        const horaSalva =
           localStorage.getItem(
             "controleFrotaHoraChegada"
           );
 
-        if (horaChegadaSalva) {
+        if (horaSalva) {
 
           campo("horaChegada").value =
-            horaChegadaSalva;
+            horaSalva;
         }
 
         bloquearCamposChegada();
       }
 
-
-      /*
-        Se a chegada já foi registrada,
-        restaura os dados do PDF e mantém
-        os botões para salvar o relatório
-        e encerrar a viagem.
-      */
 
       if (
         localStorage.getItem(
@@ -3026,32 +2860,22 @@ document.addEventListener(
       }
 
 
-      /*
-        Leva a tela diretamente para
-        REGISTRO DE CHEGADA.
-      */
+      setTimeout(
+        function() {
 
-      setTimeout(function() {
+          campo("areaChegada")
+            .scrollIntoView({
+              behavior: "smooth",
+              block: "start"
+            });
 
-        campo("areaChegada")
-          .scrollIntoView({
-            behavior: "auto",
-            block: "start"
-          });
-
-      }, 100);
+        },
+        200
+      );
 
     }
 
     else {
-
-      /*
-        NÃO existe saída registrada.
-
-        Qualquer fotografia antiga que tenha
-        ficado no navegador é apagada para
-        não bloquear uma nova viagem.
-      */
 
       localStorage.removeItem(
         "controleFrotaFotoSaida"
@@ -3082,19 +2906,6 @@ document.addEventListener(
       );
 
 
-      fotos = {
-        saida: "",
-        chegada: "",
-        horaSaida: "",
-        horaChegada: ""
-      };
-
-
-      /*
-        Garante que uma nova viagem
-        comece na tela de saída.
-      */
-
       campo("cardSaida").style.display =
         "block";
 
@@ -3112,3 +2923,4 @@ document.addEventListener(
 
 </body>
 </html>
+  
