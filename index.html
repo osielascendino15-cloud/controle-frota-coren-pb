@@ -171,6 +171,18 @@ body {
   line-height: 1.5;
 }
 
+.aviso-fechar {
+  margin-top: 15px;
+  padding: 14px;
+  background: #fff3cd;
+  border: 2px solid #e1a900;
+  border-radius: 9px;
+  color: #654f00;
+  text-align: center;
+  font-weight: bold;
+  line-height: 1.5;
+}
+
 
 /* =========================================
    CAMPOS
@@ -213,11 +225,6 @@ input[readonly] {
   color: #555;
   opacity: 1;
 }
-
-
-/* =========================================
-   CAMPO COM ERRO
-========================================= */
 
 .campo-erro {
   border: 2px solid #c62828 !important;
@@ -273,6 +280,7 @@ button {
 
 button:disabled {
   background: #999;
+  color: white;
   cursor: not-allowed;
   box-shadow: none;
 }
@@ -620,8 +628,6 @@ Foto ainda não tirada.
 
 <!-- =========================================
      VIAGEM EM ANDAMENTO
-
-     Esta tela ficará após registrar a saída.
 ========================================= -->
 
 <div
@@ -640,9 +646,9 @@ Foto ainda não tirada.
 ✅ SAÍDA REGISTRADA COM SUCESSO
 </strong>
 
-<br>
+<br><br>
 
-A viagem permanecerá salva neste aparelho.
+A viagem está salva neste aparelho.
 
 </div>
 
@@ -654,17 +660,17 @@ A viagem permanecerá salva neste aparelho.
 </div>
 
 
-<div class="orientacao-retorno">
+<div class="aviso-fechar">
 
-Você pode sair do aplicativo.
-
-<br><br>
-
-Quando chegar ao destino final da viagem, abra novamente o aplicativo e toque no botão abaixo para iniciar o REGISTRO DE CHEGADA.
+⚠️ PARA REGISTRAR A CHEGADA
 
 <br><br>
 
-A data e a hora da chegada serão atualizadas somente nesse momento.
+É obrigatório fechar este aplicativo após registrar a saída.
+
+<br><br>
+
+Quando retornar da viagem, abra novamente o aplicativo.
 
 </div>
 
@@ -674,13 +680,15 @@ A data e a hora da chegada serão atualizadas somente nesse momento.
   class="btn-continuar"
   id="btnIniciarChegada"
   onclick="iniciarRegistroChegada()"
+  style="display:none"
 >
 🏁 CONTINUAR PARA REGISTRAR CHEGADA
 </button>
 
 </div>
 
-  <!-- =========================================
+
+<!-- =========================================
      REGISTRO DE CHEGADA
 ========================================= -->
 
@@ -711,8 +719,6 @@ A data e a hora da chegada serão atualizadas somente nesse momento.
 
 </div>
 
-
-<!-- CAMPOS OCULTOS PARA COMPATIBILIDADE -->
 
 <input
   type="hidden"
@@ -745,8 +751,6 @@ A data e a hora da chegada serão atualizadas somente nesse momento.
 >
 
 
-<!-- DATA DA CHEGADA -->
-
 <label for="dataChegada">
 Data de Chegada
 </label>
@@ -757,8 +761,6 @@ Data de Chegada
   readonly
 >
 
-
-<!-- KM DA CHEGADA -->
 
 <label for="kmChegada">
 KM de Chegada *
@@ -772,8 +774,6 @@ KM de Chegada *
 >
 
 
-<!-- HORA DA CHEGADA -->
-
 <label for="horaChegada">
 Hora de Chegada
 </label>
@@ -784,8 +784,6 @@ Hora de Chegada
   readonly
 >
 
-
-<!-- LOCAL DA CHEGADA -->
 
 <label for="localChegada">
 Local de Chegada *
@@ -798,8 +796,6 @@ Local de Chegada *
 >
 
 
-<!-- OBSERVAÇÃO -->
-
 <label for="observacaoChegada">
 Observação *
 </label>
@@ -811,8 +807,6 @@ Observação *
 ></textarea>
 
 
-<!-- FOTO DA CHEGADA -->
-
 <div class="foto-painel">
 
 <strong>
@@ -820,7 +814,7 @@ Observação *
 </strong>
 
 <p>
-Tire uma nova foto do condutor para registrar a chegada e incluir no relatório PDF.
+Tire uma nova foto do condutor para registrar a chegada.
 </p>
 
 <button
@@ -847,8 +841,6 @@ Foto ainda não tirada.
 </div>
 
 
-<!-- REGISTRAR CHEGADA -->
-
 <button
   type="button"
   class="btn-principal"
@@ -865,8 +857,6 @@ Foto ainda não tirada.
 ></div>
 
 
-<!-- PDF -->
-
 <button
   type="button"
   class="btn-pdf"
@@ -874,28 +864,7 @@ Foto ainda não tirada.
   onclick="baixarPDF()"
   style="display:none"
 >
-📄 BAIXAR / SALVAR EM PDF
-</button>
-
-
-<!--
-     O BOTÃO ENCERRAR COMEÇA ESCONDIDO.
-     ELE SOMENTE SERÁ LIBERADO DEPOIS
-     DE ABRIR O RELATÓRIO PARA SALVAR EM PDF.
--->
-
-<button
-  type="button"
-  class="btn-principal"
-  id="btnEncerrar"
-  onclick="confirmarEncerramento()"
-  style="
-    display:none;
-    background:#176b38;
-    color:white;
-  "
->
-✓ JÁ SALVEI O PDF — ENCERRAR VIAGEM
+📄 BAIXAR / SALVAR RELATÓRIO COMPLETO EM PDF
 </button>
 
 </div>
@@ -915,17 +884,17 @@ Foto ainda não tirada.
 </h2>
 
 <p>
-O registro da saída e da chegada foi concluído.
-</p>
-
-<p>
-As fotografias temporárias desta viagem foram apagadas deste aparelho.
+O relatório completo da saída e da chegada foi gerado.
 </p>
 
 <p>
 <strong>
-Feche esta tela e abra novamente o aplicativo para registrar uma nova saída.
+A viagem foi encerrada.
 </strong>
+</p>
+
+<p>
+Feche o aplicativo e abra novamente para iniciar um novo registro.
 </p>
 
 </div>
@@ -1001,7 +970,15 @@ let fotos = {
 };
 
 
-/* =========================================
+/*
+  ESTA VARIÁVEL SERVIRÁ PARA IMPEDIR
+  QUE A CHEGADA SEJA LIBERADA NA MESMA
+  ABERTURA EM QUE A SAÍDA FOI REGISTRADA.
+*/
+
+let saidaRegistradaNestaAbertura = false;
+
+  /* =========================================
    FUNÇÕES BÁSICAS
 ========================================= */
 
@@ -1012,7 +989,8 @@ function campo(id) {
 
 function valor(id) {
 
-  const elemento = campo(id);
+  const elemento =
+    campo(id);
 
   if (!elemento) {
     return "";
@@ -1026,7 +1004,8 @@ function valor(id) {
 
 function dataHoje() {
 
-  const agora = new Date();
+  const agora =
+    new Date();
 
   const ano =
     agora.getFullYear();
@@ -1047,7 +1026,8 @@ function dataHoje() {
 
 function horaAgora() {
 
-  const agora = new Date();
+  const agora =
+    new Date();
 
   const hora =
     String(
@@ -1086,7 +1066,7 @@ function atualizarPlaca() {
 
 
 /* =========================================
-   CONVERSÃO DO KM
+   CONVERTER KM
 ========================================= */
 
 function numeroKM(valorRecebido) {
@@ -1102,11 +1082,13 @@ function numeroKM(valorRecebido) {
     return NaN;
   }
 
+
   const ultimaVirgula =
     texto.lastIndexOf(",");
 
   const ultimoPonto =
     texto.lastIndexOf(".");
+
 
   if (
     ultimaVirgula >= 0 &&
@@ -1136,14 +1118,17 @@ function numeroKM(valorRecebido) {
       texto.replace(",", ".");
   }
 
+
   texto =
     texto.replace(
       /[^0-9.-]/g,
       ""
     );
 
+
   const numero =
     Number(texto);
+
 
   return Number.isFinite(numero)
     ? numero
@@ -1168,11 +1153,14 @@ function mostrarMensagem(
     return;
   }
 
+
   elemento.textContent =
     texto;
 
+
   elemento.className =
     "mensagem " + tipo;
+
 
   elemento.style.display =
     "block";
@@ -1188,10 +1176,14 @@ function limparMensagem(id) {
     return;
   }
 
-  elemento.textContent = "";
+
+  elemento.textContent =
+    "";
+
 
   elemento.className =
     "mensagem";
+
 
   elemento.style.display =
     "none";
@@ -1199,7 +1191,7 @@ function limparMensagem(id) {
 
 
 /* =========================================
-   MARCAR CAMPO COM ERRO E LEVAR O CURSOR
+   LEVAR CURSOR AO CAMPO COM ERRO
 ========================================= */
 
 function focarCampoErro(
@@ -1210,6 +1202,7 @@ function focarCampoErro(
 
   const elemento =
     campo(id);
+
 
   if (idMensagem) {
 
@@ -1224,24 +1217,30 @@ function focarCampoErro(
     alert(mensagem);
   }
 
+
   if (!elemento) {
     return false;
   }
 
+
   elemento.classList.add(
     "campo-erro"
   );
+
 
   elemento.scrollIntoView({
     behavior: "smooth",
     block: "center"
   });
 
+
   setTimeout(
     function() {
 
       try {
+
         elemento.focus();
+
       } catch (erro) {
       }
 
@@ -1249,18 +1248,20 @@ function focarCampoErro(
     300
   );
 
+
   return false;
 }
 
 
 /* =========================================
-   RETIRAR DESTAQUE DE ERRO
+   RETIRAR ERRO DO CAMPO
 ========================================= */
 
 function limparErroCampo(id) {
 
   const elemento =
     campo(id);
+
 
   if (elemento) {
 
@@ -1272,7 +1273,32 @@ function limparErroCampo(id) {
 
 
 /* =========================================
-   VALIDAR NOME E SOBRENOME
+   LIMPAR AVISO ASSIM QUE O USUÁRIO
+   COMEÇAR A CORRIGIR O CAMPO
+
+   IMPORTANTE:
+   A VALIDAÇÃO NÃO É RETIRADA.
+   APENAS O AVISO ANTIGO DESAPARECE.
+========================================= */
+
+function corrigindoCampo(
+  idCampo,
+  idMensagem
+) {
+
+  limparErroCampo(
+    idCampo
+  );
+
+
+  limparMensagem(
+    idMensagem
+  );
+}
+
+
+/* =========================================
+   VALIDAR NOME + SOBRENOME
 ========================================= */
 
 function nomeCompletoValido(nome) {
@@ -1283,16 +1309,18 @@ function nomeCompletoValido(nome) {
     .split(/\s+/)
     .filter(
       function(parte) {
+
         return parte.length >= 2;
       }
     );
+
 
   return partes.length >= 2;
 }
 
 
 /* =========================================
-   PROTEÇÃO DO TEXTO EXIBIDO NA TELA
+   PROTEGER TEXTO EXIBIDO
 ========================================= */
 
 function escaparTextoTela(texto) {
@@ -1333,6 +1361,7 @@ function salvarViagemNoAparelho() {
     return false;
   }
 
+
   try {
 
     localStorage.setItem(
@@ -1342,12 +1371,15 @@ function salvarViagemNoAparelho() {
       )
     );
 
+
     localStorage.setItem(
       "controleFrotaViagemEmAndamento",
       "1"
     );
 
+
     return true;
+
 
   } catch (erro) {
 
@@ -1355,6 +1387,7 @@ function salvarViagemNoAparelho() {
       "Erro ao salvar a viagem:",
       erro
     );
+
 
     return false;
   }
@@ -1372,11 +1405,13 @@ function existeViagemEmAndamento() {
       "controleFrotaViagemAtual"
     );
 
+
   return !!viagemSalva;
 }
 
-  /* =========================================
-   VALIDAR DADOS ANTES DA FOTO
+
+/* =========================================
+   VALIDAR ANTES DE ABRIR A CÂMERA
 ========================================= */
 
 function validarAntesDaFoto(tipo) {
@@ -1414,7 +1449,11 @@ function validarAntesDaFoto(tipo) {
     }
 
 
-    if (!nomeCompletoValido(motorista)) {
+    if (
+      !nomeCompletoValido(
+        motorista
+      )
+    ) {
 
       return focarCampoErro(
         "motorista",
@@ -1422,6 +1461,7 @@ function validarAntesDaFoto(tipo) {
         "mensagemSaida"
       );
     }
+
 
     limparErroCampo(
       "motorista"
@@ -1437,12 +1477,16 @@ function validarAntesDaFoto(tipo) {
       );
     }
 
+
     limparErroCampo(
       "numeroPortaria"
     );
 
 
-    if (!veiculo || !placa) {
+    if (
+      !veiculo ||
+      !placa
+    ) {
 
       return focarCampoErro(
         "veiculo",
@@ -1450,6 +1494,7 @@ function validarAntesDaFoto(tipo) {
         "mensagemSaida"
       );
     }
+
 
     limparErroCampo(
       "veiculo"
@@ -1464,6 +1509,7 @@ function validarAntesDaFoto(tipo) {
         "mensagemSaida"
       );
     }
+
 
     limparErroCampo(
       "destino"
@@ -1481,6 +1527,7 @@ function validarAntesDaFoto(tipo) {
         "mensagemSaida"
       );
     }
+
 
     limparErroCampo(
       "kmSaida"
@@ -1536,6 +1583,7 @@ function validarAntesDaFoto(tipo) {
       );
     }
 
+
     limparErroCampo(
       "kmChegada"
     );
@@ -1551,6 +1599,7 @@ function validarAntesDaFoto(tipo) {
         "mensagemChegada"
       );
     }
+
 
     limparErroCampo(
       "localChegada"
@@ -1665,9 +1714,11 @@ function fecharCamera() {
       .getTracks()
       .forEach(
         function(track) {
+
           track.stop();
         }
       );
+
 
     cameraStream =
       null;
@@ -1696,8 +1747,7 @@ function fecharCamera() {
   }
 }
 
-
-/* =========================================
+  /* =========================================
    CAPTURAR FOTO
 ========================================= */
 
@@ -1738,8 +1788,7 @@ function capturarFoto() {
 
 
   if (
-    larguraOriginal >
-    larguraMaxima
+    larguraOriginal > larguraMaxima
   ) {
 
     largura =
@@ -1758,6 +1807,7 @@ function capturarFoto() {
     document.createElement(
       "canvas"
     );
+
 
   canvas.width =
     largura;
@@ -1802,6 +1852,7 @@ function capturarFoto() {
     fotos.saida =
       imagem;
 
+
     fotos.horaSaida =
       horario;
 
@@ -1811,8 +1862,10 @@ function capturarFoto() {
         "previewSaida"
       );
 
+
     preview.src =
       imagem;
+
 
     preview.style.display =
       "block";
@@ -1833,6 +1886,7 @@ function capturarFoto() {
     fotos.chegada =
       imagem;
 
+
     fotos.horaChegada =
       horario;
 
@@ -1842,8 +1896,10 @@ function capturarFoto() {
         "previewChegada"
       );
 
+
     preview.src =
       imagem;
+
 
     preview.style.display =
       "block";
@@ -1880,6 +1936,7 @@ function salvarFotosTemporarias() {
         fotos.saida
       );
 
+
       localStorage.setItem(
         "controleFrotaHoraFotoSaida",
         fotos.horaSaida || ""
@@ -1895,6 +1952,7 @@ function salvarFotosTemporarias() {
         "controleFrotaFotoChegada",
         fotos.chegada
       );
+
 
       localStorage.setItem(
         "controleFrotaHoraFotoChegada",
@@ -2110,6 +2168,36 @@ function mostrarViagemEmAndamento() {
     montarResumoViagem();
 
 
+  /*
+    SE A SAÍDA FOI REGISTRADA NESTA
+    MESMA ABERTURA DO APLICATIVO,
+    O BOTÃO DA CHEGADA FICA ESCONDIDO.
+
+    QUANDO O APLICATIVO FOR FECHADO
+    E ABERTO NOVAMENTE, ESTA VARIÁVEL
+    VOLTA A SER FALSE E O BOTÃO
+    PODERÁ SER MOSTRADO.
+  */
+
+  if (
+    saidaRegistradaNestaAbertura
+  ) {
+
+    campo(
+      "btnIniciarChegada"
+    ).style.display =
+      "none";
+
+
+  } else {
+
+    campo(
+      "btnIniciarChegada"
+    ).style.display =
+      "block";
+  }
+
+
   window.scrollTo({
     top: 0,
     behavior: "smooth"
@@ -2119,11 +2207,27 @@ function mostrarViagemEmAndamento() {
 
 /* =========================================
    INICIAR REGISTRO DE CHEGADA
-
-   DATA E HORA SÃO DEFINIDAS AQUI.
 ========================================= */
 
 function iniciarRegistroChegada() {
+
+  /*
+    PROTEÇÃO EXTRA:
+    NÃO PERMITE CHEGADA NA MESMA
+    ABERTURA EM QUE A SAÍDA FOI FEITA.
+  */
+
+  if (
+    saidaRegistradaNestaAbertura
+  ) {
+
+    alert(
+      "Para registrar a chegada, primeiro feche o aplicativo. Quando retornar da viagem, abra novamente o aplicativo."
+    );
+
+    return;
+  }
+
 
   if (!viagemAtual) {
 
@@ -2135,44 +2239,12 @@ function iniciarRegistroChegada() {
   }
 
 
-  const agora =
-    new Date();
-
-
-  const ano =
-    agora.getFullYear();
-
-
-  const mes =
-    String(
-      agora.getMonth() + 1
-    ).padStart(2, "0");
-
-
-  const dia =
-    String(
-      agora.getDate()
-    ).padStart(2, "0");
-
-
-  const hora =
-    String(
-      agora.getHours()
-    ).padStart(2, "0");
-
-
-  const minuto =
-    String(
-      agora.getMinutes()
-    ).padStart(2, "0");
-
-
   const dataChegada =
-    `${ano}-${mes}-${dia}`;
+    dataHoje();
 
 
   const horaChegada =
-    `${hora}:${minuto}`;
+    horaAgora();
 
 
   localStorage.setItem(
@@ -2256,17 +2328,11 @@ function preencherChegada() {
     );
 
 
-  /*
-    SOMENTE COMO PROTEÇÃO:
-    se a chegada já tiver sido iniciada
-    e algum valor estiver ausente,
-    cria o valor naquele momento.
-  */
-
   if (!dataChegada) {
 
     dataChegada =
       dataHoje();
+
 
     localStorage.setItem(
       "controleFrotaDataChegada",
@@ -2279,6 +2345,7 @@ function preencherChegada() {
 
     horaChegada =
       horaAgora();
+
 
     localStorage.setItem(
       "controleFrotaHoraChegada",
@@ -2300,7 +2367,8 @@ function preencherChegada() {
 
 
   /*
-    LOCAL DE CHEGADA AUTOMÁTICO
+    LOCAL DA CHEGADA CONTINUA
+    AUTOMÁTICO COMO COMBINADO.
   */
 
   campo(
@@ -2317,7 +2385,7 @@ function preencherChegada() {
 
 
 /* =========================================
-   MOSTRAR TELA DE CHEGADA
+   MOSTRAR TELA DA CHEGADA
 ========================================= */
 
 function mostrarTelaChegada() {
@@ -2362,14 +2430,7 @@ function mostrarTelaChegada() {
 
 
 /* =========================================
-   RESTAURAR VIAGEM SALVA
-
-   IMPORTANTE:
-   AO REABRIR O APP, PRIMEIRO MOSTRA
-   "VIAGEM EM ANDAMENTO".
-
-   A CHEGADA SÓ ABRE AUTOMATICAMENTE
-   SE ELA JÁ TIVER SIDO INICIADA.
+   RESTAURAR VIAGEM AO ABRIR NOVAMENTE
 ========================================= */
 
 function restaurarViagem() {
@@ -2431,6 +2492,12 @@ function restaurarViagem() {
       ) === "1";
 
 
+    /*
+      SE A CHEGADA JÁ ESTAVA SENDO
+      PREENCHIDA, RESTAURA A TELA
+      PARA NÃO PERDER O TRABALHO.
+    */
+
     if (
       chegadaRegistrada ||
       chegadaIniciada
@@ -2438,7 +2505,18 @@ function restaurarViagem() {
 
       mostrarTelaChegada();
 
+
     } else {
+
+      /*
+        COMO O APLICATIVO FOI ABERTO
+        NOVAMENTE, AGORA O BOTÃO
+        DE CHEGADA SERÁ LIBERADO.
+      */
+
+      saidaRegistradaNestaAbertura =
+        false;
+
 
       mostrarViagemEmAndamento();
     }
@@ -2453,6 +2531,7 @@ function restaurarViagem() {
       "Erro ao restaurar viagem:",
       erro
     );
+
 
     return false;
   }
@@ -2476,9 +2555,11 @@ async function registrarSaida() {
 
     restaurarViagem();
 
+
     alert(
       "Já existe uma viagem em andamento. Finalize essa viagem antes de registrar uma nova saída."
     );
+
 
     return;
   }
@@ -2495,14 +2576,6 @@ async function registrarSaida() {
 
   const numeroPortaria =
     valor("numeroPortaria");
-
-
-  const dataSaida =
-    valor("dataSaida");
-
-
-  const horaSaida =
-    valor("horaSaida");
 
 
   const veiculo =
@@ -2522,11 +2595,6 @@ async function registrarSaida() {
       valor("kmSaida")
     );
 
-
-  /*
-    MOTORISTA:
-    OBRIGATÓRIO NOME + SOBRENOME
-  */
 
   if (!motorista) {
 
@@ -2606,9 +2674,7 @@ async function registrarSaida() {
 
 
   if (
-    !Number.isFinite(
-      kmSaida
-    ) ||
+    !Number.isFinite(kmSaida) ||
     kmSaida < 0
   ) {
 
@@ -2656,6 +2722,32 @@ async function registrarSaida() {
 
     return;
   }
+
+
+  /*
+    DATA E HORA DA SAÍDA SÃO
+    ATUALIZADAS NO MOMENTO EXATO
+    DE REGISTRAR A SAÍDA.
+  */
+
+  campo(
+    "dataSaida"
+  ).value =
+    dataHoje();
+
+
+  campo(
+    "horaSaida"
+  ).value =
+    horaAgora();
+
+
+  const dataSaida =
+    valor("dataSaida");
+
+
+  const horaSaida =
+    valor("horaSaida");
 
 
   viagemAtual = {
@@ -2708,8 +2800,22 @@ async function registrarSaida() {
 
 
   /*
-    LIMPA SOMENTE DADOS DE
-    UMA CHEGADA ANTERIOR.
+    MARCA QUE A SAÍDA FOI REGISTRADA
+    NESTA ABERTURA DO APLICATIVO.
+
+    ESTA MARCA NÃO É GRAVADA NO
+    LOCALSTORAGE DE PROPÓSITO.
+
+    ASSIM, SOMENTE FECHAR E ABRIR
+    NOVAMENTE LIBERA A CHEGADA.
+  */
+
+  saidaRegistradaNestaAbertura =
+    true;
+
+
+  /*
+    LIMPAR DADOS DE CHEGADA ANTERIOR
   */
 
   localStorage.removeItem(
@@ -2738,11 +2844,6 @@ async function registrarSaida() {
 
 
   localStorage.removeItem(
-    "controleFrotaPDFLiberado"
-  );
-
-
-  localStorage.removeItem(
     "controleFrotaFotoChegada"
   );
 
@@ -2764,12 +2865,9 @@ async function registrarSaida() {
 
 
   /*
-    NOVO FUNCIONAMENTO:
-
-    NÃO ABRE A CHEGADA IMEDIATAMENTE.
-
-    MANTÉM NA TELA A CONFIRMAÇÃO
-    DA SAÍDA E A VIAGEM EM ANDAMENTO.
+    MOSTRA A VIAGEM EM ANDAMENTO,
+    MAS NÃO MOSTRA O BOTÃO
+    PARA REGISTRAR A CHEGADA.
   */
 
   mostrarViagemEmAndamento();
@@ -2844,7 +2942,7 @@ async function registrarSaida() {
     } catch (erro) {
 
       console.warn(
-        "Resposta do servidor em formato diferente.",
+        "Resposta do servidor:",
         texto
       );
     }
@@ -2862,10 +2960,6 @@ async function registrarSaida() {
     }
 
 
-    /*
-      PRESERVA A VIAGEM NO APARELHO.
-    */
-
     salvarViagemNoAparelho();
 
 
@@ -2878,8 +2972,8 @@ async function registrarSaida() {
 
 
     /*
-      MESMO EM CASO DE FALHA DE REDE,
-      NÃO APAGA A VIAGEM DO APARELHO.
+      NÃO APAGA A VIAGEM DO APARELHO
+      EM CASO DE FALHA DE INTERNET.
     */
 
     salvarViagemNoAparelho();
@@ -2943,8 +3037,14 @@ async function registrarChegada() {
     valor("observacaoChegada");
 
 
+  /* =======================================
+     VALIDAR KM DE CHEGADA
+  ======================================= */
+
   if (
-    !Number.isFinite(kmChegada)
+    !Number.isFinite(
+      kmChegada
+    )
   ) {
 
     return focarCampoErro(
@@ -2972,6 +3072,10 @@ async function registrarChegada() {
   );
 
 
+  /* =======================================
+     VALIDAR LOCAL DE CHEGADA
+  ======================================= */
+
   if (!localChegada) {
 
     return focarCampoErro(
@@ -2987,6 +3091,10 @@ async function registrarChegada() {
   );
 
 
+  /* =======================================
+     VALIDAR OBSERVAÇÃO
+  ======================================= */
+
   if (!observacao) {
 
     return focarCampoErro(
@@ -3001,6 +3109,10 @@ async function registrarChegada() {
     "observacaoChegada"
   );
 
+
+  /* =======================================
+     VALIDAR FOTO DA CHEGADA
+  ======================================= */
 
   if (!fotos.chegada) {
 
@@ -3035,11 +3147,13 @@ async function registrarChegada() {
   }
 
 
-  /*
-    A DATA E A HORA FORAM CRIADAS
-    QUANDO O MOTORISTA INICIOU
-    O REGISTRO DA CHEGADA.
-  */
+  /* =======================================
+     DATA E HORA DA CHEGADA
+
+     FORAM CRIADAS QUANDO O MOTORISTA
+     CLICOU EM CONTINUAR PARA
+     REGISTRAR CHEGADA.
+  ======================================= */
 
   let dataChegada =
     localStorage.getItem(
@@ -3058,6 +3172,7 @@ async function registrarChegada() {
     dataChegada =
       dataHoje();
 
+
     localStorage.setItem(
       "controleFrotaDataChegada",
       dataChegada
@@ -3069,6 +3184,7 @@ async function registrarChegada() {
 
     horaChegada =
       horaAgora();
+
 
     localStorage.setItem(
       "controleFrotaHoraChegada",
@@ -3108,6 +3224,10 @@ async function registrarChegada() {
   enviandoChegada =
     true;
 
+
+  /* =======================================
+     DADOS ENVIADOS PARA A PLANILHA
+  ======================================= */
 
   const dados = {
 
@@ -3189,6 +3309,7 @@ async function registrarChegada() {
           texto
         );
 
+
     } catch (erro) {
 
       console.warn(
@@ -3210,6 +3331,17 @@ async function registrarChegada() {
       );
     }
 
+
+    /* =====================================
+       PREPARAR UM ÚNICO RELATÓRIO
+
+       O MESMO PDF TERÁ:
+
+       1 - REGISTRO DE SAÍDA
+       2 - FOTO DA SAÍDA
+       3 - REGISTRO DE CHEGADA
+       4 - FOTO DA CHEGADA
+    ===================================== */
 
     dadosPDF = {
 
@@ -3271,19 +3403,9 @@ async function registrarChegada() {
     );
 
 
-    /*
-      A CADA NOVA CHEGADA O ENCERRAMENTO
-      FICA BLOQUEADO ATÉ ABRIR O PDF.
-    */
-
-    localStorage.removeItem(
-      "controleFrotaPDFLiberado"
-    );
-
-
     mostrarMensagem(
       "mensagemChegada",
-      "✓ CHEGADA REGISTRADA COM SUCESSO. Agora clique em BAIXAR / SALVAR EM PDF.",
+      "✓ CHEGADA REGISTRADA COM SUCESSO. Agora clique em BAIXAR / SALVAR RELATÓRIO COMPLETO EM PDF.",
       "sucesso"
     );
 
@@ -3300,12 +3422,6 @@ async function registrarChegada() {
       "block";
 
 
-    campo(
-      "btnEncerrar"
-    ).style.display =
-      "none";
-
-
     const aviso =
       campo(
         "avisoViagem"
@@ -3317,9 +3433,9 @@ async function registrarChegada() {
       aviso.innerHTML =
         '<strong>✅ CHEGADA REGISTRADA COM SUCESSO</strong>' +
         '<br><br>' +
-        'Agora baixe/salve o relatório PDF.' +
-        '<br>' +
-        'Depois disso será liberado o encerramento da viagem.';
+        'Agora gere o relatório completo da viagem.' +
+        '<br><br>' +
+        '<strong>O PDF terá a saída, a foto da saída, a chegada e a foto da chegada no mesmo relatório.</strong>';
     }
 
 
@@ -3356,7 +3472,7 @@ async function registrarChegada() {
 
 
 /* =========================================
-   RESTAURAR DADOS DO PDF
+   RESTAURAR DADOS DO RELATÓRIO
 ========================================= */
 
 function restaurarDadosPDF() {
@@ -3379,6 +3495,7 @@ function restaurarDadosPDF() {
         salvo
       );
 
+
     return true;
 
 
@@ -3387,13 +3504,14 @@ function restaurarDadosPDF() {
     dadosPDF =
       null;
 
+
     return false;
   }
 }
 
 
 /* =========================================
-   FORMATAÇÃO PARA O PDF
+   PROTEGER TEXTO DO RELATÓRIO
 ========================================= */
 
 function escaparHTML(texto) {
@@ -3401,13 +3519,32 @@ function escaparHTML(texto) {
   return String(
     texto ?? ""
   )
-  .replace(/&/g, "&amp;")
-  .replace(/</g, "&lt;")
-  .replace(/>/g, "&gt;")
-  .replace(/"/g, "&quot;")
-  .replace(/'/g, "&#039;");
+  .replace(
+    /&/g,
+    "&amp;"
+  )
+  .replace(
+    /</g,
+    "&lt;"
+  )
+  .replace(
+    />/g,
+    "&gt;"
+  )
+  .replace(
+    /"/g,
+    "&quot;"
+  )
+  .replace(
+    /'/g,
+    "&#039;"
+  );
 }
 
+
+/* =========================================
+   FORMATAR DATA PARA O RELATÓRIO
+========================================= */
 
 function formatarDataBR(data) {
 
@@ -3415,11 +3552,16 @@ function formatarDataBR(data) {
     return "";
   }
 
+
   const partes =
-    String(data).split("-");
+    String(data)
+    .split("-");
 
 
-  if (partes.length !== 3) {
+  if (
+    partes.length !== 3
+  ) {
+
     return data;
   }
 
@@ -3435,15 +3577,205 @@ function formatarDataBR(data) {
 
 
 /* =========================================
-   BAIXAR / SALVAR PDF
+   RESTAURAR CHEGADA JÁ REGISTRADA
 
-   RELATÓRIO DE SAÍDA
-   +
-   FOTO DA SAÍDA
+   SE O MOTORISTA FECHAR O APLICATIVO
+   ANTES DE GERAR O PDF, O RELATÓRIO
+   CONTINUARÁ DISPONÍVEL.
+========================================= */
 
-   RELATÓRIO DE CHEGADA
-   +
-   FOTO DA CHEGADA
+function restaurarChegadaRegistrada() {
+
+  const registrada =
+    localStorage.getItem(
+      "controleFrotaChegadaRegistrada"
+    ) === "1";
+
+
+  if (!registrada) {
+    return false;
+  }
+
+
+  restaurarDadosPDF();
+
+  restaurarFotosTemporarias();
+
+
+  if (dadosPDF) {
+
+    campo(
+      "dataChegada"
+    ).value =
+      dadosPDF.dataChegada || "";
+
+
+    campo(
+      "horaChegada"
+    ).value =
+      dadosPDF.horaChegada || "";
+
+
+    campo(
+      "kmChegada"
+    ).value =
+      dadosPDF.kmChegada ?? "";
+
+
+    campo(
+      "localChegada"
+    ).value =
+      dadosPDF.localChegada ||
+      "João Pessoa - PB, Sede do COREN-PB";
+
+
+    campo(
+      "observacaoChegada"
+    ).value =
+      dadosPDF.observacao || "";
+  }
+
+
+  campo(
+    "btnChegada"
+  ).style.display =
+    "none";
+
+
+  campo(
+    "btnPDF"
+  ).style.display =
+    "block";
+
+
+  const aviso =
+    campo(
+      "avisoViagem"
+    );
+
+
+  if (aviso) {
+
+    aviso.innerHTML =
+      '<strong>✅ CHEGADA JÁ REGISTRADA</strong>' +
+      '<br><br>' +
+      'Clique em BAIXAR / SALVAR RELATÓRIO COMPLETO EM PDF.' +
+      '<br><br>' +
+      'O relatório terá a saída e a chegada com suas respectivas fotos.';
+  }
+
+
+  return true;
+}
+
+
+/* =========================================
+   LIMPAR AVISOS QUANDO O USUÁRIO
+   COMEÇAR A CORRIGIR OS CAMPOS
+========================================= */
+
+function prepararEventosCampos() {
+
+  const camposSaida = [
+    "motorista",
+    "numeroPortaria",
+    "veiculo",
+    "destino",
+    "kmSaida"
+  ];
+
+
+  camposSaida.forEach(
+    function(id) {
+
+      const elemento =
+        campo(id);
+
+
+      if (!elemento) {
+        return;
+      }
+
+
+      elemento.addEventListener(
+        "input",
+        function() {
+
+          corrigindoCampo(
+            id,
+            "mensagemSaida"
+          );
+        }
+      );
+
+
+      elemento.addEventListener(
+        "change",
+        function() {
+
+          corrigindoCampo(
+            id,
+            "mensagemSaida"
+          );
+        }
+      );
+    }
+  );
+
+
+  const camposChegada = [
+    "kmChegada",
+    "localChegada",
+    "observacaoChegada"
+  ];
+
+
+  camposChegada.forEach(
+    function(id) {
+
+      const elemento =
+        campo(id);
+
+
+      if (!elemento) {
+        return;
+      }
+
+
+      elemento.addEventListener(
+        "input",
+        function() {
+
+          corrigindoCampo(
+            id,
+            "mensagemChegada"
+          );
+        }
+      );
+
+
+      elemento.addEventListener(
+        "change",
+        function() {
+
+          corrigindoCampo(
+            id,
+            "mensagemChegada"
+          );
+        }
+      );
+    }
+  );
+}
+
+  /* =========================================
+   GERAR RELATÓRIO COMPLETO
+
+   UM ÚNICO DOCUMENTO:
+   1 - REGISTRO DE SAÍDA
+   2 - FOTO DA SAÍDA
+   3 - REGISTRO DE CHEGADA
+   4 - FOTO DA CHEGADA
 ========================================= */
 
 function baixarPDF() {
@@ -3458,29 +3790,6 @@ function baixarPDF() {
 
       return;
     }
-  }
-
-
-  /*
-    ABRE A JANELA IMEDIATAMENTE.
-    ISSO AJUDA A EVITAR BLOQUEIO
-    DE POP-UP NO CELULAR.
-  */
-
-  const janela =
-    window.open(
-      "",
-      "_blank"
-    );
-
-
-  if (!janela) {
-
-    alert(
-      "Não foi possível abrir o relatório. Permita pop-ups para este aplicativo e tente novamente."
-    );
-
-    return;
   }
 
 
@@ -3516,11 +3825,33 @@ function baixarPDF() {
     "";
 
 
+  /*
+    ABRIR A JANELA PRIMEIRO
+    AJUDA A EVITAR BLOQUEIO DE POP-UP.
+  */
+
+  const janela =
+    window.open(
+      "",
+      "_blank"
+    );
+
+
+  if (!janela) {
+
+    alert(
+      "Não foi possível abrir o relatório. Permita pop-ups para este aplicativo e tente novamente."
+    );
+
+    return;
+  }
+
+
   const htmlFotoSaida =
     fotoSaida
       ? (
         '<div class="foto-bloco">' +
-          '<h3>📷 FOTO DA SAÍDA</h3>' +
+          '<h3>FOTO DA SAÍDA</h3>' +
           '<img src="' +
           fotoSaida +
           '" alt="Foto da saída">' +
@@ -3542,7 +3873,7 @@ function baixarPDF() {
     fotoChegada
       ? (
         '<div class="foto-bloco">' +
-          '<h3>📷 FOTO DA CHEGADA</h3>' +
+          '<h3>FOTO DA CHEGADA</h3>' +
           '<img src="' +
           fotoChegada +
           '" alt="Foto da chegada">' +
@@ -3575,7 +3906,7 @@ function baixarPDF() {
   content="width=device-width, initial-scale=1.0"
 >
 
-<title>Relatório de Frota COREN-PB</title>
+<title>Relatório Completo de Frota COREN-PB</title>
 
 <style>
 
@@ -3621,7 +3952,7 @@ body {
 
 .cabecalho h2 {
   margin: 0;
-  font-size: 19px;
+  font-size: 17px;
 }
 
 .titulo-relatorio {
@@ -3663,18 +3994,20 @@ body {
   border: 2px solid #9fc4d6;
   border-radius: 8px;
   padding: 10px;
+  page-break-inside: avoid;
 }
 
 .foto-bloco h3 {
   margin: 0 0 10px;
   color: #07579c;
+  font-size: 18px;
 }
 
 .foto-bloco img {
   display: block;
   max-width: 100%;
   width: auto;
-  max-height: 430px;
+  max-height: 390px;
   margin: auto;
   object-fit: contain;
   border-radius: 6px;
@@ -3715,6 +4048,18 @@ body {
   cursor: pointer;
 }
 
+.instrucao {
+  max-width: 800px;
+  margin: 10px auto;
+  padding: 12px;
+  background: #e7f7ec;
+  border: 1px solid #8ac79e;
+  border-radius: 8px;
+  color: #176b38;
+  text-align: center;
+  font-weight: bold;
+}
+
 .rodape {
   margin-top: 20px;
   text-align: center;
@@ -3724,7 +4069,8 @@ body {
 
 @media print {
 
-  .botoes {
+  .botoes,
+  .instrucao {
     display: none;
   }
 
@@ -3740,18 +4086,35 @@ body {
 <body>
 
 
+<div class="instrucao">
+
+RELATÓRIO COMPLETO DA VIAGEM
+
+<br><br>
+
+Este é um único relatório contendo a saída e a chegada.
+
+</div>
+
+
 <div class="botoes">
 
 <button onclick="window.print()">
-🖨️ IMPRIMIR / SALVAR COMO PDF
+
+IMPRIMIR / SALVAR COMO PDF
+
 </button>
 
 </div>
 
 
-<!-- RELATÓRIO DE SAÍDA -->
+<!-- =====================================
+     PRIMEIRA PARTE DO MESMO RELATÓRIO
+     REGISTRO DE SAÍDA
+===================================== -->
 
 <div class="pagina pagina-saida">
+
 
 <div class="cabecalho">
 
@@ -3767,7 +4130,9 @@ Conselho Regional de Enfermagem da Paraíba
 
 
 <div class="titulo-relatorio">
+
 RELATÓRIO DE SAÍDA
+
 </div>
 
 
@@ -3820,15 +4185,21 @@ ${htmlFotoSaida}
 
 
 <div class="rodape">
-Relatório de Saída — Controle de Frota COREN-PB
-</div>
+
+Relatório Completo de Frota COREN-PB — Registro de Saída
 
 </div>
 
+</div>
 
-<!-- RELATÓRIO DE CHEGADA -->
+
+<!-- =====================================
+     SEGUNDA PARTE DO MESMO RELATÓRIO
+     REGISTRO DE CHEGADA
+===================================== -->
 
 <div class="pagina">
+
 
 <div class="cabecalho">
 
@@ -3844,7 +4215,9 @@ Conselho Regional de Enfermagem da Paraíba
 
 
 <div class="titulo-relatorio titulo-chegada">
+
 RELATÓRIO DE CHEGADA
+
 </div>
 
 
@@ -3917,229 +4290,88 @@ ${htmlFotoChegada}
 
 
 <div class="rodape">
-Relatório de Chegada — Controle de Frota COREN-PB
+
+Relatório Completo de Frota COREN-PB — Registro de Chegada
+
 </div>
 
 </div>
 
 
 </body>
+
 </html>
 `;
 
 
   janela.document.open();
 
+
   janela.document.write(
     conteudo
   );
+
 
   janela.document.close();
 
 
   /*
-    O NAVEGADOR NÃO INFORMA AO APLICATIVO
-    SE O USUÁRIO REALMENTE PRESSIONOU
-    "SALVAR" NA JANELA DE IMPRESSÃO.
+    O RELATÓRIO JÁ FOI ABERTO.
 
-    POR ISSO, O ENCERRAMENTO É LIBERADO
-    SOMENTE DEPOIS QUE O MOTORISTA
-    ABRE O RELATÓRIO PARA SALVAR.
+    AGORA A VIAGEM É ENCERRADA
+    AUTOMATICAMENTE NO APLICATIVO.
+
+    NÃO EXISTE MAIS O BOTÃO
+    "JÁ SALVEI O PDF".
   */
 
-  localStorage.setItem(
-    "controleFrotaPDFLiberado",
-    "1"
-  );
-
-
-  campo(
-    "btnEncerrar"
-  ).style.display =
-    "block";
-
-
-  mostrarMensagem(
-    "mensagemChegada",
-    "✓ RELATÓRIO ABERTO. Salve o arquivo em PDF. Depois volte ao aplicativo e toque em JÁ SALVEI O PDF — ENCERRAR VIAGEM.",
-    "sucesso"
-  );
+  encerrarViagemAposPDF();
 }
 
 
 /* =========================================
-   RESTAURAR CHEGADA JÁ REGISTRADA
+   ENCERRAR AUTOMATICAMENTE APÓS
+   ABRIR O RELATÓRIO COMPLETO
 ========================================= */
 
-function restaurarChegadaRegistrada() {
+function encerrarViagemAposPDF() {
 
-  const registrada =
-    localStorage.getItem(
-      "controleFrotaChegadaRegistrada"
-    ) === "1";
+  fecharCamera();
 
 
-  if (!registrada) {
-    return false;
-  }
-
-
-  restaurarDadosPDF();
-
-  restaurarFotosTemporarias();
-
-
-  if (dadosPDF) {
-
-    if (
-      campo("dataChegada")
-    ) {
-
-      campo(
-        "dataChegada"
-      ).value =
-        dadosPDF.dataChegada || "";
-    }
-
-
-    if (
-      campo("horaChegada")
-    ) {
-
-      campo(
-        "horaChegada"
-      ).value =
-        dadosPDF.horaChegada || "";
-    }
-
-
-    if (
-      campo("kmChegada")
-    ) {
-
-      campo(
-        "kmChegada"
-      ).value =
-        dadosPDF.kmChegada ?? "";
-    }
-
-
-    if (
-      campo("localChegada")
-    ) {
-
-      campo(
-        "localChegada"
-      ).value =
-        dadosPDF.localChegada ||
-        "João Pessoa - PB, Sede do COREN-PB";
-    }
-
-
-    if (
-      campo("observacaoChegada")
-    ) {
-
-      campo(
-        "observacaoChegada"
-      ).value =
-        dadosPDF.observacao || "";
-    }
-  }
-
+  /*
+    PRIMEIRO MOSTRA A TELA DE
+    VIAGEM ENCERRADA.
+  */
 
   campo(
-    "btnChegada"
+    "cardSaida"
   ).style.display =
     "none";
 
 
   campo(
-    "btnPDF"
+    "areaViagemAndamento"
+  ).style.display =
+    "none";
+
+
+  campo(
+    "areaChegada"
+  ).style.display =
+    "none";
+
+
+  campo(
+    "areaEncerrada"
   ).style.display =
     "block";
 
 
-  const pdfLiberado =
-    localStorage.getItem(
-      "controleFrotaPDFLiberado"
-    ) === "1";
-
-
-  campo(
-    "btnEncerrar"
-  ).style.display =
-    pdfLiberado
-      ? "block"
-      : "none";
-
-
-  const aviso =
-    campo(
-      "avisoViagem"
-    );
-
-
-  if (aviso) {
-
-    aviso.innerHTML =
-      '<strong>✅ CHEGADA JÁ REGISTRADA</strong>' +
-      '<br><br>' +
-      (
-        pdfLiberado
-          ? 'O relatório já foi aberto. Confirme que salvou o PDF e encerre a viagem.'
-          : 'Agora clique em BAIXAR / SALVAR EM PDF.'
-      );
-  }
-
-
-  return true;
-}
-
-
-/* =========================================
-   CONFIRMAR ENCERRAMENTO
-========================================= */
-
-function confirmarEncerramento() {
-
-  if (
-    localStorage.getItem(
-      "controleFrotaPDFLiberado"
-    ) !== "1"
-  ) {
-
-    alert(
-      "Primeiro clique em BAIXAR / SALVAR EM PDF."
-    );
-
-    return;
-  }
-
-
-  const confirmar =
-    window.confirm(
-      "Confirma que o relatório foi SALVO EM PDF?\n\nAo encerrar, as fotos temporárias serão apagadas deste aparelho e a viagem será finalizada."
-    );
-
-
-  if (!confirmar) {
-    return;
-  }
-
-
-  encerrarViagem();
-}
-
-
-/* =========================================
-   ENCERRAR VIAGEM
-========================================= */
-
-function encerrarViagem() {
-
-  fecharCamera();
-
+  /*
+    APAGA OS DADOS TEMPORÁRIOS
+    DESTA VIAGEM DESTE APARELHO.
+  */
 
   const chavesParaApagar = [
 
@@ -4157,15 +4389,15 @@ function encerrarViagem() {
 
     "controleFrotaDadosPDF",
 
-    "controleFrotaPDFLiberado",
-
     "controleFrotaFotoSaida",
 
     "controleFrotaHoraFotoSaida",
 
     "controleFrotaFotoChegada",
 
-    "controleFrotaHoraFotoChegada"
+    "controleFrotaHoraFotoChegada",
+
+    "controleFrotaPDFLiberado"
   ];
 
 
@@ -4188,35 +4420,19 @@ function encerrarViagem() {
 
 
   fotos = {
+
     saida: "",
+
     chegada: "",
+
     horaSaida: "",
+
     horaChegada: ""
   };
 
 
-  campo(
-    "cardSaida"
-  ).style.display =
-    "none";
-
-
-  campo(
-    "areaViagemAndamento"
-  ).style.display =
-    "none";
-
-
-  campo(
-    "areaChegada"
-  ).style.display =
-    "none";
-
-
-  campo(
-    "areaEncerrada"
-  ).style.display =
-    "block";
+  saidaRegistradaNestaAbertura =
+    false;
 
 
   window.scrollTo({
@@ -4227,7 +4443,7 @@ function encerrarViagem() {
 
 
 /* =========================================
-   PREPARAR NOVA SAÍDA
+   PREPARAR TELA INICIAL
 ========================================= */
 
 function prepararTelaInicial() {
@@ -4244,6 +4460,10 @@ function prepararTelaInicial() {
     horaAgora();
 
 
+  /*
+    LOCAL DE CHEGADA AUTOMÁTICO
+  */
+
   campo(
     "localChegada"
   ).value =
@@ -4252,96 +4472,54 @@ function prepararTelaInicial() {
 
 
 /* =========================================
-   REMOVER MARCA DE ERRO AO CORRIGIR CAMPO
-========================================= */
-
-function prepararEventosCampos() {
-
-  const ids = [
-    "motorista",
-    "numeroPortaria",
-    "veiculo",
-    "destino",
-    "kmSaida",
-    "kmChegada",
-    "localChegada",
-    "observacaoChegada"
-  ];
-
-
-  ids.forEach(
-    function(id) {
-
-      const elemento =
-        campo(id);
-
-
-      if (!elemento) {
-        return;
-      }
-
-
-      elemento.addEventListener(
-        "input",
-        function() {
-
-          limparErroCampo(
-            id
-          );
-        }
-      );
-
-
-      elemento.addEventListener(
-        "change",
-        function() {
-
-          limparErroCampo(
-            id
-          );
-        }
-      );
-    }
-  );
-}
-
-
-/* =========================================
-   INICIALIZAÇÃO
+   INICIALIZAR APLICATIVO
 ========================================= */
 
 function iniciarAplicativo() {
 
   prepararTelaInicial();
 
+
   prepararEventosCampos();
+
 
   restaurarFotosTemporarias();
 
 
   /*
-    SE EXISTIR VIAGEM EM ANDAMENTO,
-    NÃO PERMITE UMA NOVA SAÍDA.
+    AO ABRIR O APLICATIVO,
+    ESTA VARIÁVEL SEMPRE COMEÇA FALSE.
+
+    SE EXISTIR UMA SAÍDA SALVA,
+    SIGNIFICA QUE O APLICATIVO FOI
+    ABERTO NOVAMENTE E A CHEGADA
+    PODERÁ SER LIBERADA.
   */
+
+  saidaRegistradaNestaAbertura =
+    false;
+
 
   if (
     restaurarViagem()
   ) {
 
     /*
-      SE A CHEGADA JÁ FOI REGISTRADA,
-      RESTAURA O ESTADO DO PDF.
+      SE A CHEGADA JÁ ESTIVER
+      REGISTRADA, MANTÉM O PDF
+      DISPONÍVEL.
     */
 
     restaurarChegadaRegistrada();
+
 
     return;
   }
 
 
   /*
-    NÃO EXISTE VIAGEM EM ANDAMENTO.
-    MOSTRA A TELA NORMAL DE SAÍDA.
+    SEM VIAGEM EM ANDAMENTO:
+    MOSTRA NOVO REGISTRO DE SAÍDA.
   */
 
   campo(
@@ -4370,45 +4548,7 @@ function iniciarAplicativo() {
 
 
 /* =========================================
-   AO VOLTAR PARA O APLICATIVO
-
-   NÃO ALTERA A DATA/HORA DA CHEGADA
-   SE O REGISTRO JÁ TIVER SIDO INICIADO.
-========================================= */
-
-window.addEventListener(
-  "pageshow",
-  function() {
-
-    if (
-      existeViagemEmAndamento() &&
-      !viagemAtual
-    ) {
-
-      restaurarViagem();
-    }
-  }
-);
-
-
-document.addEventListener(
-  "visibilitychange",
-  function() {
-
-    if (
-      document.visibilityState === "visible" &&
-      existeViagemEmAndamento() &&
-      !viagemAtual
-    ) {
-
-      restaurarViagem();
-    }
-  }
-);
-
-
-/* =========================================
-   PROTEÇÃO AO FECHAR / ATUALIZAR
+   PROTEGER DADOS AO FECHAR
 ========================================= */
 
 window.addEventListener(
