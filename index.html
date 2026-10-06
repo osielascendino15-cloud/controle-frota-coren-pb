@@ -3886,6 +3886,10 @@ async function baixarPDF() {
       nomeArquivo
     );
 
+   setTimeout(function() {
+  finalizarViagem();
+}, 1000);
+
 
     mostrarMensagem(
       "mensagemChegada",
